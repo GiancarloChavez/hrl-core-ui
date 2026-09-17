@@ -1,0 +1,42 @@
+{
+  "name": "@hrl/core-ui",
+  "version": "1.0.0",
+  "description": "Sistema de diseño del Hospital Regional de Loreto: componentes React y tokens CSS, sin dependencias.",
+  "license": "UNLICENSED",
+  "type": "module",
+  "main": "./dist/index.js",
+  "module": "./dist/index.js",
+  "sideEffects": [
+    "*.css"
+  ],
+  "exports": {
+    ".": "./dist/index.js",
+    "./tokens.css": "./tokens.css",
+    "./package.json": "./package.json"
+  },
+  "files": [
+    "dist",
+    "src",
+    "tokens.css",
+    "README.md",
+    "CHANGELOG.md",
+    "UI_CATALOG.md"
+  ],
+  "scripts": {
+    "build": "node build.mjs",
+    "humo": "node scripts/humo.mjs",
+    "verificar": "node build.mjs && node scripts/humo.mjs"
+  },
+  "peerDependencies": {
+    "react": ">=19",
+    "react-dom": ">=19"
+  },
+  "devDependencies": {
+    "esbuild": "^0.25.0",
+    "react": "^19.2.8",
+    "react-dom": "^19.2.8"
+  },
+  "engines": {
+    "node": ">=20"
+  }
+}

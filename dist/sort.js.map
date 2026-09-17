@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/sort.js"],
+  "sourcesContent": ["/* Primer clic: descendente en columnas num\u00E9ricas, ascendente en texto.\r\n   El segundo clic invierte. */\r\nexport function nextSort(sort, columna) {\r\n  if (sort?.key === columna.key) {\r\n    return { key: columna.key, dir: sort.dir === 'asc' ? 'desc' : 'asc' };\r\n  }\r\n  return { key: columna.key, dir: columna.numeric ? 'desc' : 'asc' };\r\n}\r\n\r\nexport function sortRows(rows, sort, columns) {\r\n  if (!sort?.key) return rows;\r\n  const col = columns.find((c) => c.key === sort.key);\r\n  const signo = sort.dir === 'asc' ? 1 : -1;\r\n\r\n  return [...rows].sort((a, b) => {\r\n    const va = a[sort.key];\r\n    const vb = b[sort.key];\r\n    if (col?.numeric) return (Number(va) - Number(vb)) * signo;\r\n    return String(va ?? '').localeCompare(String(vb ?? ''), 'es', { sensitivity: 'base' }) * signo;\r\n  });\r\n}\r\n"],
+  "mappings": "AAEO,SAAS,SAAS,MAAM,SAAS;AACtC,MAAI,MAAM,QAAQ,QAAQ,KAAK;AAC7B,WAAO,EAAE,KAAK,QAAQ,KAAK,KAAK,KAAK,QAAQ,QAAQ,SAAS,MAAM;AAAA,EACtE;AACA,SAAO,EAAE,KAAK,QAAQ,KAAK,KAAK,QAAQ,UAAU,SAAS,MAAM;AACnE;AAEO,SAAS,SAAS,MAAM,MAAM,SAAS;AAC5C,MAAI,CAAC,MAAM,IAAK,QAAO;AACvB,QAAM,MAAM,QAAQ,KAAK,CAAC,MAAM,EAAE,QAAQ,KAAK,GAAG;AAClD,QAAM,QAAQ,KAAK,QAAQ,QAAQ,IAAI;AAEvC,SAAO,CAAC,GAAG,IAAI,EAAE,KAAK,CAAC,GAAG,MAAM;AAC9B,UAAM,KAAK,EAAE,KAAK,GAAG;AACrB,UAAM,KAAK,EAAE,KAAK,GAAG;AACrB,QAAI,KAAK,QAAS,SAAQ,OAAO,EAAE,IAAI,OAAO,EAAE,KAAK;AACrD,WAAO,OAAO,MAAM,EAAE,EAAE,cAAc,OAAO,MAAM,EAAE,GAAG,MAAM,EAAE,aAAa,OAAO,CAAC,IAAI;AAAA,EAC3F,CAAC;AACH;",
+  "names": []
+}

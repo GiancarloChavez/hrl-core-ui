@@ -1,0 +1,2476 @@
+/* Tokens del handoff de diseño Convenio FED.
+   Todo cuelga de .hrl-nuevo: el frontend heredado carga style.css de forma
+   global y sus reglas invadirían estos componentes si no se acotan.
+
+   .hrl-portal lleva los mismos tokens pero sin fondo: lo usan los elementos
+   que se montan en document.body (modales, avisos), que necesitan las
+   variables y la tipografía, pero no deben pintar un fondo opaco. */
+
+@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+
+.hrl-nuevo,
+.hrl-portal {
+  --bg-app: #f9fafb;
+  --bg-surface: #ffffff;
+  --text-primary: #1c252e;
+  --text-secondary: #637381;
+  --text-disabled: #919eab;
+  --border: rgba(145, 158, 171, 0.2);
+  --border-soft: rgba(145, 158, 171, 0.16);
+  --row-hover: rgba(145, 158, 171, 0.06);
+  --head-bg: rgba(145, 158, 171, 0.08);
+  /* Versiones opacas, para las celdas fijas de la matriz: al ser sticky se
+     superponen a otras filas y con un color translúcido se transparentan. */
+  --head-solido: #eff1f3;
+  --fila-solida: #fbfcfc;
+
+  --brand-deep: #004b50;
+  --brand: #00a76f;
+  --brand-hover: #007867;
+  /* El verde profundo se usa como fondo y como texto; en oscuro el texto
+     necesita su propio tono, porque sobre fondo oscuro no se lee. */
+  --brand-texto: #004b50;
+  --toast-bg: #1c252e;
+  --action-blue: #1877f2;
+  /* Acento categórico, sin significado de estado: identifica módulos y series
+     (bitácora, derivaciones, histórico) que no son ni acción ni alerta. */
+  --violet: #8e33ff;
+  --danger: #ff5630;
+  --danger-text: #b71d18;
+  --warning: #ffab00;
+  --warning-text: #7a4100;
+  --info: #00b8d9;
+  --info-text: #006c9c;
+
+  /* Tonos de texto que acompañan a un fondo teñido pálido. En claro son
+     oscuros; en oscuro tienen que invertirse o el badge queda ilegible. */
+  --ok-text: #00544a;
+  --accent-text: #0a56ae;
+  --neutral-text: #4e5a64;
+
+  /* Identidad institucional del hospital. Son los colores del logotipo, no
+     del sistema de diseño: se usan solo en la marca (login y cabecera) y no
+     cambian con el tema, porque siempre van sobre fondo claro. */
+  --marca-verde: #3b5c38;
+  --marca-tierra: #8c3a10;
+  --marca-naranja: #963d0c;
+
+  /* Paleta categórica. No es un semáforo: son colores de identidad, sin
+     significado de estado. Cada serie mantiene el suyo en todos los paneles
+     para que el mismo tipo de cáncer se reconozca de un vistazo. El orden es
+     estable: cambiarlo reasigna colores en todo el sistema. */
+  --serie-1: #004b50;
+  --serie-2: #0c7bb3;
+  --serie-3: #b7560b;
+  --serie-4: #7a2fd1;
+  --serie-5: #c2185b;
+  --serie-6: #0e8c9c;
+  --serie-7: #4c8a16;
+  --serie-8: #d4451c;
+  --serie-9: #4b4fd6;
+  --serie-10: #96154c;
+  --serie-11: #5119b7;
+
+  --ease: cubic-bezier(0.33, 1, 0.68, 1);
+  --shadow-card: 0 0 2px rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12);
+  --shadow-card-hover: 0 0 2px rgba(145, 158, 171, 0.2), 0 20px 40px -8px rgba(145, 158, 171, 0.28);
+  --shadow-drawer: -24px 0 48px -12px rgba(145, 158, 171, 0.34);
+
+  /* ------------------------------------------------------------------
+     CAPA SEMANTICA
+
+     Vocabulario estable del sistema de diseno. Los tokens de arriba son la
+     implementacion (pueden cambiar de valor o de nombre); estos son el
+     contrato con el que se escriben los componentes y los proyectos nuevos.
+     Usa SIEMPRE estos, no los de arriba.
+     ------------------------------------------------------------------ */
+
+  /* Superficies y texto */
+  --background: var(--bg-app);
+  --foreground: var(--text-primary);
+  --surface: var(--bg-surface);
+  --surface-foreground: var(--text-primary);
+  --muted: var(--head-bg);
+  --muted-foreground: var(--text-secondary);
+  --subtle-foreground: var(--text-disabled);
+
+  /* Accion principal */
+  --primary: var(--brand);
+  --primary-foreground: #ffffff;
+  --primary-strong: var(--brand-deep);
+  --primary-hover: var(--brand-hover);
+  --primary-text: var(--brand-texto);
+
+  /* Accion secundaria / enlaces */
+  --accent: var(--action-blue);
+  --accent-foreground: #ffffff;
+
+  /* Semaforo de estado. Cada uno con su par de texto legible sobre su
+     propio fondo tenido. */
+  --destructive: var(--danger);
+  --destructive-foreground: #ffffff;
+  --destructive-text: var(--danger-text);
+  --warning-fg: var(--warning-text);
+  --success: var(--brand);
+  --success-text: var(--ok-text);
+  --info-fg: var(--info-text);
+
+  /* Fondos tenidos de cada estado. Existen para no escribir el mismo
+     `rgba(...)` suelto en cada aviso, y para poder subirles la opacidad en
+     modo oscuro, donde un velo del 8 % no se ve. */
+  --info-soft: rgba(0, 184, 217, 0.06);
+  --success-soft: rgba(0, 167, 111, 0.08);
+  --warning-soft: rgba(255, 171, 0, 0.10);
+  --destructive-soft: rgba(255, 86, 48, 0.08);
+  --neutral-soft: rgba(145, 158, 171, 0.10);
+
+  /* Bordes, campos y foco */
+  --input: var(--bg-surface);
+  --input-border: rgba(145, 158, 171, 0.32);
+  --ring: var(--brand);
+
+  /* --------------------------------------------------- escala de radios */
+  --radius: 12px;
+  --radius-xs: 6px;
+  --radius-sm: 8px;
+  --radius-md: 10px;
+  --radius-lg: 14px;
+  --radius-xl: 18px;
+  --radius-full: 999px;
+
+  /* -------------------------------------------------- escala de sombras */
+  --shadow-sm: 0 1px 2px rgba(28, 37, 46, 0.08);
+  --shadow-md: var(--shadow-card);
+  --shadow-lg: var(--shadow-card-hover);
+  --shadow-overlay: 0 32px 64px -16px rgba(28, 37, 46, 0.44);
+
+  /* ---------------------------------------------- escala tipografica */
+  --font-sans: 'Public Sans', Helvetica, Arial, sans-serif;
+  --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
+
+  --text-xs: 11px;
+  --text-sm: 12.5px;
+  --text-base: 13.5px;
+  --text-md: 14px;
+  --text-lg: 17px;
+  --text-xl: 22px;
+  --text-2xl: 30px;
+
+  --weight-regular: 400;
+  --weight-medium: 500;
+  --weight-semibold: 600;
+  --weight-bold: 700;
+
+  --leading-tight: 1.25;
+  --leading-normal: 1.5;
+  --leading-loose: 1.6;
+
+  /* --------------------------------------------------- transiciones */
+  --duration-fast: 0.2s;
+  --duration-base: 0.35s;
+  --duration-slow: 0.5s;
+  --transition-fast: var(--duration-fast) var(--ease);
+  --transition-base: var(--duration-base) var(--ease);
+  --transition-slow: var(--duration-slow) var(--ease);
+
+  /* Alto minimo de un objetivo tactil. El contrato de CLAUDE.md exige 40px
+     como minimo en cualquier control interactivo. */
+  --touch-target: 40px;
+  --touch-target-lg: 44px;
+
+  font-family: 'Public Sans', Helvetica, Arial, sans-serif;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased;
+}
+
+.hrl-nuevo { background: var(--bg-app); }
+
+.hrl-nuevo *,
+.hrl-nuevo *::before,
+.hrl-nuevo *::after,
+.hrl-portal *,
+.hrl-portal *::before,
+.hrl-portal *::after {
+  box-sizing: border-box;
+}
+
+@keyframes hrl-riseIn { from { opacity: 0; transform: translateY(14px); } to { opacity: 1; transform: none; } }
+@keyframes hrl-rowIn { from { opacity: 0; transform: translateY(-6px); } to { opacity: 1; transform: none; } }
+@keyframes hrl-panelIn { from { opacity: 0; transform: translateY(12px); } to { opacity: 1; transform: none; } }
+@keyframes hrl-barGrowX { from { transform: scaleX(0); } to { transform: scaleX(1); } }
+@keyframes hrl-fadeIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hrl-slideInRight { from { opacity: 0; transform: translateX(40px); } to { opacity: 1; transform: none; } }
+
+/* Salidas. Más cortas que las entradas: al cerrar algo, la espera se nota. */
+@keyframes hrl-fadeOut { to { opacity: 0; } }
+@keyframes hrl-panelOut { to { opacity: 0; transform: translateY(-8px); } }
+@keyframes hrl-modalOut { to { opacity: 0; transform: translateY(10px) scale(0.985); } }
+@keyframes hrl-slideOutRight { to { opacity: 0; transform: translateX(44px); } }
+@keyframes hrl-toastIn {
+  from { opacity: 0; transform: translateX(-50%) translateY(14px); }
+  to { opacity: 1; transform: translateX(-50%); }
+}
+@keyframes hrl-toastOut { to { opacity: 0; transform: translateX(-50%) translateY(12px); } }
+@keyframes hrl-rowOut { to { opacity: 0; transform: translateY(-6px); } }
+@keyframes hrl-celdaIn { from { opacity: 0; } to { opacity: 1; } }
+@keyframes hrl-bellRing {
+  0%, 70%, 100% { transform: rotate(0); }
+  75% { transform: rotate(12deg); }
+  85% { transform: rotate(-10deg); }
+  95% { transform: rotate(5deg); }
+}
+
+/* El handoff pide respetarlo explícitamente; los prototipos no lo hacían. */
+@media (prefers-reduced-motion: reduce) {
+  .hrl-nuevo *,
+  .hrl-nuevo *::before,
+  .hrl-nuevo *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
+}
+
+/* ---------------------------------------------------------------- UiStatCard */
+
+.hrl-stat {
+  background: var(--bg-surface);
+  border: none;
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 18px 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+  width: 100%;
+  font: inherit;
+  color: inherit;
+  text-align: left;
+  transition: transform 0.5s var(--ease), box-shadow 0.5s var(--ease);
+  animation: hrl-riseIn 0.5s var(--ease) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.hrl-stat:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card-hover);
+}
+
+/* Solo cuando la tarjeta lleva `onClick` (un botón real, no un `article`):
+   el cursor y el foco visible son la única pista de que se puede pulsar, ya
+   que por lo demás se ve igual a una tarjeta informativa. */
+.hrl-stat--clic { cursor: pointer; }
+.hrl-stat--clic:focus-visible { outline: 2px solid var(--ring); outline-offset: 2px; }
+
+.hrl-stat__top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 10px;
+}
+
+.hrl-stat__label { font-size: 13px; color: var(--text-secondary); }
+
+.hrl-stat__label--info {
+  cursor: help;
+  border-radius: 6px;
+  outline-offset: 3px;
+  transition: color 0.35s var(--ease);
+}
+
+.hrl-stat__label--info svg { color: var(--text-disabled); flex: 0 0 auto; }
+.hrl-stat__label--info:hover,
+.hrl-stat__label--info:hover svg,
+.hrl-stat__label--info:focus-visible { color: var(--text-primary); }
+
+.hrl-stat__icon {
+  width: 30px;
+  height: 30px;
+  flex: 0 0 auto;
+  border-radius: 9px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--sev) 14%, transparent);
+  color: var(--sev);
+}
+
+.hrl-stat__value { font-size: 28px; font-weight: 700; letter-spacing: -0.9px; line-height: 1.1; }
+
+.hrl-stat__track {
+  height: 6px;
+  border-radius: 4px;
+  background: rgba(145, 158, 171, 0.16);
+  overflow: hidden;
+}
+
+.hrl-stat__bar {
+  display: block;
+  height: 100%;
+  width: var(--pct, 0%);
+  background: var(--sev);
+  border-radius: 4px;
+  transform-origin: left;
+  animation: hrl-barGrowX 0.85s var(--ease) both;
+  animation-delay: calc(var(--delay, 0ms) + 120ms);
+}
+
+.hrl-stat__note { font-size: 12.5px; color: var(--text-disabled); }
+
+/* ------------------------------------------------------------------ UiBadge */
+
+.hrl-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+  width: fit-content;
+  font-size: 12.5px;
+  font-weight: 700;
+  padding: 5px 11px;
+  border-radius: 8px;
+  background: var(--tone-bg);
+  color: var(--tone-fg);
+}
+
+.hrl-badge svg { flex: 0 0 auto; }
+
+/* ------------------------------------------------------------------ UiField */
+
+.hrl-field {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+}
+
+.hrl-field__label {
+  display: flex;
+  align-items: center;
+  gap: 7px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: var(--text-secondary);
+}
+
+.hrl-field__req { color: var(--danger-text); font-weight: 700; }
+
+.hrl-field__control,
+.hrl-field__wrap {
+  min-height: 42px;
+  padding: 0 12px;
+  border-radius: 10px;
+  border: 1px solid rgba(145, 158, 171, 0.32);
+  background: var(--bg-surface);
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.35s var(--ease), background 0.4s var(--ease);
+}
+
+.hrl-field__control { cursor: pointer; }
+.hrl-field__wrap { display: flex; align-items: center; gap: 8px; }
+
+.hrl-field__control:focus,
+.hrl-field__wrap:focus-within {
+  border-color: var(--brand);
+}
+
+.hrl-field--error .hrl-field__control,
+.hrl-field--error .hrl-field__wrap {
+  border-color: var(--danger);
+  background: rgba(255, 86, 48, 0.04);
+}
+
+.hrl-field__input {
+  flex: 1;
+  min-width: 0;
+  border: none;
+  outline: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--text-primary);
+}
+
+.hrl-field__error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 12.5px;
+  color: var(--danger-text);
+}
+
+.hrl-field__hint { font-size: 12px; color: var(--text-disabled); }
+
+/* ------------------------------------------------------------- UiPagination */
+
+.hrl-pag {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 14px 24px;
+  background: var(--bg-surface);
+  backdrop-filter: blur(8px);
+  border-top: 1px solid var(--border);
+}
+
+.hrl-pag__counter { font-size: 13px; color: var(--text-secondary); }
+.hrl-pag__pages { display: flex; align-items: center; gap: 6px; }
+
+.hrl-pag__btn {
+  min-width: var(--touch-target);
+  min-height: var(--touch-target);
+  padding: 0 10px;
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 13.5px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: rgba(145, 158, 171, 0.1);
+  transition: background 0.4s var(--ease), color 0.4s var(--ease), opacity 0.4s var(--ease);
+}
+
+.hrl-pag__btn--on {
+  font-weight: 700;
+  color: #fff;
+  background: var(--accent, var(--action-blue));
+}
+
+.hrl-pag__btn:disabled { opacity: 0.45; cursor: default; }
+
+/* ------------------------------------------------------------ UiSectionCard */
+
+.hrl-section {
+  display: block;
+  background: var(--bg-surface);
+  border-radius: 16px;
+  box-shadow: var(--shadow-card);
+  padding: 24px;
+  animation: hrl-riseIn 0.55s var(--ease) both;
+}
+
+.hrl-section--flush { padding: 0; overflow: hidden; }
+
+.hrl-section__head {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  flex-wrap: wrap;
+}
+
+.hrl-section--flush .hrl-section__head { padding: 20px 24px 12px; }
+
+.hrl-section__title-row {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 0;
+}
+
+.hrl-section__accent {
+  width: 6px;
+  height: 22px;
+  border-radius: 4px;
+  background: var(--accent);
+  flex: 0 0 auto;
+}
+
+.hrl-section__title { margin: 0; font-size: 17px; font-weight: 700; color: var(--text-primary); }
+.hrl-section__subtitle { margin: 6px 0 0; font-size: 13.5px; color: var(--text-secondary); }
+.hrl-section__total { font-size: 13.5px; color: var(--text-secondary); }
+
+.hrl-section__acciones {
+  display: flex;
+  align-items: center;
+  flex: 0 0 auto;
+  gap: 8px;
+}
+
+/* ----------------------------------------------------------------- AppShell */
+
+.hrl-shell {
+  display: flex;
+  min-height: 100vh;
+  min-width: 1440px;
+  background: var(--bg-app);
+}
+
+/* Fijo, no sticky. Con `sticky` el menú quedaba atado al alto del contenido:
+   al cambiar de módulo, desplegar una fila o abrir un diálogo, la página
+   cambiaba de alto y el navegador reajustaba el scroll, con lo que el menú
+   parecía moverse de arriba abajo. Fijo al viewport no se mueve nunca. */
+.hrl-sidebar {
+  position: fixed;
+  top: 0;
+  left: 0;
+  z-index: 30;
+  height: 100vh;
+  width: 260px;
+  transition: width 0.42s var(--ease);
+  overflow: hidden;
+  background: var(--bg-surface);
+  border-right: 1px solid var(--border-soft);
+  display: flex;
+  flex-direction: column;
+}
+
+/* El logo viene recortado al contenido, así que el aire lo da el padding y no
+   el propio PNG. */
+.hrl-sidebar__logo {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 11px 20px 9px;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.hrl-sidebar__logo img { width: 158px; height: auto; display: block; }
+
+.hrl-sidebar__group-label,
+.hrl-sidebar__section-label {
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.8px;
+  color: var(--text-disabled);
+  text-transform: uppercase;
+}
+
+.hrl-sidebar__section-label { padding: 12px 20px 6px; }
+.hrl-sidebar__group-label { padding: 10px 20px 4px; }
+
+.hrl-sidebar__nav {
+  flex: 1;
+  overflow-y: auto;
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+}
+
+.hrl-sidebar__group { display: flex; flex-direction: column; gap: 2px; }
+
+/* Sidebar replegado: quedan solo los iconos, y la etiqueta de cada módulo
+   pasa a un tooltip para que el menú siga siendo legible. */
+.hrl-shell--plegado .hrl-sidebar { width: 76px; }
+.hrl-shell--plegado .hrl-sidebar__logo { padding: 9px 10px 8px; }
+.hrl-shell--plegado .hrl-sidebar__logo img { width: 54px; }
+.hrl-shell--plegado .hrl-sidebar__section-label,
+.hrl-shell--plegado .hrl-sidebar__group-label { display: none; }
+
+/* Sin las etiquetas de grupo hace falta otra separación entre bloques. */
+.hrl-shell--plegado .hrl-sidebar__group + .hrl-sidebar__group {
+  border-top: 1px dashed var(--border-soft);
+  padding-top: 12px;
+}
+
+.hrl-shell--plegado .hrl-nav-item { justify-content: center; gap: 0; padding: 13px 0; }
+.hrl-shell--plegado .hrl-nav-item__label { display: none; }
+
+.hrl-nav-item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 13px 20px;
+  border: none;
+  border-left: 3px solid transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  background: transparent;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+
+.hrl-nav-item:hover { background: rgba(145, 158, 171, 0.1); }
+
+.hrl-nav-item--on {
+  font-weight: 700;
+  color: var(--brand-texto);
+  background: rgba(0, 167, 111, 0.08);
+  border-left-color: var(--brand-texto);
+}
+
+.hrl-nav-item svg { flex: 0 0 auto; }
+.hrl-nav-item__label { flex: 1; text-align: left; }
+
+.hrl-main {
+  flex: 1;
+  min-width: 0;
+  display: flex;
+  flex-direction: column;
+  /* El menú está fuera de flujo: el hueco lo deja este margen. */
+  margin-left: 260px;
+  transition: margin-left 0.42s var(--ease);
+}
+
+.hrl-shell--plegado .hrl-main { margin-left: 76px; }
+
+/* Reserva el canal de la barra de desplazamiento: sin esto, un panel que pasa
+   de necesitar scroll a no necesitarlo desplaza todo el contenido a lo ancho. */
+html { scrollbar-gutter: stable; }
+
+/* Esta hoja se carga sola, sin ningún reset: sin esto el <body> conserva su
+   margen de 8px y su fondo blanco, que en modo oscuro se ve como un marco
+   alrededor de toda la aplicación. */
+body { margin: 0; background: #f9fafb; }
+
+/* Opaca y con su propia sombra: antes era casi del mismo tono que el fondo de
+   la aplicación (blanco sobre blanco translúcido), así que al hacer scroll el
+   contenido se transparentaba bajo ella y la diferencia desaparecía. Con
+   `--surface` sólido y una sombra fija, el borde queda siempre visible, se
+   mueva lo que se mueva debajo. */
+.hrl-topbar {
+  position: sticky;
+  top: 0;
+  z-index: 40;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.hrl-topbar__row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  height: 52px;
+  padding: 0 32px;
+  border-bottom: 1px solid rgba(145, 158, 171, 0.14);
+}
+
+.hrl-topbar__brand { font-size: 15px; font-weight: 700; letter-spacing: -0.2px; white-space: nowrap; }
+
+.hrl-topbar__chip {
+  font-size: 11px;
+  font-weight: 700;
+  background: rgba(145, 158, 171, 0.16);
+  padding: 2px 8px;
+  border-radius: 6px;
+}
+
+.hrl-topbar__spacer { flex: 1; }
+
+/* Botón de replegar el menú. Vive en la barra superior, junto al borde del
+   sidebar, para que la acción quede al lado de lo que afecta. */
+.hrl-plegar {
+  width: var(--touch-target);
+  height: var(--touch-target);
+  margin-right: 6px;
+  flex: 0 0 auto;
+  border: none;
+  border-radius: 9px;
+  background: rgba(145, 158, 171, 0.12);
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.35s var(--ease), color 0.35s var(--ease);
+}
+
+.hrl-plegar:hover { background: rgba(0, 167, 111, 0.16); color: var(--brand-hover); }
+.hrl-plegar svg { transition: transform 0.45s var(--ease); }
+.hrl-plegar--plegado svg { transform: rotate(180deg); }
+
+.hrl-bell {
+  position: relative;
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-primary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease);
+}
+
+.hrl-bell:hover { background: rgba(145, 158, 171, 0.12); }
+.hrl-bell--on { background: rgba(0, 167, 111, 0.14); color: var(--brand-hover); }
+.hrl-bell svg { animation: hrl-bellRing 5s ease-in-out infinite; transform-origin: 50% 20%; }
+
+.hrl-bell__badge {
+  position: absolute;
+  top: 4px;
+  right: 4px;
+  min-width: 18px;
+  height: 18px;
+  padding: 0 4px;
+  border-radius: 9px;
+  background: var(--danger);
+  color: #fff;
+  font-size: 10px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border: 2px solid var(--bg-app);
+}
+
+.hrl-avatar {
+  width: var(--touch-target);
+  height: var(--touch-target);
+  margin-left: 4px;
+  border-radius: 50%;
+  border: 2px solid rgba(0, 167, 111, 0.48);
+  padding: 2px;
+  background: transparent;
+  cursor: pointer;
+  transition: transform 0.45s var(--ease);
+}
+
+.hrl-avatar:hover { transform: scale(1.07); }
+
+.hrl-avatar__initials {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--brand-deep);
+  color: #fff;
+  font-size: 13px;
+  font-weight: 700;
+}
+
+/* Con 4px abajo, el subtítulo quedaba rozando el borde de la barra y lo
+   primero del módulo se leía como parte del encabezado. Los controles de la
+   ranura se centran contra el bloque título + subtítulo, no contra su base:
+   alineados abajo parecían colgar del subtítulo. */
+.hrl-pagehead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 12px 20px;
+  padding: 16px 32px 18px;
+}
+
+.hrl-pagehead h1 { margin: 0; font-size: 22px; font-weight: 700; letter-spacing: -0.4px; }
+.hrl-pagehead p { margin: 4px 0 0; font-size: 13.5px; color: var(--text-secondary); }
+
+/* Separación fija entre la barra y el módulo. Va aquí y no en cada panel
+   (`.hrl-panel` arranca en 0) para que todos los módulos respiren igual. */
+.hrl-content {
+  flex: 1;
+  min-width: 0;
+  padding-top: 28px;
+  animation: hrl-panelIn 0.34s var(--ease) both;
+}
+
+/* ------------------------------------------------------------------ Drawers */
+
+.hrl-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(28, 37, 46, 0.32);
+  backdrop-filter: blur(2px);
+  z-index: 80;
+  border: none;
+  animation: hrl-fadeIn 0.3s ease both;
+}
+
+.hrl-drawer {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  max-width: 92vw;
+  background: var(--bg-surface);
+  z-index: 90;
+  display: flex;
+  flex-direction: column;
+  box-shadow: var(--shadow-drawer);
+  animation: hrl-slideInRight 0.42s var(--ease) both;
+}
+
+.hrl-drawer--notif { width: 420px; }
+.hrl-drawer--profile { width: 380px; }
+
+.hrl-drawer__head {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 20px 16px 12px 24px;
+}
+
+.hrl-drawer__head h3 { margin: 0; flex: 1; font-size: 18px; font-weight: 700; }
+
+.hrl-drawer__link {
+  border: none;
+  background: transparent;
+  font-family: inherit;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--action-blue);
+  cursor: pointer;
+  padding: 6px 10px;
+  border-radius: 8px;
+  transition: background 0.4s var(--ease);
+}
+
+.hrl-drawer__link:hover { background: rgba(24, 119, 242, 0.1); }
+.hrl-drawer__link:disabled { opacity: 0.45; cursor: default; }
+
+.hrl-iconbtn {
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border: none;
+  border-radius: 50%;
+  background: transparent;
+  color: var(--text-secondary);
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: background 0.4s var(--ease);
+}
+
+.hrl-iconbtn:hover { background: rgba(145, 158, 171, 0.14); }
+
+.hrl-drawer__tabs {
+  display: flex;
+  gap: 6px;
+  padding: 0 20px 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hrl-tab {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 10px 8px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+
+.hrl-tab--on { font-weight: 700; color: var(--text-primary); border-bottom-color: var(--brand-texto); }
+
+.hrl-tab__count {
+  font-size: 11.5px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(145, 158, 171, 0.16);
+  color: var(--text-secondary);
+}
+
+.hrl-tab--on .hrl-tab__count { background: var(--brand-deep); color: #fff; }
+
+.hrl-drawer__body { flex: 1; overflow-y: auto; }
+.hrl-drawer__foot { padding: 14px 20px; border-top: 1px solid var(--border); }
+
+.hrl-drawer__btn {
+  width: 100%;
+  border: none;
+  background: rgba(145, 158, 171, 0.1);
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 11px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.4s var(--ease);
+}
+
+.hrl-drawer__btn:hover { background: rgba(145, 158, 171, 0.2); }
+
+.hrl-profile__head {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+  padding: 8px 24px 24px;
+  border-bottom: 1px dashed rgba(145, 158, 171, 0.24);
+}
+
+.hrl-profile__ring {
+  width: 104px;
+  height: 104px;
+  border-radius: 50%;
+  padding: 5px;
+  background: conic-gradient(from 180deg, #00a76f, #5be49b, #00b8d9, #00a76f);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.hrl-profile__initials {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  background: var(--brand-deep);
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 30px;
+  font-weight: 700;
+  letter-spacing: -1px;
+}
+
+.hrl-profile__name { font-size: 19px; font-weight: 700; margin-top: 10px; }
+.hrl-profile__mail { font-size: 14px; color: var(--text-secondary); }
+
+.hrl-profile__menu {
+  flex: 1;
+  overflow-y: auto;
+  padding: 10px 12px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.hrl-profile__item {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  width: 100%;
+  padding: 12px 14px;
+  border: none;
+  border-radius: 10px;
+  background: transparent;
+  font-family: inherit;
+  font-size: 14.5px;
+  color: var(--text-secondary);
+  cursor: pointer;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease), transform 0.4s var(--ease);
+}
+
+.hrl-profile__item:hover {
+  background: rgba(145, 158, 171, 0.1);
+  color: var(--text-primary);
+  transform: translateX(3px);
+}
+
+.hrl-profile__item svg { color: var(--text-disabled); }
+.hrl-profile__item span { flex: 1; text-align: left; }
+
+.hrl-profile__foot { padding: 16px 20px 22px; border-top: 1px dashed rgba(145, 158, 171, 0.24); }
+
+.hrl-signout {
+  width: 100%;
+  border: none;
+  background: rgba(255, 86, 48, 0.12);
+  color: var(--danger-text);
+  font-family: inherit;
+  font-size: 14.5px;
+  font-weight: 700;
+  padding: 12px;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: background 0.4s var(--ease);
+}
+
+.hrl-signout:hover { background: rgba(255, 86, 48, 0.22); }
+
+/* -------------------------------------------------------------- EmptyState */
+
+.hrl-empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  text-align: center;
+  gap: 12px;
+  padding: 56px 32px;
+}
+
+.hrl-empty__icon {
+  width: 64px;
+  height: 64px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--tone, #919eab) 10%, transparent);
+  color: var(--tone, #919eab);
+}
+
+.hrl-empty__title { font-size: 16px; font-weight: 700; }
+.hrl-empty__body { font-size: 13.5px; color: var(--text-secondary); max-width: 420px; margin: 0; }
+
+/* ---------------------------------------------------------------- DataTable */
+
+/* Con muchas columnas (el detalle de un indicador o de una regla de
+   consistencia llega a doce) `width: 100%` forzaba el navegador a encoger
+   cada celda hasta desfigurar el contenido, en vez de dejar que la tabla
+   creciera y desplazarse horizontalmente. `min-width` conserva el ancho
+   completo en las tablas angostas y deja crecer a las anchas. */
+.hrl-table-wrap { width: 100%; overflow-x: auto; }
+
+.hrl-table {
+  min-width: 100%;
+  border-collapse: collapse;
+  font-size: 13.5px;
+}
+
+.hrl-table thead th {
+  background: var(--head-bg);
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-secondary);
+  padding: 11px 14px;
+  text-align: left;
+  white-space: nowrap;
+  border-bottom: 1px solid var(--border);
+}
+
+.hrl-table__head-cell { display: inline-flex; align-items: center; gap: 6px; }
+
+/* Fila de grupos sobre la cabecera: «SIS · Convenios · Pagados» encima de sus
+   tres columnas de servicio. Solo los tramos con rótulo llevan línea inferior,
+   para que se lea qué columnas abarca cada uno. */
+.hrl-table thead tr.hrl-table__grupos th {
+  text-align: center;
+  padding-block: 9px 5px;
+  border-bottom: none;
+}
+.hrl-table thead tr.hrl-table__grupos th[scope='colgroup'] {
+  border-bottom: 1px solid var(--border);
+  color: var(--foreground);
+}
+
+.hrl-table__sort {
+  border: none;
+  background: transparent;
+  padding: 0;
+  margin: 0;
+  font: inherit;
+  color: inherit;
+  cursor: pointer;
+  display: inline-flex;
+  align-items: center;
+}
+
+.hrl-table tbody td {
+  padding: 9px 14px;
+  border-bottom: 1px dashed var(--border);
+  /* Solo opacidad: el desplazamiento vertical hacía que cada cambio de página
+     o de filtro pareciera un salto de la tabla entera. */
+  animation: hrl-celdaIn 0.32s var(--ease) both;
+  vertical-align: middle;
+}
+
+.hrl-table tbody tr { transition: background 0.35s var(--ease); }
+.hrl-table tbody tr:hover { background: var(--row-hover); }
+
+.hrl-table__empty {
+  padding: 32px 14px !important;
+  text-align: center;
+  color: var(--text-secondary);
+}
+
+.hrl-mono { font-family: 'IBM Plex Mono', ui-monospace, monospace; font-size: 12.5px; }
+
+.hrl-legend {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px;
+  padding: 12px 16px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+  border-top: 1px solid var(--border);
+}
+
+.hrl-legend span { display: inline-flex; align-items: center; gap: 7px; }
+
+/* ------------------------------------------------------------------ InfoTip */
+
+.hrl-tip {
+  position: fixed;
+  transform: translate(-50%, -100%);
+  background: #1c252e;
+  color: rgba(255, 255, 255, 0.74);
+  font-family: 'Public Sans', Helvetica, Arial, sans-serif;
+  font-size: 13.5px;
+  line-height: 1.5;
+  padding: 14px 18px;
+  border-radius: 14px;
+  max-width: 320px;
+  box-shadow: 0 18px 36px -10px rgba(28, 37, 46, 0.55);
+  pointer-events: none;
+  z-index: 220;
+  animation: hrl-tipIn 0.22s var(--ease) both;
+  transition: left 0.12s linear, top 0.12s linear;
+}
+
+.hrl-tip__title {
+  display: block;
+  color: #fff;
+  font-size: 14px;
+  font-weight: 700;
+  letter-spacing: -0.1px;
+  margin-bottom: 5px;
+}
+
+@keyframes hrl-tipIn {
+  from { opacity: 0; transform: translate(-50%, calc(-100% - 4px)) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+}
+
+/* Volteado: sin sitio arriba del punto de anclaje (cerca del borde superior
+   de la ventana), el tooltip cuelga hacia abajo en vez de cortarse. */
+.hrl-tip--abajo { transform: translate(-50%, 12px); animation-name: hrl-tipInAbajo; }
+
+@keyframes hrl-tipInAbajo {
+  from { opacity: 0; transform: translate(-50%, calc(12px + 4px)) scale(0.96); }
+  to { opacity: 1; transform: translate(-50%, 12px) scale(1); }
+}
+
+/* -------------------------------------------------------------------- Modal */
+
+/* Se monta en document.body, así que cubre la ventana entera — incluidos el
+   sidebar y la barra superior — y el diálogo queda centrado respecto a la
+   página, no al módulo. */
+.hrl-modal-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 200;
+  background: rgba(28, 37, 46, 0.42);
+  backdrop-filter: blur(3px);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px;
+  overflow-y: auto;
+  animation: hrl-fadeIn 0.3s ease both;
+}
+
+.hrl-modal {
+  position: relative;
+  width: 100%;
+  /* Con un diálogo más alto que la ventana, el scroll lo asume el overlay y el
+     diálogo se ancla arriba en vez de recortarse por ambos extremos. */
+  margin: auto;
+  background: var(--bg-surface);
+  border-radius: 18px;
+  box-shadow: 0 32px 64px -16px rgba(28, 37, 46, 0.44);
+  animation: hrl-modalIn 0.38s var(--ease) both;
+}
+
+@keyframes hrl-modalIn {
+  from { opacity: 0; transform: translateY(16px) scale(0.985); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Fijo en la esquina del diálogo, no en el flujo junto al título: así no se
+   desplaza cuando el título ocupa dos líneas o lleva badge encima. */
+.hrl-modal__cerrar {
+  position: absolute;
+  top: 14px;
+  right: 14px;
+  z-index: 1;
+}
+
+.hrl-modal__head {
+  display: flex;
+  align-items: flex-start;
+  gap: 16px;
+  padding: 22px 56px 14px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hrl-modal__title { margin: 0; font-size: 18px; font-weight: 700; }
+.hrl-modal__subtitle { margin: 6px 0 0; font-size: 13.5px; color: var(--text-secondary); }
+.hrl-modal__body { padding: 20px 24px; }
+.hrl-modal__foot {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  padding: 16px 24px 20px;
+  border-top: 1px solid var(--border);
+}
+
+/* Paginador colocado antes del contenido en vez de después: el paginador de
+   tabla se pega al fondo de la ventana al desplazarse (.hrl-pag), algo pensado
+   para cuando cierra una lista, no para cuando la abre. Aquí se ancla en su
+   sitio y el borde pasa de arriba a abajo. */
+.hrl-modal__paginacion-superior .hrl-pag {
+  position: static;
+  border-top: none;
+  border-bottom: 1px solid var(--border);
+  margin-bottom: 16px;
+  padding: 0 0 14px;
+}
+
+/* -------------------------------------------------------------------- Toast */
+
+.hrl-toast {
+  position: fixed;
+  bottom: 28px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 240;
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  background: var(--toast-bg);
+  color: #fff;
+  font-size: 13.5px;
+  font-weight: 600;
+  padding: 12px 18px;
+  border-radius: 12px;
+  box-shadow: 0 18px 36px -10px rgba(28, 37, 46, 0.5);
+  animation: hrl-toastIn 0.4s var(--ease) both;
+}
+
+/* ------------------------------------------------------------------ Botones */
+
+.hrl-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  min-height: 42px;
+  padding: 0 16px;
+  border: none;
+  border-radius: 10px;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 700;
+  cursor: pointer;
+  transition: background 0.4s var(--ease), color 0.4s var(--ease), opacity 0.4s var(--ease);
+}
+
+.hrl-btn--cta { background: #00695c; color: #fff; }
+.hrl-btn--cta:hover { background: var(--brand-deep); }
+.hrl-btn--blue { background: var(--action-blue); color: #fff; }
+.hrl-btn--blue:hover { background: #0c68e9; }
+.hrl-btn--ghost { background: rgba(145, 158, 171, 0.12); color: var(--text-primary); }
+.hrl-btn--ghost:hover { background: rgba(145, 158, 171, 0.22); }
+.hrl-btn--peligro { background: rgba(255, 86, 48, 0.14); color: var(--danger-text); }
+.hrl-btn--peligro:hover { background: rgba(255, 86, 48, 0.26); }
+.hrl-btn:disabled { opacity: 0.5; cursor: default; }
+
+.hrl-btn-mini {
+  display: inline-flex;
+  align-items: center;
+  /* «Mini» es el peso visual, no el objetivo táctil: el alto sigue siendo el
+     mínimo del contrato, porque es un botón real de la tabla. */
+  min-height: var(--touch-target);
+  gap: 6px;
+  border: 1px solid rgba(145, 158, 171, 0.32);
+  background: var(--bg-surface);
+  font-family: inherit;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--text-primary);
+  padding: 6px 11px;
+  border-radius: 9px;
+  cursor: pointer;
+  /* Un botón nunca parte su etiqueta en dos líneas: engorda la fila. */
+  white-space: nowrap;
+  transition: background 0.4s var(--ease);
+}
+
+.hrl-btn { white-space: nowrap; }
+
+.hrl-btn-mini:hover { background: rgba(145, 158, 171, 0.1); }
+
+/* Ocupa siempre su celda: con display:none el grid de la fila se descuadra. */
+.hrl-trunc {
+  display: block;
+  max-width: 420px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+/* Barra de filtros de ancho completo. Rejilla explícita en vez de auto-fit,
+   que repartía los campos de forma imprevisible y dejaba el último solo en
+   una fila con un hueco al lado.
+
+   Con 6 campos en 4 columnas quedan dos filas exactas y los botones ocupan el
+   hueco libre de la segunda (columnas 3 y 4) en lugar de bajar a una tercera. */
+.hrl-filtros-barra {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 16px;
+  /* Los campos arrancan arriba para que sus etiquetas queden alineadas; si se
+     alinean por abajo, cualquier campo con una línea extra descuadra la fila. */
+  align-items: start;
+}
+
+.hrl-filtros-barra__acciones {
+  grid-column: 3 / -1;
+  /* Los botones sí bajan, para quedar a la altura de los controles. */
+  align-self: end;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 10px;
+  flex-wrap: wrap;
+}
+
+/* ---------------------------------------------- Pestañas dentro de un panel */
+
+.hrl-tabs {
+  display: flex;
+  gap: 4px;
+  flex-wrap: wrap;
+  margin: 0 0 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hrl-tabs__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  font-family: inherit;
+  font-size: 14px;
+  font-weight: 500;
+  color: var(--text-secondary);
+  padding: 12px 14px;
+  border-bottom: 2px solid transparent;
+  transition: color 0.4s var(--ease), border-color 0.4s var(--ease);
+}
+
+.hrl-tabs__btn:hover { color: var(--text-primary); }
+.hrl-tabs__btn--on { font-weight: 700; color: var(--text-primary); border-bottom-color: var(--brand); }
+
+/* -------------------------------------------------------- Entrada compacta */
+
+.hrl-input-mini {
+  width: 108px;
+  min-height: var(--touch-target);
+  padding: 0 10px;
+  border-radius: 9px;
+  border: 1px solid rgba(145, 158, 171, 0.32);
+  background: var(--bg-surface);
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.35s var(--ease);
+}
+
+.hrl-input-mini:focus { border-color: var(--brand); }
+
+.hrl-select-mini {
+  min-height: var(--touch-target);
+  padding: 0 10px;
+  border-radius: 9px;
+  border: 1px solid rgba(145, 158, 171, 0.32);
+  background: var(--bg-surface);
+  font-family: inherit;
+  font-size: 13.5px;
+  color: var(--text-primary);
+  cursor: pointer;
+}
+
+.hrl-error {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(255, 86, 48, 0.08);
+  border: 1px solid rgba(255, 86, 48, 0.24);
+  color: var(--danger-text);
+  font-size: 13.5px;
+  font-weight: 600;
+}
+
+.hrl-aviso {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+  padding: 16px 18px;
+  border-radius: 12px;
+  background: rgba(255, 171, 0, 0.1);
+  border: 1px solid rgba(255, 171, 0, 0.28);
+  color: var(--warning-text);
+  animation: hrl-riseIn 0.5s var(--ease) both;
+}
+
+.hrl-aviso svg { flex: 0 0 auto; margin-top: 1px; }
+.hrl-aviso strong { display: block; font-size: 14px; font-weight: 700; }
+.hrl-aviso p { margin: 5px 0 0; font-size: 13px; line-height: 1.5; }
+
+@keyframes hrl-vaiven {
+  0% { margin-left: 0; }
+  50% { margin-left: 65%; }
+  100% { margin-left: 0; }
+}
+
+.hrl-check {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  cursor: pointer;
+}
+
+.hrl-check input { margin-top: 2px; width: 17px; height: 17px; accent-color: var(--brand); }
+.hrl-check span { color: var(--text-secondary); }
+
+/* ----------------------------------------------------------------- Gráficos */
+
+.hrl-gauge { position: relative; display: flex; justify-content: center; }
+.hrl-gauge svg { width: 100%; max-width: 200px; display: block; }
+
+.hrl-gauge__arco {
+  animation: hrl-gaugeIn 0.9s var(--ease) both;
+  transition: stroke-dashoffset 0.6s var(--ease);
+}
+
+@keyframes hrl-gaugeIn {
+  from { stroke-dashoffset: 251.3; }
+}
+
+.hrl-gauge__valor {
+  position: absolute;
+  left: 50%;
+  bottom: 6px;
+  transform: translateX(-50%);
+  font-size: 26px;
+  font-weight: 700;
+  letter-spacing: -0.9px;
+}
+
+.hrl-spark {
+  display: inline-flex;
+  align-items: flex-end;
+  gap: 2px;
+  height: 30px;
+}
+
+.hrl-spark__barra {
+  width: 6px;
+  border-radius: 2px;
+  animation: hrl-barGrow 0.8s var(--ease) both;
+  transform-origin: bottom;
+}
+
+@keyframes hrl-barGrow {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+.hrl-barras { display: flex; gap: 12px; }
+
+.hrl-barras__eje {
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  font-size: 11.5px;
+  color: var(--text-disabled);
+  padding-bottom: 22px;
+  flex: 0 0 auto;
+  text-align: right;
+  min-width: 30px;
+}
+
+.hrl-barras__lienzo {
+  flex: 1;
+  display: flex;
+  align-items: flex-end;
+  gap: 10px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hrl-barras__col {
+  flex: 1;
+  min-width: 0;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  align-items: center;
+  gap: 6px;
+}
+
+.hrl-barras__pila {
+  width: 60%;
+  max-width: 34px;
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-end;
+  border-radius: 5px 5px 0 0;
+  overflow: hidden;
+}
+
+/* Cada tramo entra por su cuenta: el retardo lo calcula el componente con el
+   mes y la posición en la pila, así la barra se construye de abajo arriba y
+   las columnas se encadenan de izquierda a derecha. */
+.hrl-barras__tramo {
+  display: block;
+  width: 100%;
+  animation: hrl-barGrow 0.7s var(--ease) both;
+  animation-delay: var(--retardo, 0ms);
+  transform-origin: bottom;
+  transition: filter 0.3s var(--ease), opacity 0.3s var(--ease), box-shadow 0.3s var(--ease);
+}
+
+/* Al apuntar un tramo se atenúan los demás de la misma pila: en una barra
+   apilada es la única manera de aislar visualmente un tramo fino. */
+.hrl-barras__pila:hover .hrl-barras__tramo { opacity: 0.42; }
+
+.hrl-barras__pila .hrl-barras__tramo:hover {
+  opacity: 1;
+  filter: brightness(1.12) saturate(1.08);
+  box-shadow: inset 0 0 0 1.5px rgba(255, 255, 255, 0.9);
+}
+
+.hrl-barras__col:hover .hrl-barras__etiqueta { color: var(--text-primary); font-weight: 700; }
+
+.hrl-barras__etiqueta {
+  font-size: 12px;
+  color: var(--text-secondary);
+  padding-top: 4px;
+}
+
+.hrl-barras__col--vacia { flex: 0 0 auto; width: 90px; }
+
+.hrl-barras__vacio {
+  width: 100%;
+  height: 100%;
+  border-radius: 8px;
+  border: 1px dashed rgba(145, 158, 171, 0.4);
+  background: rgba(145, 158, 171, 0.05);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 11px;
+  color: var(--text-disabled);
+  padding: 6px;
+}
+
+.hrl-reparto {
+  display: block;
+  height: 8px;
+  border-radius: 4px;
+  background: rgba(145, 158, 171, 0.18);
+  overflow: hidden;
+}
+
+.hrl-reparto__relleno {
+  display: block;
+  height: 100%;
+  border-radius: 4px;
+  transform-origin: left;
+  animation: hrl-barGrowX 0.85s var(--ease) both;
+}
+
+.hrl-aviso-info {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: rgba(0, 184, 217, 0.08);
+  border: 1px solid rgba(0, 184, 217, 0.24);
+  color: var(--info-text);
+  font-size: 13px;
+  line-height: 1.5;
+}
+
+.hrl-aviso-info svg { flex: 0 0 auto; margin-top: 1px; }
+
+.hrl-punto-vivo {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--danger);
+  animation: hrl-pulsa 2.4s ease-in-out infinite;
+}
+
+@keyframes hrl-pulsa {
+  0%, 100% { box-shadow: 0 0 0 0 rgba(255, 86, 48, 0.35); }
+  50% { box-shadow: 0 0 0 7px rgba(255, 86, 48, 0); }
+}
+.hrl-leyenda-series__punto { width: 9px; height: 9px; border-radius: 50%; flex: 0 0 auto; }
+
+.hrl-table tbody tr.hrl-grupo { cursor: pointer; }
+.hrl-table tbody tr.hrl-grupo--abierto { background: rgba(145, 158, 171, 0.05); }
+
+.hrl-accion {
+  width: var(--touch-target);
+  height: var(--touch-target);
+  border: none;
+  border-radius: 9px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--tono, #00A76F) 12%, transparent);
+  color: var(--tono, #00a76f);
+  transition: background 0.35s var(--ease), transform 0.4s var(--ease);
+}
+
+.hrl-accion:hover { background: color-mix(in srgb, var(--tono, #00A76F) 24%, transparent); transform: translateY(-1px); }
+
+/* Chips de la consulta inicial. */
+.hrl-chips-consulta {
+  display: flex;
+  align-items: center;
+  gap: 9px;
+  flex-wrap: wrap;
+  margin-top: 16px;
+  font-size: 12.5px;
+  color: var(--text-secondary);
+}
+
+/* Campo con el control resaltado, para el filtro por defecto del diseño. */
+.hrl-field--destacado .hrl-field__control,
+.hrl-field--destacado .hrl-field__wrap {
+  border-color: rgba(255, 86, 48, 0.5);
+  background: rgba(255, 86, 48, 0.04);
+  color: var(--danger-text);
+  font-weight: 600;
+}
+
+.hrl-campos {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 12px;
+}
+
+/* Cada dato en su propia caja: en un diálogo con nueve campos, las etiquetas
+   sueltas se confunden entre sí. */
+.hrl-campos > div {
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  padding: 11px 13px;
+  min-width: 0;
+}
+
+.hrl-campos__k {
+  display: block;
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--text-disabled);
+  margin-bottom: 4px;
+}
+
+.hrl-campos__v {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+  overflow-wrap: anywhere;
+}
+
+/* ------------------------------------------------- Diálogo de detalle doble */
+
+/* Datos a la izquierda (rejilla de nueve campos, necesita más ancho) e
+   historial a la derecha. */
+.hrl-detalle {
+  display: grid;
+  grid-template-columns: minmax(0, 1.18fr) minmax(0, 0.82fr);
+  gap: 24px;
+  align-items: start;
+}
+
+.hrl-detalle__cabecera {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+  padding: 22px 56px 18px 24px;
+  border-bottom: 1px solid var(--border);
+}
+
+.hrl-detalle__sello {
+  width: 44px;
+  height: 44px;
+  flex: 0 0 auto;
+  border-radius: 13px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: color-mix(in srgb, var(--tono) 15%, transparent);
+  color: var(--tono);
+}
+
+.hrl-detalle__titulo { margin: 8px 0 0; font-size: 20px; font-weight: 700; letter-spacing: -0.3px; }
+.hrl-detalle__sub { margin: 5px 0 0; font-size: 13.5px; color: var(--text-secondary); }
+
+.hrl-bloque {
+  display: block;
+  padding: 14px 16px;
+  border-radius: 12px;
+  background: color-mix(in srgb, var(--tono) 10%, transparent);
+  border: 1px solid color-mix(in srgb, var(--tono) 26%, transparent);
+  color: var(--tono-texto);
+}
+
+.hrl-bloque__titulo {
+  display: block;
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+}
+
+.hrl-bloque p { margin: 0; font-size: 13px; line-height: 1.55; }
+
+/* -------------------------------------------------------- Historial lateral */
+
+.hrl-hist__titulo {
+  margin: 0 0 12px;
+  font-size: 15px;
+  font-weight: 700;
+}
+
+.hrl-hist__lista {
+  display: flex;
+  flex-direction: column;
+  max-height: 420px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
+
+.hrl-hist__fila {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+  padding: 11px 0;
+  border-bottom: 1px dashed var(--border);
+  animation: hrl-rowIn 0.4s var(--ease) both;
+}
+
+.hrl-hist__fila:last-child { border-bottom: none; }
+
+.hrl-hist__fecha {
+  font-family: 'IBM Plex Mono', ui-monospace, monospace;
+  font-size: 11.5px;
+  color: var(--text-disabled);
+}
+
+.hrl-hist__texto { font-size: 13px; line-height: 1.5; }
+.hrl-hist__autor { font-size: 11.5px; color: var(--text-disabled); }
+
+.hrl-hist__marca {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 11px;
+  font-weight: 700;
+  padding: 2px 7px;
+  border-radius: 6px;
+  background: rgba(145, 158, 171, 0.14);
+  color: var(--text-secondary);
+  width: fit-content;
+}
+
+/* ------------------------------------------------------------------- Embudo */
+
+.hrl-embudo { display: flex; align-items: stretch; gap: 0; flex-wrap: nowrap; overflow-x: auto; }
+.hrl-embudo__par { display: flex; align-items: center; gap: 0; flex: 1; min-width: 0; }
+
+.hrl-embudo__flecha {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 2px;
+  padding: 0 14px;
+  flex: 0 0 auto;
+  color: var(--text-disabled);
+}
+
+.hrl-embudo__flecha span { font-size: 17px; }
+.hrl-embudo__flecha strong { font-size: 12.5px; font-weight: 700; color: var(--text-secondary); }
+
+.hrl-embudo__etapa {
+  flex: 1;
+  min-width: 170px;
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  padding: 16px 18px;
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  animation: hrl-riseIn 0.5s var(--ease) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.hrl-embudo__rotulo {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--text-secondary);
+  background: rgba(145, 158, 171, 0.14);
+  padding: 3px 8px;
+  border-radius: 6px;
+  width: fit-content;
+}
+
+.hrl-embudo__nombre { font-size: 13.5px; color: var(--text-secondary); }
+.hrl-embudo__valor { font-size: 30px; font-weight: 700; letter-spacing: -1.1px; line-height: 1.1; }
+.hrl-embudo__nota { font-size: 12px; color: var(--text-disabled); }
+
+/* ------------------------------------------------------------------ Ranking */
+
+.hrl-ranking { display: flex; flex-direction: column; gap: 16px; }
+
+.hrl-ranking__fila {
+  display: flex;
+  flex-direction: column;
+  gap: 7px;
+  animation: hrl-riseIn 0.45s var(--ease) both;
+  animation-delay: var(--delay, 0ms);
+}
+
+.hrl-ranking__alto { display: flex; align-items: baseline; justify-content: space-between; gap: 14px; }
+.hrl-ranking__nombre { display: inline-flex; align-items: center; gap: 9px; font-size: 13.5px; font-weight: 600; }
+.hrl-ranking__valor { font-size: 15px; font-weight: 700; }
+
+/* ------------------------------------------------------------ Carga en curso */
+
+/* Aro fino centrado en el hueco del módulo. Algunas consultas del hospital
+   tardan segundos, así que el texto dice qué se está calculando. */
+.hrl-cargando {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  width: 100%;
+  padding: 28px 20px;
+  animation: hrl-fadeIn 0.3s ease both;
+}
+
+.hrl-cargando__aro {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 2.5px solid rgba(0, 167, 111, 0.18);
+  border-top-color: var(--brand-texto);
+  animation: hrl-gira 0.9s linear infinite;
+}
+
+.hrl-cargando__texto {
+  font-size: 13px;
+  color: var(--text-secondary);
+  text-align: center;
+  animation: hrl-respira 1.9s ease-in-out infinite;
+}
+
+@keyframes hrl-gira { to { transform: rotate(360deg); } }
+@keyframes hrl-respira { 0%, 100% { opacity: 0.55; } 50% { opacity: 1; } }
+
+/* ----------------------------------------------------------------- Salidas */
+
+/* Todo lo que se cierra se desvanece antes de desmontarse. Los tiempos los
+   fija MS_SALIDA en ui/useSalida.js: si se cambian aquí, hay que cambiarlos
+   allí, porque es ese temporizador el que retrasa el desmontaje. */
+
+.hrl-modal-overlay--saliendo { animation: hrl-fadeOut 0.2s ease both; }
+.hrl-modal-overlay--saliendo .hrl-modal { animation: hrl-modalOut 0.2s var(--ease) both; }
+
+.hrl-overlay--saliendo { animation: hrl-fadeOut 0.2s ease both; }
+.hrl-drawer--saliendo { animation: hrl-slideOutRight 0.2s var(--ease) both; }
+.hrl-toast--saliendo { animation: hrl-toastOut 0.2s var(--ease) both; }
+
+/* Cambio de módulo: el panel saliente se va antes de montar el entrante. */
+.hrl-content--saliendo { animation: hrl-panelOut 0.14s var(--ease) both; }
+
+/* Cambio de página de una tabla: las filas viejas se apagan y las nuevas
+   entran, en lugar de sustituirse de golpe. */
+.hrl-table-wrap--cambiando tbody,
+.hrl-table--cambiando tbody,
+.hrl-bloque-cambiando { animation: hrl-fadeOut 0.13s ease both; }
+
+/* --------------------------------------------------------- Panel de perfil */
+
+.hrl-perfil__cuerpo {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.hrl-perfil__datos { margin: 0; display: flex; flex-direction: column; gap: 14px; }
+
+.hrl-perfil__datos dt {
+  font-size: 10px;
+  font-weight: 700;
+  letter-spacing: 0.7px;
+  text-transform: uppercase;
+  color: var(--text-disabled);
+  margin-bottom: 3px;
+}
+
+.hrl-perfil__datos dd { margin: 0; font-size: 14px; line-height: 1.45; }
+
+.hrl-perfil__accion { display: flex; flex-direction: column; gap: 8px; }
+.hrl-perfil__accion .hrl-btn { justify-content: center; }
+.hrl-perfil__ok { font-size: 12.5px; font-weight: 600; color: var(--ok-text); }
+
+.hrl-perfil__form { display: flex; flex-direction: column; gap: 14px; }
+.hrl-perfil__form .hrl-btn { flex: 1; justify-content: center; }
+
+.hrl-perfil__nota {
+  margin: 0;
+  padding-top: 16px;
+  border-top: 1px dashed var(--border);
+  font-size: 12px;
+  color: var(--text-disabled);
+  line-height: 1.5;
+}
+
+/* --------------------------------------------------- Acciones del módulo */
+
+/* Ranura de la barra superior. Va a la altura del resto de la barra, así que
+   los controles son de una sola línea y 32px de alto. */
+.hrl-topbar__acciones { display: flex; align-items: center; gap: 8px; margin-right: 10px; }
+
+.hrl-btn--mini { min-height: var(--touch-target); padding: 0 12px; font-size: 13px; }
+
+/* ------------------------------------------------- Interruptor de tema */
+
+.hrl-tema {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  width: 100%;
+  padding: 14px 16px;
+  border: 1px solid var(--border);
+  border-radius: 12px;
+  background: transparent;
+  color: inherit;
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color 0.35s var(--ease), background 0.35s var(--ease);
+}
+
+.hrl-tema:hover { background: var(--row-hover); }
+.hrl-tema--on { border-color: rgba(0, 167, 111, 0.5); }
+
+.hrl-tema__texto { display: flex; flex-direction: column; gap: 2px; }
+.hrl-tema__texto strong { font-size: 14px; font-weight: 700; }
+.hrl-tema__texto span { font-size: 12.5px; color: var(--text-secondary); }
+
+.hrl-tema__palanca {
+  position: relative;
+  width: 44px;
+  height: 26px;
+  flex: 0 0 auto;
+  border-radius: 13px;
+  background: rgba(145, 158, 171, 0.34);
+  transition: background 0.35s var(--ease);
+}
+
+.hrl-tema--on .hrl-tema__palanca { background: var(--brand); }
+
+.hrl-tema__bolita {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background: #fff;
+  box-shadow: 0 1px 3px rgba(28, 37, 46, 0.4);
+  transition: transform 0.35s var(--ease);
+}
+
+.hrl-tema--on .hrl-tema__bolita { transform: translateX(18px); }
+
+/* ------------------------------------------------------------ Modo oscuro */
+
+/* Solo se redefinen los tokens: el resto de las reglas ya los usan. Los
+   colores de severidad (verde, ámbar, rojo) se mantienen porque son
+   significado, no decoración, y se aclaran sus versiones de texto. */
+:root[data-tema-hrl='oscuro'] .hrl-nuevo,
+:root[data-tema-hrl='oscuro'] .hrl-portal {
+  --bg-app: #10161b;
+  --bg-surface: #18212a;
+  --text-primary: #e9edf1;
+  --text-secondary: #9fb0bd;
+  --text-disabled: #788894;
+  --border: rgba(145, 158, 171, 0.26);
+  --border-soft: rgba(145, 158, 171, 0.16);
+  --row-hover: rgba(145, 158, 171, 0.1);
+  --head-bg: rgba(145, 158, 171, 0.12);
+  --head-solido: #222d37;
+  --fila-solida: #1e2831;
+
+  --brand-texto: #5be49b;
+  --toast-bg: #2b3742;
+  --danger-text: #ffac9b;
+  --warning-text: #ffd666;
+  --info-text: #61f3f3;
+  --ok-text: #5be49b;
+  --accent-text: #8fc7ff;
+  --neutral-text: #b3c0cb;
+
+  /* Sobre superficie oscura, un velo del 8 % desaparece: se refuerzan. */
+  --info-soft: rgba(0, 184, 217, 0.14);
+  --success-soft: rgba(0, 167, 111, 0.18);
+  --warning-soft: rgba(255, 171, 0, 0.18);
+  --destructive-soft: rgba(255, 86, 48, 0.18);
+  --neutral-soft: rgba(145, 158, 171, 0.16);
+
+  /* Los semanticos que no se derivan solos de los de implementacion. */
+  --primary-foreground: #06231b;
+  --input-border: rgba(145, 158, 171, 0.34);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
+  --shadow-overlay: 0 32px 64px -16px rgba(0, 0, 0, 0.66);
+
+  --shadow-card: 0 0 2px rgba(0, 0, 0, 0.5), 0 12px 24px -4px rgba(0, 0, 0, 0.42);
+  --shadow-card-hover: 0 0 2px rgba(0, 0, 0, 0.5), 0 20px 40px -8px rgba(0, 0, 0, 0.55);
+  --shadow-drawer: -24px 0 48px -12px rgba(0, 0, 0, 0.6);
+
+  color-scheme: dark;
+}
+
+:root[data-tema-hrl='oscuro'] { color-scheme: dark; }
+:root[data-tema-hrl='oscuro'] body { background: #10161b; }
+
+/* El aro del avatar y el sello del perfil llevan texto blanco sobre el verde
+   profundo: en oscuro ese verde queda demasiado apagado. */
+:root[data-tema-hrl='oscuro'] .hrl-avatar__initials,
+:root[data-tema-hrl='oscuro'] .hrl-profile__initials { background: #00714f; }
+
+/* ------------------------------------------- Filas marcadas de las tablas */
+
+/* Mismo código de color del sistema original: rojo cuando la hoja HIS está
+   mal llenada, ámbar cuando falta la biopsia, y ambos a la vez en el peor
+   caso. El badge de la fila dice lo mismo en palabras. */
+.hrl-table tbody tr.hrl-fila--observada > td { background: rgba(255, 86, 48, 0.07); }
+.hrl-table tbody tr.hrl-fila--sinbiopsia > td { background: rgba(255, 171, 0, 0.09); }
+.hrl-table tbody tr.hrl-fila--doble > td { background: rgba(255, 86, 48, 0.14); }
+
+/* =====================================================================
+   Componentes del kit añadidos en la Fase 1 del Core UI Template
+   ===================================================================== */
+
+/* ------------------------------------------------------- Skeleton */
+
+.hrl-skeleton {
+  display: block;
+  background: linear-gradient(
+    90deg,
+    rgba(145, 158, 171, 0.12) 25%,
+    rgba(145, 158, 171, 0.22) 37%,
+    rgba(145, 158, 171, 0.12) 63%
+  );
+  background-size: 400% 100%;
+  animation: hrl-skeleton 1.4s ease-in-out infinite;
+}
+
+@keyframes hrl-skeleton {
+  from { background-position: 100% 50%; }
+  to { background-position: 0 50%; }
+}
+
+.hrl-skeleton-fila td { border-bottom: 1px dashed var(--border); padding: 12px 14px; }
+
+/* --------------------------------------------------- DropdownMenu */
+
+.hrl-menu {
+  position: fixed;
+  z-index: 210;
+  min-width: 200px;
+  padding: 6px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  border: 1px solid var(--border);
+  box-shadow: var(--shadow-lg);
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  animation: hrl-tipIn 0.18s var(--ease) both;
+}
+
+.hrl-menu__item {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  min-height: var(--touch-target);
+  padding: 0 12px;
+  border: none;
+  border-radius: var(--radius-sm);
+  background: transparent;
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: var(--text-base);
+  cursor: pointer;
+  transition: background var(--transition-fast);
+}
+
+.hrl-menu__item:hover:not(:disabled),
+.hrl-menu__item:focus-visible { background: var(--muted); outline: none; }
+.hrl-menu__item:disabled { color: var(--subtle-foreground); cursor: not-allowed; }
+.hrl-menu__item--peligro { color: var(--destructive-text); }
+.hrl-menu__item--peligro:hover:not(:disabled) { background: rgba(255, 86, 48, 0.1); }
+
+.hrl-menu__separador { height: 1px; margin: 4px 6px; background: var(--border); }
+.hrl-menu__atajo { font-size: var(--text-xs); color: var(--subtle-foreground); }
+
+/* ---------------------------------------------- PageHeader: migas */
+
+.hrl-migas {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-bottom: 6px;
+  font-size: var(--text-sm);
+  color: var(--muted-foreground);
+}
+
+.hrl-migas__paso { display: inline-flex; align-items: center; gap: 4px; }
+.hrl-migas__paso a { color: inherit; text-decoration: none; border-radius: var(--radius-xs); }
+.hrl-migas__paso a:hover { color: var(--accent); text-decoration: underline; }
+.hrl-migas__paso [aria-current='page'] { color: var(--foreground); font-weight: var(--weight-semibold); }
+
+.hrl-pagehead__acciones { display: flex; align-items: center; gap: 8px; flex: 0 0 auto; }
+/* La ranura existe siempre (es destino de `AccionesPagina`); vacía no debe
+   sumar el hueco del `gap`. */
+.hrl-pagehead__acciones:empty { display: none; }
+
+/* --------------------------------------------------- Alert: éxito */
+
+.hrl-aviso--ok {
+  background: rgba(0, 167, 111, 0.08);
+  border-color: rgba(0, 167, 111, 0.26);
+  color: var(--success-text);
+}
+
+/* ------------------------------- Paginación: selector de tamaño */
+
+.hrl-pag__tamano {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: var(--text-sm);
+  color: var(--muted-foreground);
+}
+
+.hrl-pag__tamano select {
+  min-height: var(--touch-target);
+  padding: 0 6px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--input-border);
+  background: var(--input);
+  color: var(--foreground);
+  font-family: inherit;
+  font-size: var(--text-sm);
+  cursor: pointer;
+}
+
+/* Objetivo táctil mínimo en todo control interactivo del kit. */
+.hrl-btn,
+.hrl-iconbtn,
+.hrl-tabs__btn { min-height: var(--touch-target); }
+
+/* =====================================================================
+   Componentes traídos del prototipo de Reporte Estadístico (paso 0 de
+   la unificación). Ver docs/unificacion-core-ui.md.
+   ===================================================================== */
+
+/* ---------------------------------------------------------------- Pasos
+
+   Barra de progreso de un formulario largo. Cada paso dice su estado con
+   icono y con texto, nunca solo con color: en un reporte de treinta días,
+   «faltan cuatro días» tiene que leerse sin interpretar un tono de verde. */
+.hrl-pasos {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(190px, 1fr));
+  gap: 10px;
+}
+
+.hrl-paso {
+  display: flex;
+  align-items: center;
+  gap: 11px;
+  min-height: var(--touch-target-lg);
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-md);
+  background: var(--surface);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.hrl-paso:hover { background: var(--row-hover); }
+
+.hrl-paso--on {
+  border-color: var(--primary);
+  background: var(--success-soft);
+}
+
+.hrl-paso__num {
+  flex: 0 0 auto;
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: var(--radius-full);
+  background: var(--neutral-soft);
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+}
+
+.hrl-paso--on .hrl-paso__num { background: var(--primary); color: var(--primary-foreground); }
+
+.hrl-paso__texto { display: flex; flex-direction: column; gap: 2px; min-width: 0; }
+
+.hrl-paso__titulo {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  color: var(--foreground);
+}
+
+.hrl-paso__nota {
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-medium);
+  color: var(--muted-foreground);
+}
+
+/* Casilla numérica con error y deshabilitada. */
+.hrl-input-mini--error { border-color: var(--destructive); }
+.hrl-input-mini:disabled { background: var(--muted); color: var(--muted-foreground); cursor: not-allowed; }
+
+/* Tira de selección: una fila de fichas donde solo una está activa y algunas
+   están marcadas. El kit no sabe qué representan —días de un mes, turnos,
+   lotes—: recibe título, subtítulo y si la ficha está marcada. */
+.hrl-tira { display: flex; flex-wrap: wrap; gap: 6px; }
+
+.hrl-tira__item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1px;
+  min-width: 46px;
+  min-height: var(--touch-target);
+  padding: 0 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: inherit;
+  cursor: pointer;
+  transition: border-color var(--transition-fast), background var(--transition-fast);
+}
+
+.hrl-tira__item:hover { background: var(--row-hover); }
+.hrl-tira__item--marcado { background: var(--success-soft); border-color: var(--success); }
+.hrl-tira__item--on { border-color: var(--primary); background: var(--primary); }
+.hrl-tira__item--on.hrl-tira__item--marcado { background: var(--primary); }
+
+.hrl-tira__titulo { font-size: var(--text-base); font-weight: var(--weight-bold); color: var(--foreground); }
+.hrl-tira__sub { font-size: var(--text-xs); color: var(--muted-foreground); }
+.hrl-tira__item--on .hrl-tira__titulo,
+.hrl-tira__item--on .hrl-tira__sub { color: var(--primary-foreground); }
+
+/* Etiqueta que existe para los lectores de pantalla pero no ocupa espacio.
+   La usan los campos dentro de una tabla, donde el nombre visible del campo ya
+   lo da la cabecera de la columna y repetirlo en cada fila sería ruido. */
+.hrl-oculto-visual {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip: rect(0 0 0 0);
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* ------------------------------------------------------------- Calendario
+
+   Mes en cuadrícula de siete columnas, semana de lunes a domingo. Cada casilla
+   dice su estado con fondo **e** icono: el color nunca es la única señal. */
+.hrl-cal { display: flex; flex-direction: column; gap: 8px; }
+
+.hrl-cal__semana,
+.hrl-cal__rejilla {
+  display: grid;
+  grid-template-columns: repeat(7, minmax(0, 1fr));
+  gap: 4px;
+}
+
+.hrl-cal__cabecera {
+  display: block;
+  width: 100%;
+  padding: 2px 0;
+  text-align: center;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--subtle-foreground);
+  cursor: help;
+}
+
+.hrl-cal__hueco { min-height: var(--touch-target-lg); }
+
+.hrl-cal__dia {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 2px;
+  min-width: 0;
+  min-height: 50px;
+  padding: 5px 6px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--surface);
+  font-family: inherit;
+  text-align: left;
+  cursor: pointer;
+  transition: background var(--transition-fast), border-color var(--transition-fast), box-shadow var(--transition-fast);
+}
+
+.hrl-cal__dia:hover { background: var(--row-hover); }
+.hrl-cal__dia:focus-visible { outline: 2px solid var(--ring); outline-offset: 1px; }
+.hrl-cal__dia--lleno { background: var(--success-soft); border-color: transparent; }
+.hrl-cal__dia--parcial { background: var(--warning-soft); border-color: transparent; }
+.hrl-cal__dia--on { border-color: var(--primary); box-shadow: inset 0 0 0 1px var(--primary); }
+
+.hrl-cal__num {
+  font-size: var(--text-base);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--foreground);
+}
+
+.hrl-cal__dia--finde .hrl-cal__num { color: var(--muted-foreground); }
+
+.hrl-cal__marca { position: absolute; top: 5px; right: 5px; display: flex; }
+.hrl-cal__dia--lleno .hrl-cal__marca { color: var(--success-text); }
+.hrl-cal__dia--parcial .hrl-cal__marca { color: var(--warning-fg); }
+
+.hrl-cal__detalle {
+  max-width: 100%;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: var(--text-xs);
+  font-variant-numeric: tabular-nums;
+  color: var(--muted-foreground);
+}
+
+.hrl-cal__leyenda {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px 14px;
+  padding-top: 4px;
+  font-size: var(--text-sm);
+  color: var(--muted-foreground);
+}
+
+.hrl-cal__muestra { display: inline-flex; align-items: center; gap: 5px; }
+
+.hrl-cal__cuadro {
+  width: 12px;
+  height: 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-xs);
+  background: var(--surface);
+}
+
+.hrl-cal__cuadro--lleno { background: var(--success-soft); border-color: var(--success); }
+.hrl-cal__cuadro--parcial { background: var(--warning-soft); border-color: var(--warning); }
+
+@media (max-width: 900px) {
+  .hrl-registro { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* ------------------------------------------------- Serie de barras simple */
+.hrl-barras__col--serie { cursor: default; }
+.hrl-barras__col--serie .hrl-barras__pila { flex: 1 1 auto; height: auto; min-height: 0; }
+.hrl-barras__col--serie .hrl-barras__pila:hover .hrl-barras__tramo { opacity: 1; }
+.hrl-barras__col--serie:hover .hrl-barras__tramo { filter: brightness(1.08); }
+
+.hrl-barras__valor {
+  display: block;
+  height: 16px;
+  line-height: 16px;
+  font-size: var(--text-xs);
+  font-weight: var(--weight-bold);
+  font-variant-numeric: tabular-nums;
+  color: var(--foreground);
+  white-space: nowrap;
+}
+
+/* Periodo sin dato en medio de la serie: hueco punteado, nunca barra en cero. */
+.hrl-barras__hueco {
+  flex: 1 1 auto;
+  width: 60%;
+  max-width: 34px;
+  display: flex;
+  align-items: flex-end;
+  justify-content: center;
+  padding-bottom: 6px;
+  border: 1px dashed var(--border);
+  border-bottom: none;
+  border-radius: var(--radius-xs) var(--radius-xs) 0 0;
+  background: var(--neutral-soft);
+}
+
+.hrl-barras__hueco span {
+  writing-mode: vertical-rl;
+  transform: rotate(180deg);
+  font-size: var(--text-xs);
+  white-space: nowrap;
+  color: var(--subtle-foreground);
+}
+
+.hrl-barras__col--recorte { flex: 0 0 auto; width: 96px; }
+.hrl-barras__col--recorte .hrl-barras__vacio { flex: 1 1 auto; height: auto; }
+
+@media (max-width: 1100px) {
+  .hrl-visor { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* Impresión: solo el documento. Sin menú, sin barra superior, sin controles. */
+@media print {
+  .hrl-sidebar,
+  .hrl-topbar,
+  .hrl-no-imprimir,
+  .hrl-overlay,
+  .hrl-drawer { display: none !important; }
+
+  .hrl-shell,
+  .hrl-main,
+  .hrl-content,
+  .hrl-panel { display: block !important; margin: 0 !important; padding: 0 !important; max-width: none !important; }
+
+  .hrl-nuevo { background: var(--surface) !important; }
+  .hrl-section { box-shadow: none !important; break-inside: avoid; margin-bottom: 16px; }
+}

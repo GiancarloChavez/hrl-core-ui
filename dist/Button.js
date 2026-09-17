@@ -1,0 +1,64 @@
+import { jsx, jsxs } from "react/jsx-runtime";
+import { variants } from "./variants.js";
+import { Icon } from "./icons.js";
+const clase = variants(
+  "hrl-btn",
+  {
+    tone: {
+      cta: "hrl-btn--cta",
+      blue: "hrl-btn--blue",
+      ghost: "hrl-btn--ghost",
+      danger: "hrl-btn--peligro",
+      plain: ""
+    },
+    size: { md: "", sm: "hrl-btn--mini" }
+  },
+  { tone: "cta", size: "md" }
+);
+function Button({
+  tone = "cta",
+  size = "md",
+  icon,
+  loading = false,
+  loadingText = "Procesando\u2026",
+  disabled,
+  className,
+  children,
+  type = "button",
+  ...rest
+}) {
+  return /* @__PURE__ */ jsxs(
+    "button",
+    {
+      type,
+      className: clase({ tone, size, className }),
+      disabled: disabled || loading,
+      "aria-busy": loading || void 0,
+      ...rest,
+      children: [
+        icon && /* @__PURE__ */ jsx(Icon, { name: icon, size: size === "sm" ? 15 : 16 }),
+        loading ? loadingText : children
+      ]
+    }
+  );
+}
+function IconButton({ icon, "aria-label": label, tone = "plano", className, ...rest }) {
+  if (!label && import.meta.env?.DEV) {
+    console.warn("IconButton sin aria-label: un bot\xF3n sin texto necesita nombre accesible.");
+  }
+  return /* @__PURE__ */ jsx(
+    "button",
+    {
+      type: "button",
+      className: `hrl-iconbtn${tone === "accion" ? " hrl-accion" : ""}${className ? ` ${className}` : ""}`,
+      "aria-label": label,
+      ...rest,
+      children: /* @__PURE__ */ jsx(Icon, { name: icon, size: 18 })
+    }
+  );
+}
+export {
+  Button,
+  IconButton
+};
+//# sourceMappingURL=Button.js.map

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/useFloatingTip.js"],
+  "sourcesContent": ["import { useCallback, useState } from 'react';\r\n\r\n/* Estado compartido del tooltip para zonas con muchos objetivos: la matriz de\r\n   producci\u00F3n tiene m\u00E1s de mil celdas y montar un componente por celda ser\u00EDa\r\n   inviable. El prefijo `use` es requisito de React para los hooks. */\r\nexport function useFloatingTip() {\r\n  const [tip, setTip] = useState(null);\r\n\r\n  const follow = useCallback((e, title, body) => {\r\n    setTip({ title, body, x: e.clientX, y: e.clientY - 18 });\r\n  }, []);\r\n\r\n  const hide = useCallback(() => setTip(null), []);\r\n\r\n  return { tip, follow, hide };\r\n}\r\n"],
+  "mappings": "AAAA,SAAS,aAAa,gBAAgB;AAK/B,SAAS,iBAAiB;AAC/B,QAAM,CAAC,KAAK,MAAM,IAAI,SAAS,IAAI;AAEnC,QAAM,SAAS,YAAY,CAAC,GAAG,OAAO,SAAS;AAC7C,WAAO,EAAE,OAAO,MAAM,GAAG,EAAE,SAAS,GAAG,EAAE,UAAU,GAAG,CAAC;AAAA,EACzD,GAAG,CAAC,CAAC;AAEL,QAAM,OAAO,YAAY,MAAM,OAAO,IAAI,GAAG,CAAC,CAAC;AAE/C,SAAO,EAAE,KAAK,QAAQ,KAAK;AAC7B;",
+  "names": []
+}

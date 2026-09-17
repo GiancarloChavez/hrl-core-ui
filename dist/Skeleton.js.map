@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/Skeleton.jsx"],
+  "sourcesContent": ["/* Placeholder de carga. Se usa cuando ya se conoce la forma del contenido\r\n   \u2014rows de una tabla, tarjetas de una rejilla\u2014; cuando no se conoce, va el\r\n   Spinner de Spinner. */\r\nexport function Skeleton({ width = '100%', height = 14, radius = 'var(--radius-xs)', style }) {\r\n  return <span className=\"hrl-skeleton\" style={{ width: width, height: height, borderRadius: radius, ...style }} />;\r\n}\r\n\r\n/* Bloque de filas para una tabla mientras llegan los datos. */\r\nexport function SkeletonRows({ rows = 5, columns = 4 }) {\r\n  return (\r\n    <>\r\n      {Array.from({ length: rows }, (_, f) => (\r\n        <tr key={f} className=\"hrl-skeleton-fila\">\r\n          {Array.from({ length: columns }, (_, c) => (\r\n            <td key={c}>\r\n              <Skeleton width={c === 0 ? '65%' : `${40 + ((f + c) % 4) * 12}%`} />\r\n            </td>\r\n          ))}\r\n        </tr>\r\n      ))}\r\n    </>\r\n  );\r\n}\r\n"],
+  "mappings": "AAIS,SAML,UANK;AADF,SAAS,SAAS,EAAE,QAAQ,QAAQ,SAAS,IAAI,SAAS,oBAAoB,MAAM,GAAG;AAC5F,SAAO,oBAAC,UAAK,WAAU,gBAAe,OAAO,EAAE,OAAc,QAAgB,cAAc,QAAQ,GAAG,MAAM,GAAG;AACjH;AAGO,SAAS,aAAa,EAAE,OAAO,GAAG,UAAU,EAAE,GAAG;AACtD,SACE,gCACG,gBAAM,KAAK,EAAE,QAAQ,KAAK,GAAG,CAAC,GAAG,MAChC,oBAAC,QAAW,WAAU,qBACnB,gBAAM,KAAK,EAAE,QAAQ,QAAQ,GAAG,CAACA,IAAG,MACnC,oBAAC,QACC,8BAAC,YAAS,OAAO,MAAM,IAAI,QAAQ,GAAG,MAAO,IAAI,KAAK,IAAK,EAAE,KAAK,KAD3D,CAET,CACD,KALM,CAMT,CACD,GACH;AAEJ;",
+  "names": ["_"]
+}

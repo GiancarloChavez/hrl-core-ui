@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/Spinner.jsx"],
+  "sourcesContent": ["/* Animaci\u00F3n de carga \u00FAnica para todo el sistema: un aro fino centrado en el\r\n   espacio del m\u00F3dulo y el text de lo que se est\u00E1 calculando. El text importa\r\n   porque una consulta lenta se entiende mejor si dice qu\u00E9 est\u00E1 haciendo.\r\n\r\n   `height` reserva sitio para que el panel no d\u00E9 un salto cuando llegan los\r\n   datos; en bloques peque\u00F1os se pasa un valor menor. */\r\nexport function Spinner({ text = 'Cargando\u2026', height = 220 }) {\r\n  return (\r\n    <div className=\"hrl-cargando\" style={{ minHeight: height }} role=\"status\" aria-live=\"polite\">\r\n      <span className=\"hrl-cargando__aro\" aria-hidden=\"true\" />\r\n      <span className=\"hrl-cargando__texto\">{text}</span>\r\n    </div>\r\n  );\r\n}\r\n"],
+  "mappings": "AAQI,SACE,KADF;AAFG,SAAS,QAAQ,EAAE,OAAO,kBAAa,SAAS,IAAI,GAAG;AAC5D,SACE,qBAAC,SAAI,WAAU,gBAAe,OAAO,EAAE,WAAW,OAAO,GAAG,MAAK,UAAS,aAAU,UAClF;AAAA,wBAAC,UAAK,WAAU,qBAAoB,eAAY,QAAO;AAAA,IACvD,oBAAC,UAAK,WAAU,uBAAuB,gBAAK;AAAA,KAC9C;AAEJ;",
+  "names": []
+}

@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/EmptyState.jsx"],
+  "sourcesContent": ["import { Icon } from './icons.jsx';\n\nexport function EmptyState({ icon = 'sh-lines', tone = 'var(--subtle-foreground)', title, body, children }) {\n  return (\n    <div className=\"hrl-empty\">\n      <span className=\"hrl-empty__icon\" style={{ '--tone': tone }}>\n        <Icon name={icon} size={30} />\n      </span>\n      <strong className=\"hrl-empty__title\">{title}</strong>\n      {body && <p className=\"hrl-empty__body\">{body}</p>}\n      {children}\n    </div>\n  );\n}\n"],
+  "mappings": "AAII,SAEI,KAFJ;AAJJ,SAAS,YAAY;AAEd,SAAS,WAAW,EAAE,OAAO,YAAY,OAAO,4BAA4B,OAAO,MAAM,SAAS,GAAG;AAC1G,SACE,qBAAC,SAAI,WAAU,aACb;AAAA,wBAAC,UAAK,WAAU,mBAAkB,OAAO,EAAE,UAAU,KAAK,GACxD,8BAAC,QAAK,MAAM,MAAM,MAAM,IAAI,GAC9B;AAAA,IACA,oBAAC,YAAO,WAAU,oBAAoB,iBAAM;AAAA,IAC3C,QAAQ,oBAAC,OAAE,WAAU,mBAAmB,gBAAK;AAAA,IAC7C;AAAA,KACH;AAEJ;",
+  "names": []
+}
