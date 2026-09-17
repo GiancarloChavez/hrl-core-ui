@@ -16,8 +16,11 @@ No está publicado en npm. Se instala por URL de Git, fijando la versión con el
 tag:
 
 ```bash
-npm i github:evatissac/hrl-core-ui#v1.0.0
+npm i github:<usuario-u-organizacion>/hrl-core-ui#v1.0.0
 ```
+
+> Sustituye `<usuario-u-organizacion>` cuando se cree el repositorio remoto.
+> Hoy este repositorio es local y no tiene remoto configurado.
 
 Actualizar es cambiar el tag. Sin tag, npm toma la rama por defecto y el kit
 puede moverse bajo los pies del proyecto: **fija siempre la versión**.
