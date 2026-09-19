@@ -11,7 +11,7 @@ const FILAS = [
 
 /* La columna del identificador es el enlace que abre el registro, más un
    botón de acción explícito al final de la fila — nunca la fila entera
-   clicable (ver CLAUDE.md § 3.4). */
+   clicable (ver design.md § 3.4). */
 const COLUMNAS = [
   { key: 'id', label: 'Código', render: (f) => <a href={`#/${f.id}`}>{f.id}</a> },
   { key: 'nombre', label: 'Nombre' },

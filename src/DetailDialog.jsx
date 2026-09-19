@@ -31,17 +31,17 @@ export function Timeline({ title, items = [], status = 'ok', empty, messages = {
       <h4 className="hrl-hist__titulo">
         {title}
         {status === 'ok' && items.length > 0 && (
-          <span style={{ fontWeight: 400, color: 'var(--text-disabled)', fontSize: 13 }}>
+          <span style={{ fontWeight: 400, color: 'var(--text-disabled)', fontSize: 'var(--text-base)' }}>
             {' '}
             · {items.length.toLocaleString('es-PE')}
           </span>
         )}
       </h4>
 
-      {status === 'loading' && <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{textos.loading}</p>}
-      {status === 'error' && <p style={{ fontSize: 13, color: 'var(--danger-text)' }}>{textos.error}</p>}
+      {status === 'loading' && <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)' }}>{textos.loading}</p>}
+      {status === 'error' && <p style={{ fontSize: 'var(--text-base)', color: 'var(--danger-text)' }}>{textos.error}</p>}
       {status === 'ok' && items.length === 0 && (
-        <p style={{ fontSize: 13, color: 'var(--text-secondary)' }}>{textos.empty}</p>
+        <p style={{ fontSize: 'var(--text-base)', color: 'var(--text-secondary)' }}>{textos.empty}</p>
       )}
 
       {status === 'ok' && items.length > 0 && (
@@ -60,7 +60,7 @@ export function Timeline({ title, items = [], status = 'ok', empty, messages = {
   );
 }
 
-/* Diálogo de detail de dos columnas: datos a la izquierda, panel libre a
+/* Diálogo de detalle de dos columnas: datos a la izquierda, panel libre a
    la derecha. Sin ninguna dependencia de datos ni de red. */
 export function DetailDialog({
   tone,
@@ -123,7 +123,7 @@ export function DetailDialog({
               </div>
 
               {note && (
-                <p style={{ margin: 0, fontSize: 12, color: 'var(--text-disabled)', lineHeight: 1.55 }}>{note}</p>
+                <p style={{ margin: 0, fontSize: 'var(--text-sm)', color: 'var(--text-disabled)', lineHeight: 1.55 }}>{note}</p>
               )}
             </div>
 

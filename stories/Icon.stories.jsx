@@ -3,7 +3,7 @@ import { Icon, ICONS } from '../src/index.js';
 export default { title: 'Iconos / Icon' };
 
 /* Catálogo completo: cualquier nombre que no aparezca aquí no está
-   registrado (ver CLAUDE.md § 2.3 del kit — icons.jsx / icon-catalog.js). */
+   registrado (ver design.md § 2.3 — icons.jsx / icon-catalog.js). */
 export const Catalogo = () => (
   <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fill, minmax(96px, 1fr))', gap: 16 }}>
     {ICONS.map((nombre) => (

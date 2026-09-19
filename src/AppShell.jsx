@@ -353,7 +353,7 @@ export function AppShell({
                 aria-label={plegado ? 'Mostrar el menú lateral' : 'Replegar el menú lateral'}
                 aria-expanded={!plegado}
               >
-                <Icon name="sh-plegar" size={18} />
+                <Icon name="sh-sidebar-collapse" size={18} />
               </button>
               {brand && <span className="hrl-topbar__brand">{brand}</span>}
               <div className="hrl-topbar__spacer" />

@@ -22,7 +22,7 @@ const preset = {
     "toast-bg": "#1c252e",
     "action-blue": "#0e71f1",
     /* Acento categórico, sin significado de estado: identifica módulos y series
-     (bitácora, derivaciones, histórico) que no son ni acción ni alerta. */
+     que no son ni acción ni alerta. */
     violet: "#8e33ff",
     danger: "#e52a00",
     "danger-text": "#b71d18",
@@ -43,7 +43,7 @@ const preset = {
     "marca-naranja": "#963d0c",
     /* Paleta categórica. No es un semáforo: son colores de identidad, sin
      significado de estado. Cada serie mantiene el suyo en todos los paneles
-     para que el mismo tipo de cáncer se reconozca de un vistazo. El orden es
+     para que la misma categoría se reconozca de un vistazo. El orden es
      estable: cambiarlo reasigna colores en todo el sistema. */
     "serie-1": "#004b50",
     "serie-2": "#0c7bb3",

@@ -33,7 +33,7 @@ export function GaugeArc({ value, color, label }) {
           />
         )}
       </svg>
-      <span className="hrl-gauge__valor" style={{ color: hayDato ? undefined : 'var(--text-disabled)' }}>
+      <span className={`hrl-gauge__valor${hayDato ? '' : ' hrl-gauge__valor--sin-dato'}`} style={{ color: hayDato ? undefined : 'var(--text-disabled)' }}>
         {hayDato ? `${Number(value.toFixed(2))}%` : 'Sin datos'}
       </span>
     </div>

@@ -2,7 +2,11 @@ import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { useCallback, useEffect, useId, useRef, useState } from "react";
 import { createPortal } from "react-dom";
 import { Icon } from "./icons.js";
-function DropdownMenu({ trigger, items = [], align = "derecha", label = "Men\xFA de acciones" }) {
+import { aliasObsoleto } from "./deprecated.js";
+const ALIGN_ALIASES = { derecha: "right", izquierda: "left" };
+const TONE_ALIASES = { peligro: "danger" };
+function DropdownMenu({ trigger, items = [], align: alineacionPedida = "right", label = "Men\xFA de acciones" }) {
+  const align = aliasObsoleto(ALIGN_ALIASES, alineacionPedida, "DropdownMenu");
   const [abierto, setAbierto] = useState(false);
   const [pos, setPos] = useState(null);
   const [activo, setActivo] = useState(-1);
@@ -18,7 +22,7 @@ function DropdownMenu({ trigger, items = [], align = "derecha", label = "Men\xFA
   const abrir = () => {
     const r = refDisparador.current?.getBoundingClientRect();
     if (!r) return;
-    setPos({ top: r.bottom + 6, left: align === "derecha" ? r.right : r.left, align });
+    setPos({ top: r.bottom + 6, left: align === "right" ? r.right : r.left, align });
     setAbierto(true);
   };
   useEffect(() => {
@@ -89,8 +93,8 @@ function DropdownMenu({ trigger, items = [], align = "derecha", label = "Men\xFA
           "aria-label": label,
           style: {
             top: pos.top,
-            left: pos.align === "derecha" ? void 0 : pos.left,
-            right: pos.align === "derecha" ? window.innerWidth - pos.left : void 0
+            left: pos.align === "right" ? void 0 : pos.left,
+            right: pos.align === "right" ? window.innerWidth - pos.left : void 0
           },
           children: items.map(
             (item, i) => item.separator ? /* @__PURE__ */ jsx("span", { className: "hrl-menu__separador", role: "separator" }, `sep-${i}`) : /* @__PURE__ */ jsxs(
@@ -98,7 +102,7 @@ function DropdownMenu({ trigger, items = [], align = "derecha", label = "Men\xFA
               {
                 type: "button",
                 role: "menuitem",
-                className: `hrl-menu__item${item.tone === "peligro" ? " hrl-menu__item--peligro" : ""}`,
+                className: `hrl-menu__item${aliasObsoleto(TONE_ALIASES, item.tone, "DropdownMenu") === "danger" ? " hrl-menu__item--peligro" : ""}`,
                 disabled: item.disabled,
                 onClick: () => {
                   item.onSelect?.();

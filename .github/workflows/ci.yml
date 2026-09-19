@@ -32,6 +32,9 @@ jobs:
           npm run tokens
           git diff --exit-code -- tokens.css src/preset.js
 
+      - name: Tamaños de fuente dentro de la escala
+        run: npm run literales
+
       - name: Build
         run: npm run build
 

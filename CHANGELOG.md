@@ -3,6 +3,65 @@
 Formato: qué cambió y por qué. Las versiones siguen el criterio semántico —
 quitar o renombrar una prop es un cambio mayor, porque rompe a quien ya la usa.
 
+## 1.3.0 — 19/09/2026
+
+Toda la API pública queda en inglés y todos los tamaños de fuente salen de la
+escala. Añade `design.md`, el contrato para modificar el kit.
+
+**Nombres de icono en inglés.** 19 iconos tenían nombre en español; ahora se
+nombran por lo que dibujan:
+
+| Antes | Ahora | Antes | Ahora |
+|---|---|---|---|
+| `sh-chevron-abajo` | `sh-chevron-down` | `sh-sello` | `sh-stamp` |
+| `sh-plegar` | `sh-sidebar-collapse` | `sh-semaforo` | `sh-traffic-light` |
+| `sh-pastilla` | `sh-pill` | `sh-boletin` | `sh-bulletin` |
+| `sh-gota` | `sh-drop` | `sh-bandeja` | `sh-inbox` |
+| `sh-bisturi` | `sh-scalpel` | `sh-lapiz` | `sh-pencil` |
+| `sh-lavadora` | `sh-washer` | `sh-tijeras` | `sh-scissors` |
+| `sh-cubiertos` | `sh-cutlery` | `sh-caja` | `sh-box` |
+| `sh-radiografia` | `sh-xray` | `sh-bebe` | `sh-baby` |
+| `sh-llave` | `sh-wrench` | `sh-enviar` | `sh-send` |
+| `sh-remitir` | `sh-share` | | |
+
+Los nombres anteriores **siguen funcionando** (`ICON_ALIASES`) y avisan una vez
+por nombre en desarrollo; se retiran en la próxima versión mayor.
+
+**Valores de prop en inglés.** Mismo tratamiento, con los valores anteriores
+aceptados como alias hasta la próxima mayor: `IconButton tone` (`plano` →
+`plain`, `accion` → `action`), `DropdownMenu align` (`derecha` → `right`,
+`izquierda` → `left`) y el `tone` de sus ítems (`peligro` → `danger`).
+
+**Tamaños de fuente dentro de la escala.** El CSS tenía 35 `font-size` (y el
+`DetailDialog` 5 `fontSize`) que no coincidían con ningún escalón: 13 px se
+repetía 10 veces, junto a 10, 11.5, 12, 14.5, 15, 16, 18, 19, 20, 26 y 28.
+Cada uno pasa al escalón más cercano; los empates suben, para no achicar texto:
+
+| Antes | Ahora | Antes | Ahora |
+|---|---|---|---|
+| 10, 11.5 px | `--text-xs` (11) | 16, 18, 19 px | `--text-lg` (17) |
+| 12 px | `--text-sm` (12.5) | 20 px | `--text-xl` (22) |
+| 13 px | `--text-base` (13.5) | 26, 28 px | `--text-2xl` (30) |
+| 14.5, 15 px | `--text-md` (14) | | |
+
+**Es un cambio de aspecto**, de como máximo 2 px salvo la cifra del `GaugeArc`
+(26 → 30 px). Sube el texto más chico (10 px era ilegible) y baja entre 0.5 y
+2 px el de 14.5–19 px. `npm run literales` falla si un `font-size` vuelve a escribirse
+como literal, y el CI lo ejecuta.
+
+**Corregido.**
+- 17 pictogramas (`sh-pill`, `sh-drop`, `sh-scalpel`…) tenían su `<symbol>`
+  **dentro de cada `<Icon>`**, no en `IconSprite`: cada icono dibujado repetía en
+  el DOM 17 definiciones con los mismos ids. Pasan a `IconSprite`, como el resto.
+  Efecto: ahora, como los otros 34, **requieren `IconSprite` montado** (`AppShell`
+  ya lo monta). La prueba de humo falla si un icono del registro no tiene su
+  símbolo.
+- El «Sin datos» de `GaugeArc` se partía en dos líneas y se salía del arco
+  (ya pasaba antes; a 30 px se notaba más). Ahora va en una línea, a
+  `--text-lg`, dentro del arco.
+- Los comentarios de `tokens.json` mencionaban «tipo de cáncer» y módulos de una
+  aplicación concreta; el kit no sabe de dominio (`design.md` § 1).
+
 ## 1.2.0 — 19/09/2026
 
 La tipografía y las formas pasan a ser tan configurables como los colores.

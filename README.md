@@ -96,13 +96,17 @@ diseño, no una sorpresa en producción.
 
 ## Desarrollo
 
+Las reglas para modificar el kit —qué entra aquí y qué se queda en cada
+aplicación, tokens, iconos, idioma, versiones— están en [`design.md`](design.md).
+
 ```bash
 npm install
 npm run tokens        # regenera tokens.css y preset.js desde tokens.json
 npm run build         # compila src/ a dist/ con esbuild
 npm run humo          # monta cada componente del compilado y falla si alguno revienta
 npm run contrast      # WCAG AA de los tokens, informativo
-npm run verificar     # tokens + build + humo
+npm run literales     # falla si un font-size vuelve a escribirse fuera de la escala
+npm run verificar     # tokens + literales + build + humo
 npm run ladle:serve   # catálogo visual en local
 npm run ladle:build   # catálogo como sitio estático en build/
 ```

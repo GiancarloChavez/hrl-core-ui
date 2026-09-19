@@ -89,10 +89,33 @@ for (const nombre of PORTALES) {
   }
 }
 
+/* Nombres en español que la API tuvo antes de pasar a inglés: tienen que seguir
+   funcionando hasta la próxima versión mayor, y el registro no puede volver a
+   tener un icono sin su <symbol> (un renombrado a medias se ve en blanco, no
+   revienta el render). */
+const sprite = renderToString(createElement(kit.IconSprite));
+const html = (nombre, props) => renderToString(createElement(kit[nombre], props));
+const ASERCIONES = [
+  ['todo icono del registro tiene su <symbol>', () => kit.ICONS.every((n) => sprite.includes(`id="${n}"`))],
+  ['todo alias apunta a un icono registrado', () => Object.values(kit.ICON_ALIASES).every((n) => kit.ICONS.includes(n))],
+  ['ningún alias sigue en el registro', () => kit.ICONS.every((n) => !(n in kit.ICON_ALIASES))],
+  ['Icon con nombre obsoleto resuelve al nuevo', () => html('Icon', { name: 'sh-pastilla' }).includes('#sh-pill')],
+  ['Icon con nombre nuevo', () => html('Icon', { name: 'sh-pill' }).includes('#sh-pill')],
+  ['IconButton tone="action"', () => html('IconButton', { icon: 'sh-eye', 'aria-label': 'Ver', tone: 'action' }).includes('hrl-accion')],
+  ['IconButton tone="accion" (obsoleto)', () => html('IconButton', { icon: 'sh-eye', 'aria-label': 'Ver', tone: 'accion' }).includes('hrl-accion')],
+  ['IconButton por defecto no es de acción', () => !html('IconButton', { icon: 'sh-eye', 'aria-label': 'Ver' }).includes('hrl-accion')],
+];
+for (const [nombre, prueba] of ASERCIONES) {
+  let ok = false;
+  try { ok = prueba(); } catch (e) { console.log(`  FALLA ${nombre}\n        ${e.message.split('\n')[0]}`); }
+  if (ok) console.log(`  ok   ${nombre}`);
+  else { fallos += 1; console.log(`  FALLA ${nombre}`); }
+}
+
 /* El barril tiene que exportar todo lo que documenta el catálogo: un export
    que se olvida al renombrar no lo detecta ningún build. */
 const esperados = ['Button', 'Input', 'DataTable', 'AppShell', 'PageActions', 'usePagination',
-  'useExitAnimation', 'useExpandedRows', 'useFloatingTip', 'readTheme', 'applyTheme',
+  'useExitAnimation', 'useExpandedRows', 'ICON_ALIASES', 'useFloatingTip', 'readTheme', 'applyTheme',
   'memoize', 'invalidate', 'sortRows', 'nextSort', 'variants', 'cx', 'preset', 'token', 'ICONS'];
 const faltan = esperados.filter((n) => !(n in kit));
 if (faltan.length) {

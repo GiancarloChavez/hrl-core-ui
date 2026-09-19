@@ -24,7 +24,7 @@ function GaugeArc({ value, color, label }) {
         }
       )
     ] }),
-    /* @__PURE__ */ jsx("span", { className: "hrl-gauge__valor", style: { color: hayDato ? void 0 : "var(--text-disabled)" }, children: hayDato ? `${Number(value.toFixed(2))}%` : "Sin datos" })
+    /* @__PURE__ */ jsx("span", { className: `hrl-gauge__valor${hayDato ? "" : " hrl-gauge__valor--sin-dato"}`, style: { color: hayDato ? void 0 : "var(--text-disabled)" }, children: hayDato ? `${Number(value.toFixed(2))}%` : "Sin datos" })
   ] });
 }
 function Sparkline({ values, color, height = 30 }) {

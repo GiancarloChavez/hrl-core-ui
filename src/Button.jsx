@@ -1,10 +1,11 @@
 import { variants } from './variants.js';
 import { Icon } from './icons.jsx';
+import { aliasObsoleto } from './deprecated.js';
 
 /* Botón del sistema. Único punto de entrada: en la aplicación no se escribe
-   <button> a mano (ver CLAUDE.md).
+   <button> a mano (ver design.md).
 
-   - `tone`   cta | blue | ghost | peligro | plano
+   - `tone`   cta | blue | ghost | danger | plain
    - `size` md (40px, objetivo táctil mínimo) | sm
    - `icon`  nombre del registro de iconos, a la izquierda del texto
    - `loading` bloquea el botón y sustituye el texto por el de `loadingText` */
@@ -50,14 +51,19 @@ export function Button({
 }
 
 /* Botón de solo icono. Obliga a `aria-label` porque no tiene texto. */
-export function IconButton({ icon, 'aria-label': label, tone = 'plano', className, ...rest }) {
+/* `tone` de IconButton: plain (por defecto) | action. Los nombres en español
+   anteriores se siguen aceptando (ver deprecated.js). */
+const TONE_ALIASES = { plano: 'plain', accion: 'action' };
+
+export function IconButton({ icon, 'aria-label': label, tone: tonoPedido = 'plain', className, ...rest }) {
+  const tone = aliasObsoleto(TONE_ALIASES, tonoPedido, 'IconButton');
   if (!label && import.meta.env?.DEV) {
     console.warn('IconButton sin aria-label: un botón sin texto necesita nombre accesible.');
   }
   return (
     <button
       type="button"
-      className={`hrl-iconbtn${tone === 'accion' ? ' hrl-accion' : ''}${className ? ` ${className}` : ''}`}
+      className={`hrl-iconbtn${tone === 'action' ? ' hrl-accion' : ''}${className ? ` ${className}` : ''}`}
       aria-label={label}
       {...rest}
     >

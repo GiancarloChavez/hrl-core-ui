@@ -31,7 +31,7 @@ import { PageHeader } from "./PageHeader.js";
 import { PageActions, PAGE_ACTIONS_ID } from "./PageActions.js";
 import { FilterBar } from "./FilterBar.js";
 import { Icon, IconSprite, Sprite } from "./icons.js";
-import { ICONS } from "./icon-catalog.js";
+import { ICONS, ICON_ALIASES } from "./icon-catalog.js";
 import { variants, cx } from "./variants.js";
 import { preset, token, literalColor, tokensToCss } from "./preset.js";
 import { useExitAnimation, useMountedWhile, useExpandedRows, EXIT_MS } from "./useExitAnimation.js";
@@ -59,6 +59,7 @@ export {
   Funnel,
   GaugeArc,
   ICONS,
+  ICON_ALIASES,
   Icon,
   IconButton,
   IconSprite,

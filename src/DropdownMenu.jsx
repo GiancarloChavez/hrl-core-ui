@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from './icons.jsx';
+import { aliasObsoleto } from './deprecated.js';
 
 /* Menú desplegable accesible, sin Radix.
 
@@ -14,10 +15,16 @@ import { Icon } from './icons.jsx';
        items={[
          { id: 'editar', label: 'Editar', icon: 'sh-doc', onSelect: () => {} },
          { separator: true },
-         { id: 'borrar', label: 'Eliminar', icon: 'sh-trash', tone: 'peligro', onSelect: () => {} },
+         { id: 'borrar', label: 'Eliminar', icon: 'sh-trash', tone: 'danger', onSelect: () => {} },
        ]}
      /> */
-export function DropdownMenu({ trigger, items = [], align = 'derecha', label = 'Menú de acciones' }) {
+/* `align`: right (por defecto) | left. `tone` de un ítem: danger. Los nombres en
+   español anteriores se siguen aceptando (ver deprecated.js). */
+const ALIGN_ALIASES = { derecha: 'right', izquierda: 'left' };
+const TONE_ALIASES = { peligro: 'danger' };
+
+export function DropdownMenu({ trigger, items = [], align: alineacionPedida = 'right', label = 'Menú de acciones' }) {
+  const align = aliasObsoleto(ALIGN_ALIASES, alineacionPedida, 'DropdownMenu');
   const [abierto, setAbierto] = useState(false);
   const [pos, setPos] = useState(null);
   const [activo, setActivo] = useState(-1);
@@ -36,7 +43,7 @@ export function DropdownMenu({ trigger, items = [], align = 'derecha', label = '
   const abrir = () => {
     const r = refDisparador.current?.getBoundingClientRect();
     if (!r) return;
-    setPos({ top: r.bottom + 6, left: align === 'derecha' ? r.right : r.left, align });
+    setPos({ top: r.bottom + 6, left: align === 'right' ? r.right : r.left, align });
     setAbierto(true);
   };
 
@@ -116,8 +123,8 @@ export function DropdownMenu({ trigger, items = [], align = 'derecha', label = '
             aria-label={label}
             style={{
               top: pos.top,
-              left: pos.align === 'derecha' ? undefined : pos.left,
-              right: pos.align === 'derecha' ? window.innerWidth - pos.left : undefined,
+              left: pos.align === 'right' ? undefined : pos.left,
+              right: pos.align === 'right' ? window.innerWidth - pos.left : undefined,
             }}
           >
             {items.map((item, i) =>
@@ -128,7 +135,7 @@ export function DropdownMenu({ trigger, items = [], align = 'derecha', label = '
                   key={item.id ?? item.label}
                   type="button"
                   role="menuitem"
-                  className={`hrl-menu__item${item.tone === 'peligro' ? ' hrl-menu__item--peligro' : ''}`}
+                  className={`hrl-menu__item${aliasObsoleto(TONE_ALIASES, item.tone, 'DropdownMenu') === 'danger' ? ' hrl-menu__item--peligro' : ''}`}
                   disabled={item.disabled}
                   onClick={() => {
                     item.onSelect?.();

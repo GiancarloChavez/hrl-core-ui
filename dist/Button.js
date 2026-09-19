@@ -1,6 +1,7 @@
 import { jsx, jsxs } from "react/jsx-runtime";
 import { variants } from "./variants.js";
 import { Icon } from "./icons.js";
+import { aliasObsoleto } from "./deprecated.js";
 const clase = variants(
   "hrl-btn",
   {
@@ -42,7 +43,9 @@ function Button({
     }
   );
 }
-function IconButton({ icon, "aria-label": label, tone = "plano", className, ...rest }) {
+const TONE_ALIASES = { plano: "plain", accion: "action" };
+function IconButton({ icon, "aria-label": label, tone: tonoPedido = "plain", className, ...rest }) {
+  const tone = aliasObsoleto(TONE_ALIASES, tonoPedido, "IconButton");
   if (!label && import.meta.env?.DEV) {
     console.warn("IconButton sin aria-label: un bot\xF3n sin texto necesita nombre accesible.");
   }
@@ -50,7 +53,7 @@ function IconButton({ icon, "aria-label": label, tone = "plano", className, ...r
     "button",
     {
       type: "button",
-      className: `hrl-iconbtn${tone === "accion" ? " hrl-accion" : ""}${className ? ` ${className}` : ""}`,
+      className: `hrl-iconbtn${tone === "action" ? " hrl-accion" : ""}${className ? ` ${className}` : ""}`,
       "aria-label": label,
       ...rest,
       children: /* @__PURE__ */ jsx(Icon, { name: icon, size: 18 })

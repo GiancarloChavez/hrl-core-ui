@@ -5,7 +5,7 @@ import { Tooltip } from './Tooltip.jsx';
 
    Existe para que ninguna tabla vuelva a resolverlo con `title="..."` nativo:
    ese tooltip del navegador tarda un segundo en aparecer, no se puede leer con
-   el teclado y no respeta la tipografía del sistema (ver CLAUDE.md § 2.1).
+   el teclado y no respeta la tipografía del sistema (ver design.md § 2.1).
 
      <TruncatedText text={f.descripcion} width={520} label="Descripción" />
 

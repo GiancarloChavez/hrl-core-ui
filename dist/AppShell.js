@@ -258,7 +258,7 @@ function AppShell({
                 onClick: alternarMenu,
                 "aria-label": plegado ? "Mostrar el men\xFA lateral" : "Replegar el men\xFA lateral",
                 "aria-expanded": !plegado,
-                children: /* @__PURE__ */ jsx(Icon, { name: "sh-plegar", size: 18 })
+                children: /* @__PURE__ */ jsx(Icon, { name: "sh-sidebar-collapse", size: 18 })
               }
             ),
             brand && /* @__PURE__ */ jsx("span", { className: "hrl-topbar__brand", children: brand }),

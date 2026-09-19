@@ -20,15 +20,15 @@ function Timeline({ title, items = [], status = "ok", empty, messages = {} }) {
   return /* @__PURE__ */ jsxs("div", { children: [
     /* @__PURE__ */ jsxs("h4", { className: "hrl-hist__titulo", children: [
       title,
-      status === "ok" && items.length > 0 && /* @__PURE__ */ jsxs("span", { style: { fontWeight: 400, color: "var(--text-disabled)", fontSize: 13 }, children: [
+      status === "ok" && items.length > 0 && /* @__PURE__ */ jsxs("span", { style: { fontWeight: 400, color: "var(--text-disabled)", fontSize: "var(--text-base)" }, children: [
         " ",
         "\xB7 ",
         items.length.toLocaleString("es-PE")
       ] })
     ] }),
-    status === "loading" && /* @__PURE__ */ jsx("p", { style: { fontSize: 13, color: "var(--text-secondary)" }, children: textos.loading }),
-    status === "error" && /* @__PURE__ */ jsx("p", { style: { fontSize: 13, color: "var(--danger-text)" }, children: textos.error }),
-    status === "ok" && items.length === 0 && /* @__PURE__ */ jsx("p", { style: { fontSize: 13, color: "var(--text-secondary)" }, children: textos.empty }),
+    status === "loading" && /* @__PURE__ */ jsx("p", { style: { fontSize: "var(--text-base)", color: "var(--text-secondary)" }, children: textos.loading }),
+    status === "error" && /* @__PURE__ */ jsx("p", { style: { fontSize: "var(--text-base)", color: "var(--danger-text)" }, children: textos.error }),
+    status === "ok" && items.length === 0 && /* @__PURE__ */ jsx("p", { style: { fontSize: "var(--text-base)", color: "var(--text-secondary)" }, children: textos.empty }),
     status === "ok" && items.length > 0 && /* @__PURE__ */ jsx("div", { className: "hrl-hist__lista", children: items.map((it, i) => /* @__PURE__ */ jsxs("div", { className: "hrl-hist__fila", style: { animationDelay: `${Math.min(i, 12) * 30}ms` }, children: [
       /* @__PURE__ */ jsx("span", { className: "hrl-hist__fecha", children: it.date }),
       /* @__PURE__ */ jsx("span", { className: "hrl-hist__texto", children: it.title }),
@@ -83,7 +83,7 @@ function DetailDialog({
                 /* @__PURE__ */ jsx("span", { className: "hrl-bloque__titulo", children: block.title }),
                 /* @__PURE__ */ jsx("p", { children: block.text })
               ] }),
-              note && /* @__PURE__ */ jsx("p", { style: { margin: 0, fontSize: 12, color: "var(--text-disabled)", lineHeight: 1.55 }, children: note })
+              note && /* @__PURE__ */ jsx("p", { style: { margin: 0, fontSize: "var(--text-sm)", color: "var(--text-disabled)", lineHeight: 1.55 }, children: note })
             ] }),
             aside
           ] }) }),

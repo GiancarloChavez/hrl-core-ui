@@ -253,7 +253,7 @@ const columnas = (onVer) => [
     render: (f) => (
       <div className="hrl-acciones-icono">
         <Tooltip title="Ver detalle" body="Abre la ficha completa del registro." focusable={false}>
-          <IconButton icon="sh-eye" tone="accion" aria-label={`Ver ${f.codigo}`} onClick={() => onVer(f)} />
+          <IconButton icon="sh-eye" tone="action" aria-label={`Ver ${f.codigo}`} onClick={() => onVer(f)} />
         </Tooltip>
       </div>
     ),
