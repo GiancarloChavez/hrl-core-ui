@@ -28,13 +28,16 @@
     "contrast": "node scripts/check-contrast.mjs",
     "build": "node build.mjs",
     "humo": "node scripts/humo.mjs",
-    "verificar": "node scripts/generate-tokens.mjs && node build.mjs && node scripts/humo.mjs"
+    "verificar": "node scripts/generate-tokens.mjs && node build.mjs && node scripts/humo.mjs",
+    "ladle:serve": "ladle serve",
+    "ladle:build": "ladle build"
   },
   "peerDependencies": {
     "react": ">=19",
     "react-dom": ">=19"
   },
   "devDependencies": {
+    "@ladle/react": "^5.1.1",
     "esbuild": "^0.25.0",
     "react": "^19.2.8",
     "react-dom": "^19.2.8"
@@ -43,6 +46,8 @@
     "node": ">=20"
   },
   "allowScripts": {
-    "esbuild": true
+    "esbuild": true,
+    "@swc/core": true,
+    "msw": true
   }
 }
