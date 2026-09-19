@@ -24,11 +24,11 @@ export const Select = () => {
 export const Numero = () => <Input label="Monto" kind="number" disabled />;
 
 export const ConAyudaYRequerido = () => (
-  <Input label="DNI" required info="Solo números, ocho dígitos" hint="Sin puntos ni guiones" />
+  <Input label="Código" required info="Solo números, ocho dígitos" hint="Sin puntos ni guiones" />
 );
 
 export const ConError = () => (
   <Input label="Correo" value="no-es-un-correo" onChange={() => {}} error="El formato no es válido" />
 );
 
-export const Busqueda = () => <Input label="Buscar" labelHidden searchIcon placeholder="Buscar paciente…" />;
+export const Busqueda = () => <Input label="Buscar" labelHidden searchIcon placeholder="Buscar registro…" />;

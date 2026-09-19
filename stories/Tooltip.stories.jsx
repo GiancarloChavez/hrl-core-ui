@@ -9,7 +9,7 @@ export const Basico = () => (
 );
 
 export const ConTitulo = () => (
-  <Tooltip title="Cobertura" body="Porcentaje de pacientes tamizados sobre el total esperado en el periodo.">
+  <Tooltip title="Cobertura" body="Porcentaje de registros completos sobre el total esperado en el periodo.">
     <span style={{ textDecoration: 'underline dotted' }}>Cobertura</span>
   </Tooltip>
 );

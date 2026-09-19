@@ -4,18 +4,18 @@ import { DataTable, Badge, IconButton } from '../src/index.js';
 export default { title: 'Datos / DataTable' };
 
 const FILAS = [
-  { id: '00123', nombre: 'Ana Torres', estado: 'ok', edad: 54 },
-  { id: '00124', nombre: 'Luis Ríos', estado: 'warn', edad: 61 },
-  { id: '00125', nombre: 'Marta Vela', estado: 'crit', edad: 47 },
+  { id: '00123', nombre: 'Elemento A', estado: 'ok', cantidad: 54 },
+  { id: '00124', nombre: 'Elemento B', estado: 'warn', cantidad: 61 },
+  { id: '00125', nombre: 'Elemento C', estado: 'crit', cantidad: 47 },
 ];
 
 /* La columna del identificador es el enlace que abre el registro, más un
    botón de acción explícito al final de la fila — nunca la fila entera
    clicable (ver CLAUDE.md § 3.4). */
 const COLUMNAS = [
-  { key: 'id', label: 'Caso', render: (f) => <a href={`#/${f.id}`}>{f.id}</a> },
+  { key: 'id', label: 'Código', render: (f) => <a href={`#/${f.id}`}>{f.id}</a> },
   { key: 'nombre', label: 'Nombre' },
-  { key: 'edad', label: 'Edad', align: 'right' },
+  { key: 'cantidad', label: 'Cantidad', align: 'right' },
   {
     key: 'estado',
     label: 'Estado',
@@ -25,7 +25,7 @@ const COLUMNAS = [
     key: 'acciones',
     label: '',
     align: 'right',
-    render: (f) => <IconButton icon="sh-eye" aria-label={`Ver caso ${f.id}`} />,
+    render: (f) => <IconButton icon="sh-eye" aria-label={`Ver registro ${f.id}`} />,
   },
 ];
 
@@ -49,7 +49,7 @@ export const Ordenable = () => {
     <DataTable
       columns={[
         { key: 'nombre', label: 'Nombre', sortable: true },
-        { key: 'edad', label: 'Edad', sortable: true, align: 'right' },
+        { key: 'cantidad', label: 'Cantidad', sortable: true, align: 'right' },
       ]}
       rows={FILAS}
       sort={sort}

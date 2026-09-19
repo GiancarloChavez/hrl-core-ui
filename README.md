@@ -86,7 +86,9 @@ diferencia en esta hoja sin que nadie lo notara.
 npm run contrast      # WCAG 2.1 AA de cada combinación texto/fondo, en los dos temas
 ```
 
-No bloquea el build: reporta la razón exacta de contraste de cada combinación
+Solo falla (y hace fallar el CI) si una combinación cae por debajo de 3:1, el
+umbral mínimo de cualquier texto o componente. Por encima de eso reporta la
+razón exacta de contraste de cada combinación
 real que produce el sistema (no cada combinación matemáticamente posible) y
 contra qué umbral pasa —4.5:1 para texto normal, 3:1 para texto grande o
 componentes de interfaz—, para que decidir qué corregir sea una decisión de
@@ -101,7 +103,18 @@ npm run build         # compila src/ a dist/ con esbuild
 npm run humo          # monta cada componente del compilado y falla si alguno revienta
 npm run contrast      # WCAG AA de los tokens, informativo
 npm run verificar     # tokens + build + humo
+npm run ladle:serve   # catálogo visual en local
+npm run ladle:build   # catálogo como sitio estático en build/
 ```
+
+### Catálogo visual
+
+Ladle muestra cada componente y los fundamentos (colores, tipografía, formas)
+leyendo directamente `tokens.json`, en claro y en oscuro. «Composición /
+Personalizar» permite cambiar el color de marca, la fuente y el redondeo en
+vivo y calcula el contraste del color elegido. Las historias viven en
+`stories/`; los datos de ejemplo son genéricos a propósito, porque el kit no
+sabe de ningún sistema concreto.
 
 `dist/` se versiona a propósito: así una instalación por URL de Git funciona sin
 que el consumidor compile nada.
@@ -121,5 +134,5 @@ rompe a quien ya la usa.
 
 | Sistema | Estado |
 |---|---|
-| Vigilancia Oncológica (HRL) | origen del kit; pendiente de pasar a consumirlo como paquete |
+| Vigilancia Oncológica (HRL) | origen del kit; ya lo consume como paquete (v1.1.2) |
 | Reporte Estadístico (HRL) | se reconstruye sobre esta v1.0 |

@@ -24,11 +24,11 @@ export const ConAviso = () => {
     <Tabs
       tabs={[
         { key: 'resumen', label: 'Resumen' },
-        { key: 'consistencia', label: 'Consistencia' },
+        { key: 'calidad', label: 'Calidad' },
       ]}
       active={activo}
       onChange={setActivo}
-      alerts={{ consistencia: '3 hallazgos nuevos' }}
+      alerts={{ calidad: '3 avisos nuevos' }}
     />
   );
 };

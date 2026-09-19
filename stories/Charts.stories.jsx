@@ -39,9 +39,9 @@ export const SerieConMesesSinDato = () => (
 export const EmbudoDeEtapas = () => (
   <Funnel
     stages={[
-      { name: 'Tamizaje', value: 500, color: 'var(--accent)' },
-      { name: 'Confirmación', value: 120, color: 'var(--warning)' },
-      { name: 'Tratamiento', value: 80, color: 'var(--success)' },
+      { name: 'Recibidos', value: 500, color: 'var(--accent)' },
+      { name: 'Validados', value: 120, color: 'var(--warning)' },
+      { name: 'Cerrados', value: 80, color: 'var(--success)' },
     ]}
   />
 );
@@ -49,9 +49,9 @@ export const EmbudoDeEtapas = () => (
 export const RankingBasico = () => (
   <Ranking
     rows={[
-      { name: 'Cuello uterino', value: 42, color: 'var(--accent)' },
-      { name: 'Mama', value: 31, color: 'var(--warning)' },
-      { name: 'Próstata', value: 18, color: 'var(--success)' },
+      { name: 'Categoría A', value: 42, color: 'var(--accent)' },
+      { name: 'Categoría B', value: 31, color: 'var(--warning)' },
+      { name: 'Categoría C', value: 18, color: 'var(--success)' },
     ]}
   />
 );

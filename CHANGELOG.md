@@ -3,6 +3,39 @@
 Formato: qué cambió y por qué. Las versiones siguen el criterio semántico —
 quitar o renombrar una prop es un cambio mayor, porque rompe a quien ya la usa.
 
+## 1.2.0 — 19/09/2026
+
+La tipografía y las formas pasan a ser tan configurables como los colores.
+Hasta ahora `--font-sans`, `--text-*` y `--radius-*` existían como tokens pero
+casi ningún componente los usaba: el CSS tenía 53 radios y 85 tamaños de
+fuente escritos como literal, así que cambiar un token no cambiaba nada.
+
+- Toda `font-family` de `tokens.css` usa `var(--font-sans)` / `var(--font-mono)`
+  (5 lugares que llevaban el nombre de la fuente escrito). Cambiar la fuente
+  del sistema es ahora cambiar un token.
+- 25 `border-radius` y 50 `font-size` que coincidían **exactamente** con un
+  valor de la escala pasan a `var(--radius-*)` / `var(--text-*)`. Cada uno
+  lleva el valor original como respaldo (`var(--radius, 12px)`), de modo que
+  fuera de `.hrl-nuevo` / `.hrl-portal` —donde los tokens no existen— se ve
+  igual que antes. Con los tokens por defecto el resultado es idéntico:
+  se compararon las 72 historias del catálogo antes y después, y las
+  diferencias que quedaron se explican por animaciones, datos aleatorios y
+  la carga tardía de la fuente de Google, no por el CSS.
+- Token nuevo `--radius-card` (16 px): es el radio de `Card`/`StatCard`, que
+  no coincidía con ningún escalón de la escala.
+- Sin cambios de API ni de aspecto por defecto. **Pendiente**: quedan
+  literales que no coinciden con la escala (p. ej. `9px`, `13px`, `50%` de los
+  círculos) y no se tocaron; llevarlos a la escala cambiaría el aspecto y es
+  una decisión de diseño aparte.
+
+Además, el repositorio suma un **catálogo visual** (Ladle): `npm run
+ladle:serve`. Ver README.
+
+## 1.1.2 — 18/09/2026
+
+Solo declara `allowScripts` para `esbuild` en `package.json`, necesario para
+instalar el kit por Git con npm reciente.
+
 ## 1.1.1 — 18/09/2026
 
 Corrige los hallazgos que reportó `npm run contrast` en 1.1.0. Cada color se

@@ -14,23 +14,23 @@ export const Basico = () => {
           toneText="var(--accent-text)"
           icon="sh-doc"
           badge={{ label: 'Activo', tone: 'ok' }}
-          title="Caso #00123"
+          title="Registro #00123"
           subtitle="Registrado el 12 de marzo de 2026"
           fields={
             <>
-              <Field k="DNI" v="12345678" mono />
-              <Field k="Sexo" v="Femenino" />
-              <Field k="Edad" v="54 años" />
+              <Field k="Código" v="12345678" mono />
+              <Field k="Categoría" v="A" />
+              <Field k="Cantidad" v="54" />
             </>
           }
-          block={{ title: 'Diagnóstico', text: 'Descripción breve del caso.' }}
+          block={{ title: 'Resumen', text: 'Descripción breve del registro.' }}
           note="Los datos mostrados son de ejemplo."
           aside={
             <Timeline
               title="Historial"
               items={[
-                { key: '1', date: '2026-01-10', title: 'Primera consulta' },
-                { key: '2', date: '2026-02-02', title: 'Resultado de biopsia' },
+                { key: '1', date: '2026-01-10', title: 'Alta del registro' },
+                { key: '2', date: '2026-02-02', title: 'Validación completada' },
               ]}
             />
           }

@@ -1,0 +1,241 @@
+/* Estilos del catálogo, no del kit: solo componen las páginas de muestra
+   (Fundamentos, Composición). Todo valor de color, radio, sombra y tipografía
+   sale de los tokens, para que el catálogo también responda al tema y a
+   «Personalizar». */
+
+.showroom {
+  min-height: 100vh;
+  padding: 32px;
+  box-sizing: border-box;
+}
+
+.showroom-pagina {
+  max-width: 1040px;
+  margin: 0 auto;
+  display: grid;
+  gap: 32px;
+}
+
+.showroom-portada {
+  display: grid;
+  gap: 16px;
+  padding: 40px 32px;
+  border-radius: var(--radius-xl);
+  background: var(--surface);
+  box-shadow: var(--shadow-md);
+  border-left: 6px solid var(--primary);
+}
+
+.showroom-sobretitulo {
+  margin: 0;
+  font-size: var(--text-sm);
+  font-weight: var(--weight-bold);
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  color: var(--primary-text);
+}
+
+.showroom-titulo {
+  margin: 0;
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+}
+
+.showroom-bajada {
+  margin: 0;
+  max-width: 62ch;
+  font-size: var(--text-lg);
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+.showroom-cifras {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+  gap: 16px;
+}
+
+.showroom-cifra {
+  display: grid;
+  gap: 2px;
+  padding: 16px;
+  border-radius: var(--radius);
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+}
+
+.showroom-cifra strong {
+  font-size: var(--text-2xl);
+  font-weight: var(--weight-bold);
+  line-height: var(--leading-tight);
+  color: var(--primary-text);
+}
+
+.showroom-cifra span {
+  font-size: var(--text-sm);
+  color: var(--text-secondary);
+}
+
+.showroom-principios {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+  gap: 16px;
+}
+
+.showroom-principio h4 {
+  margin: 0 0 6px;
+  font-size: var(--text-md);
+  font-weight: var(--weight-bold);
+}
+
+.showroom-principio p {
+  margin: 0;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+.showroom-fila {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  align-items: center;
+}
+
+/* ------------------------------------------------------------ colores */
+.showroom-muestras {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(168px, 1fr));
+  gap: 16px;
+}
+
+.showroom-muestra {
+  border-radius: var(--radius);
+  overflow: hidden;
+  background: var(--surface);
+  box-shadow: var(--shadow-sm);
+  border: 1px solid var(--border);
+}
+
+.showroom-muestra__color {
+  height: 64px;
+  border-bottom: 1px solid var(--border);
+}
+
+.showroom-muestra__texto {
+  display: grid;
+  gap: 2px;
+  padding: 10px 12px;
+}
+
+.showroom-muestra__nombre {
+  font-size: var(--text-sm);
+  font-weight: var(--weight-semibold);
+  word-break: break-all;
+}
+
+.showroom-muestra__valor {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+.showroom-seccion-desc {
+  margin: 0 0 16px;
+  font-size: var(--text-base);
+  line-height: var(--leading-normal);
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------- tipografía */
+.showroom-familia {
+  display: grid;
+  grid-template-columns: auto 1fr;
+  gap: 8px 24px;
+  align-items: center;
+}
+
+.showroom-familia__aa {
+  font-size: calc(var(--text-2xl) * 2);
+  line-height: 1;
+  font-weight: var(--weight-bold);
+  color: var(--primary-text);
+}
+
+.showroom-escala {
+  display: grid;
+  gap: 4px;
+}
+
+.showroom-escala__fila {
+  display: grid;
+  grid-template-columns: 130px 1fr;
+  gap: 16px;
+  align-items: baseline;
+  padding: 10px 0;
+  border-bottom: 1px solid var(--border-soft);
+}
+
+.showroom-escala__fila:last-child {
+  border-bottom: none;
+}
+
+.showroom-etiqueta {
+  font-family: var(--font-mono);
+  font-size: var(--text-xs);
+  color: var(--text-secondary);
+}
+
+/* --------------------------------------------------------------- forma */
+.showroom-formas {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+  gap: 20px;
+}
+
+.showroom-forma {
+  display: grid;
+  gap: 8px;
+  justify-items: center;
+  text-align: center;
+}
+
+.showroom-forma__caja {
+  width: 96px;
+  height: 96px;
+  background: var(--primary-soft, var(--success-soft));
+  border: 2px solid var(--primary);
+}
+
+.showroom-forma__caja--sombra {
+  border: none;
+  background: var(--surface);
+}
+
+/* -------------------------------------------------- ajustes de muestra */
+
+/* El kit no trae estilo de enlace (vive en cada aplicación); aquí se usa el
+   mismo criterio que sus tablas: color de acento, sin subrayado hasta el
+   hover. */
+.showroom a {
+  color: var(--accent-text);
+  font-weight: var(--weight-semibold);
+  text-decoration: none;
+}
+
+.showroom a:hover {
+  text-decoration: underline;
+}
+
+/* El encabezado de página trae sangría propia porque en una app vive dentro
+   del área de contenido; en una página de muestra se alinea con las tarjetas. */
+.showroom-pagina .hrl-pagehead {
+  padding-inline: 0;
+}
+
+/* Aire entre el título de una tarjeta y su contenido libre. Las tarjetas
+   «flush» (con tabla a sangre) llevan su propio relleno y no se tocan. */
+.showroom .hrl-section:not(.hrl-section--flush) > .hrl-section__head {
+  margin-bottom: 16px;
+}

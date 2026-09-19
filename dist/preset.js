@@ -137,6 +137,7 @@ const preset = {
     sm: "8px",
     md: "10px",
     lg: "14px",
+    card: "16px",
     xl: "18px",
     full: "999px"
   },

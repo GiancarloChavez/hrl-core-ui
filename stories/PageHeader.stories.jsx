@@ -6,9 +6,9 @@ export const Basico = () => <PageHeader title="Indicadores" description="Resumen
 
 export const Completo = () => (
   <PageHeader
-    title="Consistencia"
-    description="Hallazgos pendientes de revisión"
-    breadcrumbs={[{ label: 'Inicio', href: '#' }, { label: 'Consistencia' }]}
+    title="Calidad de datos"
+    description="Registros pendientes de revisión"
+    breadcrumbs={[{ label: 'Inicio', href: '#' }, { label: 'Calidad de datos' }]}
     actions={<Button icon="sh-export">Exportar</Button>}
   />
 );
