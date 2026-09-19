@@ -1,13 +1,14 @@
 name: Catálogo
 
-# Publica el catálogo visual (Ladle) en la rama gh-pages, que es la que sirve
-# GitHub Pages. La rama es solo salida generada: se sobrescribe entera en cada
-# publicación y nadie la edita a mano.
+# Compila el catálogo visual (Ladle) y lo sube a la rama `catalogo`, que es la
+# que publica Netlify. La rama es solo salida generada —el sitio ya
+# compilado— y se sobrescribe entera en cada publicación: nadie la edita a
+# mano y no contiene código fuente.
 #
 # Se publica al crear un tag de versión, no en cada push: el sitio público
 # muestra lo que está publicado, no lo que está a medias. Para publicar sin
-# tag (la primera vez, o tras un cambio solo del catálogo): pestaña Actions →
-# «Catálogo» → «Run workflow».
+# tag (tras un cambio solo del catálogo): pestaña Actions → «Catálogo» →
+# «Run workflow».
 on:
   push:
     tags: ['v*']
@@ -31,21 +32,29 @@ jobs:
 
       - run: npm ci
 
-      # Pages sirve el sitio en /<nombre-del-repositorio>/, no en la raíz: sin
-      # el base, los assets se pedirían a una ruta que no existe.
+      # Netlify sirve el sitio en la raíz de su dominio, así que el base es `/`.
       - name: Compilar el catálogo
-        run: npx ladle build --base "/${GITHUB_REPOSITORY#*/}/"
+        run: npx ladle build --base /
 
-      - run: touch build/.nojekyll
+      # Netlify lee esto al conectar la rama: como ya viene compilado, no hay
+      # comando de build y se publica la propia raíz de la rama.
+      - name: Configuración de Netlify
+        run: |
+          cat > build/netlify.toml <<'EOF'
+          # Rama generada por .github/workflows/catalogo.yml en el repositorio
+          # del kit. Solo contiene el sitio ya compilado: no hay nada que construir.
+          [build]
+            publish = "."
+          EOF
 
-      - name: Publicar en gh-pages
+      - name: Publicar en la rama catalogo
         env:
           GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         run: |
           cd build
-          git init -q -b gh-pages
+          git init -q -b catalogo
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
           git add -A
           git commit -q -m "Catálogo de ${GITHUB_REF_NAME}"
-          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" gh-pages
+          git push -f "https://x-access-token:${GH_TOKEN}@github.com/${GITHUB_REPOSITORY}.git" catalogo

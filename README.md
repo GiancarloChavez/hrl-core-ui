@@ -119,22 +119,18 @@ sabe de ningún sistema concreto.
 ### Publicar el catálogo
 
 El workflow `.github/workflows/catalogo.yml` compila el catálogo y lo sube a la
-rama `gh-pages`, que es solo salida generada (se sobrescribe entera; no se
-edita a mano). Se ejecuta al crear un tag `v*`, o a demanda desde la pestaña
-Actions → «Catálogo» → «Run workflow».
+rama `catalogo`, que contiene solo el sitio ya compilado (sin código fuente) y
+se sobrescribe entera en cada publicación: no se edita a mano. Se ejecuta al
+crear un tag `v*`, o a demanda desde Actions → «Catálogo» → «Run workflow».
 
-Una sola vez, en GitHub: Settings → Pages → *Deploy from a branch* →
-rama `gh-pages`, carpeta `/ (root)`. El sitio queda en
-`https://<usuario>.github.io/hrl-core-ui/`.
+Netlify publica esa rama. Una sola vez, en app.netlify.com: *Add new site* →
+*Import an existing project* → GitHub → `hrl-core-ui` → rama `catalogo`. El
+`netlify.toml` de la rama ya indica que no hay comando de build y que se
+publica la raíz; a partir de ahí cada publicación de la rama redespliega sola.
 
-- GitHub Pages en un repositorio **privado** requiere un plan de pago (Pro,
-  Team o Enterprise). Con el plan gratuito, la opción no está disponible.
-- El sitio publicado es **público** aunque el repositorio sea privado: quien
-  tenga la URL ve los componentes, los tokens y el código compilado. El código
-  fuente del repositorio no se publica.
-
-`dist/` se versiona a propósito: así una instalación por URL de Git funciona sin
-que el consumidor compile nada.
+El sitio publicado es **público** aunque el repositorio sea privado: quien tenga
+la URL ve los componentes, los tokens y el código compilado. El código fuente
+del repositorio no se publica.
 
 ### Publicar una versión
 
