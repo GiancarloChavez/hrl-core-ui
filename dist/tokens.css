@@ -19,19 +19,21 @@
   --border-soft: rgba(145, 158, 171, 0.16);
   --row-hover: rgba(145, 158, 171, 0.06);
   --head-bg: rgba(145, 158, 171, 0.08);
+
   /* Versiones opacas, para las celdas fijas de la matriz: al ser sticky se
      superponen a otras filas y con un color translúcido se transparentan. */
   --head-solido: #eff1f3;
   --fila-solida: #fbfcfc;
-
   --brand-deep: #004b50;
   --brand: #00a76f;
   --brand-hover: #007867;
+
   /* El verde profundo se usa como fondo y como texto; en oscuro el texto
      necesita su propio tono, porque sobre fondo oscuro no se lee. */
   --brand-texto: #004b50;
   --toast-bg: #1c252e;
   --action-blue: #1877f2;
+
   /* Acento categórico, sin significado de estado: identifica módulos y series
      (bitácora, derivaciones, histórico) que no son ni acción ni alerta. */
   --violet: #8e33ff;
@@ -42,23 +44,23 @@
   --info: #00b8d9;
   --info-text: #006c9c;
 
-  /* Tonos de texto que acompañan a un fondo teñido pálido. En claro son
-     oscuros; en oscuro tienen que invertirse o el badge queda ilegible. */
+  /* Tonos de texto que acompañan a un fondo teñido pálido. En claro son oscuros;
+     en oscuro tienen que invertirse o el badge queda ilegible. */
   --ok-text: #00544a;
   --accent-text: #0a56ae;
   --neutral-text: #4e5a64;
 
-  /* Identidad institucional del hospital. Son los colores del logotipo, no
-     del sistema de diseño: se usan solo en la marca (login y cabecera) y no
-     cambian con el tema, porque siempre van sobre fondo claro. */
+  /* Identidad institucional del hospital. Son los colores del logotipo, no del
+     sistema de diseño: se usan solo en la marca (login y cabecera) y no cambian
+     con el tema, porque siempre van sobre fondo claro. */
   --marca-verde: #3b5c38;
   --marca-tierra: #8c3a10;
   --marca-naranja: #963d0c;
 
   /* Paleta categórica. No es un semáforo: son colores de identidad, sin
-     significado de estado. Cada serie mantiene el suyo en todos los paneles
-     para que el mismo tipo de cáncer se reconozca de un vistazo. El orden es
-     estable: cambiarlo reasigna colores en todo el sistema. */
+     significado de estado. Cada serie mantiene el suyo en todos los paneles para
+     que el mismo tipo de cáncer se reconozca de un vistazo. El orden es estable:
+     cambiarlo reasigna colores en todo el sistema. */
   --serie-1: #004b50;
   --serie-2: #0c7bb3;
   --serie-3: #b7560b;
@@ -70,20 +72,17 @@
   --serie-9: #4b4fd6;
   --serie-10: #96154c;
   --serie-11: #5119b7;
-
   --ease: cubic-bezier(0.33, 1, 0.68, 1);
   --shadow-card: 0 0 2px rgba(145, 158, 171, 0.2), 0 12px 24px -4px rgba(145, 158, 171, 0.12);
   --shadow-card-hover: 0 0 2px rgba(145, 158, 171, 0.2), 0 20px 40px -8px rgba(145, 158, 171, 0.28);
   --shadow-drawer: -24px 0 48px -12px rgba(145, 158, 171, 0.34);
 
-  /* ------------------------------------------------------------------
-     CAPA SEMANTICA
+  /* CAPA SEMANTICA
 
      Vocabulario estable del sistema de diseno. Los tokens de arriba son la
-     implementacion (pueden cambiar de valor o de nombre); estos son el
-     contrato con el que se escriben los componentes y los proyectos nuevos.
-     Usa SIEMPRE estos, no los de arriba.
-     ------------------------------------------------------------------ */
+     implementacion (pueden cambiar de valor o de nombre); estos son el contrato
+     con el que se escriben los componentes y los proyectos nuevos. Usa SIEMPRE
+     estos, no los de arriba. */
 
   /* Superficies y texto */
   --background: var(--bg-app);
@@ -105,8 +104,8 @@
   --accent: var(--action-blue);
   --accent-foreground: #ffffff;
 
-  /* Semaforo de estado. Cada uno con su par de texto legible sobre su
-     propio fondo tenido. */
+  /* Semaforo de estado. Cada uno con su par de texto legible sobre su propio
+     fondo tenido. */
   --destructive: var(--danger);
   --destructive-foreground: #ffffff;
   --destructive-text: var(--danger-text);
@@ -115,9 +114,9 @@
   --success-text: var(--ok-text);
   --info-fg: var(--info-text);
 
-  /* Fondos tenidos de cada estado. Existen para no escribir el mismo
-     `rgba(...)` suelto en cada aviso, y para poder subirles la opacidad en
-     modo oscuro, donde un velo del 8 % no se ve. */
+  /* Fondos tenidos de cada estado. Existen para no escribir el mismo `rgba(...)`
+     suelto en cada aviso, y para poder subirles la opacidad en modo oscuro,
+     donde un velo del 8 % no se ve. */
   --info-soft: rgba(0, 184, 217, 0.06);
   --success-soft: rgba(0, 167, 111, 0.08);
   --warning-soft: rgba(255, 171, 0, 0.10);
@@ -147,7 +146,6 @@
   /* ---------------------------------------------- escala tipografica */
   --font-sans: 'Public Sans', Helvetica, Arial, sans-serif;
   --font-mono: 'IBM Plex Mono', ui-monospace, monospace;
-
   --text-xs: 11px;
   --text-sm: 12.5px;
   --text-base: 13.5px;
@@ -155,12 +153,10 @@
   --text-lg: 17px;
   --text-xl: 22px;
   --text-2xl: 30px;
-
   --weight-regular: 400;
   --weight-medium: 500;
   --weight-semibold: 600;
   --weight-bold: 700;
-
   --leading-tight: 1.25;
   --leading-normal: 1.5;
   --leading-loose: 1.6;
@@ -173,8 +169,8 @@
   --transition-base: var(--duration-base) var(--ease);
   --transition-slow: var(--duration-slow) var(--ease);
 
-  /* Alto minimo de un objetivo tactil. El contrato de CLAUDE.md exige 40px
-     como minimo en cualquier control interactivo. */
+  /* Alto minimo de un objetivo tactil. El contrato de CLAUDE.md exige 40px como
+     minimo en cualquier control interactivo. */
   --touch-target: 40px;
   --touch-target-lg: 44px;
 
@@ -2015,7 +2011,6 @@ body { margin: 0; background: #f9fafb; }
   --head-bg: rgba(145, 158, 171, 0.12);
   --head-solido: #222d37;
   --fila-solida: #1e2831;
-
   --brand-texto: #5be49b;
   --toast-bg: #2b3742;
   --danger-text: #ffac9b;
@@ -2037,7 +2032,6 @@ body { margin: 0; background: #f9fafb; }
   --input-border: rgba(145, 158, 171, 0.34);
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.45);
   --shadow-overlay: 0 32px 64px -16px rgba(0, 0, 0, 0.66);
-
   --shadow-card: 0 0 2px rgba(0, 0, 0, 0.5), 0 12px 24px -4px rgba(0, 0, 0, 0.42);
   --shadow-card-hover: 0 0 2px rgba(0, 0, 0, 0.5), 0 20px 40px -8px rgba(0, 0, 0, 0.55);
   --shadow-drawer: -24px 0 48px -12px rgba(0, 0, 0, 0.6);

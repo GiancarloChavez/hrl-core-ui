@@ -65,13 +65,42 @@ código del hospital.
 fuente se escriben con su token. Los únicos literales de color viven en
 `tokens.css` y en `preset.js`, y solo en la definición del token.
 
+## Los tokens
+
+`tokens.json` es la única fuente de los valores del sistema —colores, radios,
+sombras, tipografía, movimiento—. `tokens.css` y `src/preset.js` se generan
+desde ahí; no se editan a mano, empiezan con un aviso de que son generados.
+Cambiar un color es cambiar `tokens.json` y correr:
+
+```bash
+npm run tokens        # regenera tokens.css y src/preset.js
+```
+
+Antes de esto, `tokens.css` y `preset.js` se mantenían a mano en paralelo, y
+fue exactamente así como dos copias del kit terminaron con 658 líneas de
+diferencia en esta hoja sin que nadie lo notara.
+
+### Contraste
+
+```bash
+npm run contrast      # WCAG 2.1 AA de cada combinación texto/fondo, en los dos temas
+```
+
+No bloquea el build: reporta la razón exacta de contraste de cada combinación
+real que produce el sistema (no cada combinación matemáticamente posible) y
+contra qué umbral pasa —4.5:1 para texto normal, 3:1 para texto grande o
+componentes de interfaz—, para que decidir qué corregir sea una decisión de
+diseño, no una sorpresa en producción.
+
 ## Desarrollo
 
 ```bash
 npm install
-npm run build        # compila src/ a dist/ con esbuild
-npm run humo         # monta cada componente del compilado y falla si alguno revienta
-npm run verificar    # las dos cosas
+npm run tokens        # regenera tokens.css y preset.js desde tokens.json
+npm run build         # compila src/ a dist/ con esbuild
+npm run humo          # monta cada componente del compilado y falla si alguno revienta
+npm run contrast      # WCAG AA de los tokens, informativo
+npm run verificar     # tokens + build + humo
 ```
 
 `dist/` se versiona a propósito: así una instalación por URL de Git funciona sin
