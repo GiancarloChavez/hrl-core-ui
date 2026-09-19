@@ -1,0 +1,42 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+    tags: ['v*']
+  pull_request:
+    branches: [main]
+
+jobs:
+  verificar:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 24
+
+      # allowScripts en package.json (npm >=11) es lo que autoriza el
+      # postinstall de esbuild aquí; el npm que trae el runner puede ser
+      # más viejo que el usado en desarrollo.
+      - run: npm install -g npm@^11
+
+      - run: npm ci
+
+      # tokens.css y src/preset.js se generan desde tokens.json. Si alguien
+      # los edita a mano y olvida regenerar, esto lo detecta en vez de dejar
+      # que las dos copias diverjan en silencio otra vez.
+      - name: Tokens sin drift respecto a tokens.json
+        run: |
+          npm run tokens
+          git diff --exit-code -- tokens.css src/preset.js
+
+      - name: Build
+        run: npm run build
+
+      - name: Humo de render
+        run: npm run humo
+
+      - name: Contraste WCAG AA
+        run: npm run contrast
