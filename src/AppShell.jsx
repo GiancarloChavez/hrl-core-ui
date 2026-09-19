@@ -158,7 +158,9 @@ function NotificationsDrawer({ items, tab, onTab, onMarkAllRead, onClose, leavin
                 <p style={{ margin: 0, fontSize: 'var(--text-md)', lineHeight: 'var(--leading-normal)' }}>
                   <strong style={{ fontWeight: 700 }}>{n.title}</strong> {n.body}
                 </p>
-                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--subtle-foreground)' }}>{n.meta}</span>
+                {/* `subtle-foreground` es para íconos y estado inactivo, no
+                    para texto que hay que leer: no llega a 4.5:1. */}
+                <span style={{ fontSize: 'var(--text-sm)', color: 'var(--muted-foreground)' }}>{n.meta}</span>
               </div>
               {n.unread && (
                 <span style={{ width: 8, height: 8, borderRadius: 'var(--radius-full)', background: 'var(--info)', flex: '0 0 auto', marginTop: 6 }} />

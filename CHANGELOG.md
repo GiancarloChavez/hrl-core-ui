@@ -3,6 +3,40 @@
 Formato: qué cambió y por qué. Las versiones siguen el criterio semántico —
 quitar o renombrar una prop es un cambio mayor, porque rompe a quien ya la usa.
 
+## 1.1.1 — 18/09/2026
+
+Corrige los hallazgos que reportó `npm run contrast` en 1.1.0. Cada color se
+oscureció lo mínimo posible en HSL (mismo matiz y saturación, solo baja la
+luminosidad) para no cambiar la identidad de marca más de lo necesario.
+
+- `--brand` (y con él `--primary`/`--success`/`--ring`) baja de `#00a76f` a
+  `#008659` **en tema claro únicamente**: el texto blanco de un botón
+  `primary` pasa de 3.11:1 a 4.62:1. El tema oscuro **conserva el verde
+  original** — el mismo valor no puede servir a la vez al texto blanco del
+  claro y al texto casi negro que ya usaba el oscuro (la ventana donde ambos
+  llegan a 4.5:1 es de un punto de luminosidad, prácticamente inexistente);
+  forzarlo habría bajado el oscuro de 5.35:1 a 3.65:1. Es la primera vez que
+  `--brand` distingue tema, y queda documentado en tokens.json por qué.
+- `--danger` baja de `#ff5630` a `#e52a00`: el texto blanco del botón
+  `destructive` pasa de 3.17:1 a 4.52:1, en los dos temas (no está
+  redefinido en oscuro).
+- `--action-blue` baja de `#1877f2` a `#0e71f1`: el texto blanco del botón
+  `accent` pasa de 4.23:1 a 4.52:1, en los dos temas.
+- `--text-disabled` (de donde cuelga `--subtle-foreground`) baja de
+  `#919eab` a `#8493a1` **en tema claro**, pero solo hasta 3:1, no 4.5:1: es
+  el umbral que le corresponde porque su uso real es sobre todo iconografía
+  (`EmptyState`, `StatCard`, `Steps`, iconos de `Input`) más un caso de
+  estado deshabilitado, exento por la propia norma. Llevarlo a 4.5:1 lo
+  dejaba a un paso de `--muted-foreground` (`#657585` contra `#637381`),
+  perdiendo la diferencia entre "secundario" y "terciario" que existe a
+  propósito. El texto oscuro no se tocó (ya daba 4.46:1, por encima de 3:1).
+  El único uso real de texto que tenía —el metadato de una notificación en
+  `AppShell`— se movió a `--muted-foreground`, que sí llega a 4.5:1.
+
+Quedan, a propósito, tres combinaciones con `subtle-foreground` entre 3:1 y
+4.5:1: es el trato correcto para un token pensado para iconos, no para texto
+de lectura.
+
 ## 1.1.0 — 18/09/2026
 
 `tokens.json` pasa a ser la única fuente de los tokens. `tokens.css` y

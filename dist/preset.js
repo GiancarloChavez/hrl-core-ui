@@ -4,7 +4,7 @@ const preset = {
     "bg-surface": "#ffffff",
     "text-primary": "#1c252e",
     "text-secondary": "#637381",
-    "text-disabled": "#919eab",
+    "text-disabled": "#8493a1",
     border: "rgba(145, 158, 171, 0.2)",
     "border-soft": "rgba(145, 158, 171, 0.16)",
     "row-hover": "rgba(145, 158, 171, 0.06)",
@@ -14,17 +14,17 @@ const preset = {
     "head-solido": "#eff1f3",
     "fila-solida": "#fbfcfc",
     "brand-deep": "#004b50",
-    brand: "#00a76f",
+    brand: "#008659",
     "brand-hover": "#007867",
     /* El verde profundo se usa como fondo y como texto; en oscuro el texto
      necesita su propio tono, porque sobre fondo oscuro no se lee. */
     "brand-texto": "#004b50",
     "toast-bg": "#1c252e",
-    "action-blue": "#1877f2",
+    "action-blue": "#0e71f1",
     /* Acento categórico, sin significado de estado: identifica módulos y series
      (bitácora, derivaciones, histórico) que no son ni acción ni alerta. */
     violet: "#8e33ff",
-    danger: "#ff5630",
+    danger: "#e52a00",
     "danger-text": "#b71d18",
     warning: "#ffab00",
     "warning-text": "#7a4100",
@@ -63,23 +63,23 @@ const preset = {
     "surface-foreground": "#1c252e",
     muted: "rgba(145, 158, 171, 0.08)",
     "muted-foreground": "#637381",
-    "subtle-foreground": "#919eab",
+    "subtle-foreground": "#8493a1",
     /* Accion principal */
-    primary: "#00a76f",
+    primary: "#008659",
     "primary-foreground": "#ffffff",
     "primary-strong": "#004b50",
     "primary-hover": "#007867",
     "primary-text": "#004b50",
     /* Accion secundaria / enlaces */
-    accent: "#1877f2",
+    accent: "#0e71f1",
     "accent-foreground": "#ffffff",
     /* Semaforo de estado. Cada uno con su par de texto legible sobre su propio
      fondo tenido. */
-    destructive: "#ff5630",
+    destructive: "#e52a00",
     "destructive-foreground": "#ffffff",
     "destructive-text": "#b71d18",
     "warning-fg": "#7a4100",
-    success: "#00a76f",
+    success: "#008659",
     "success-text": "#00544a",
     "info-fg": "#006c9c",
     /* Fondos tenidos de cada estado. Existen para no escribir el mismo
@@ -93,7 +93,7 @@ const preset = {
     /* Bordes, campos y foco */
     input: "#ffffff",
     "input-border": "rgba(145, 158, 171, 0.32)",
-    ring: "#00a76f"
+    ring: "#008659"
   },
   /* Equivalentes del tema oscuro. Solo los que cambian. */
   colorOscuro: {
@@ -124,7 +124,12 @@ const preset = {
     "neutral-soft": "rgba(145, 158, 171, 0.16)",
     /* Los semanticos que no se derivan solos de los de implementacion. */
     "primary-foreground": "#06231b",
-    "input-border": "rgba(145, 158, 171, 0.34)"
+    "input-border": "rgba(145, 158, 171, 0.34)",
+    /* El verde oscurecido en claro (para que el texto blanco del botón llegue a
+     4.5:1) deja muy poco margen para el texto casi negro que usa este tema: se
+     conserva aquí el verde original, que ya funcionaba bien con ese texto
+     (5.35:1). */
+    brand: "#00a76f"
   },
   radius: {
     DEFAULT: "12px",

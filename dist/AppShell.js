@@ -127,7 +127,7 @@ function NotificationsDrawer({ items, tab, onTab, onMarkAllRead, onClose, leavin
                   " ",
                   n.body
                 ] }),
-                /* @__PURE__ */ jsx("span", { style: { fontSize: "var(--text-sm)", color: "var(--subtle-foreground)" }, children: n.meta })
+                /* @__PURE__ */ jsx("span", { style: { fontSize: "var(--text-sm)", color: "var(--muted-foreground)" }, children: n.meta })
               ] }),
               n.unread && /* @__PURE__ */ jsx("span", { style: { width: 8, height: 8, borderRadius: "var(--radius-full)", background: "var(--info)", flex: "0 0 auto", marginTop: 6 } })
             ]
