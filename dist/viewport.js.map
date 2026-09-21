@@ -1,0 +1,7 @@
+{
+  "version": 3,
+  "sources": ["../src/viewport.js"],
+  "sourcesContent": ["/* Ancho del \u00E1rea donde puede dibujarse un elemento fijo.\n\n   No es window.innerWidth: ese cuenta la barra de desplazamiento y el hueco\n   que reserva `scrollbar-gutter: stable` (tokens.css lo pone en <html>), y en\n   algunos navegadores tambi\u00E9n lo cuenta clientWidth. El bloque contenedor de un\n   `position: fixed` no incluye ninguno de los dos, as\u00ED que calcular con\n   innerWidth deja tooltips y men\u00FAs hasta 15 px fuera del \u00E1rea visible. */\nexport function anchoVisible() {\n  const html = document.documentElement.getBoundingClientRect().width;\n  return Math.min(window.innerWidth, html || window.innerWidth);\n}\n"],
+  "mappings": "AAOO,SAAS,eAAe;AAC7B,QAAM,OAAO,SAAS,gBAAgB,sBAAsB,EAAE;AAC9D,SAAO,KAAK,IAAI,OAAO,YAAY,QAAQ,OAAO,UAAU;AAC9D;",
+  "names": []
+}

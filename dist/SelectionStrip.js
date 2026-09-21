@@ -2,15 +2,12 @@ import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { FloatingTip } from "./Tooltip.js";
 import { useFloatingTip } from "./useFloatingTip.js";
 function SelectionStrip({ items = [], active, onChange, label = "Selecci\xF3n" }) {
-  const { tip, follow, hide } = useFloatingTip();
+  const { tip, follow, anchor, hide } = useFloatingTip();
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx("div", { className: "hrl-tira", role: "group", "aria-label": label, children: items.map((item) => {
       const titulo = item.tip?.title ?? item.title;
       const cuerpo = item.tip?.body ?? item.description ?? "";
-      const anclar = (e) => {
-        const r = e.currentTarget.getBoundingClientRect();
-        follow({ clientX: r.left + r.width / 2, clientY: r.top }, titulo, cuerpo);
-      };
+      const anclar = (e) => anchor(e.currentTarget, titulo, cuerpo);
       return /* @__PURE__ */ jsxs(
         "button",
         {

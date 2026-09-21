@@ -1,51 +1,67 @@
 import { useState } from 'react';
 import { createPortal } from 'react-dom';
+import { anchoVisible } from './viewport.js';
 
 const MARGEN = 12;
 const ANCHO_MAX = 320;
+/* `.hrl-tip` es content-box: su ancho total es el del contenido más el relleno
+   horizontal (2 × 18 px). Hay que contarlo para saber si cabe. */
+const RELLENO = 36;
+const ANCHO_TOTAL = ANCHO_MAX + RELLENO;
+/* Distancia horizontal entre el punto de anclaje y el tooltip. Con el cursor
+   son 20 px: es lo que libra la silueta del puntero (una flecha de ~12 px, una
+   mano de ~16) para que nunca quede debajo del tooltip. Al anclar a un
+   elemento por teclado no hay puntero y basta con 8. */
+const SEPARACION = 20;
+const SEPARACION_ELEMENTO = 8;
 /* No se mide el DOM real antes de posicionar: este tooltip compartido se
    reubica en cada mousemove sobre superficies con miles de celdas (la matriz
    de producción), y medir ahí saldría caro. Esta altura es una cota amplia
-   para decidir si cabe arriba, no la altura exacta de cada tooltip. */
+   para acotar el tooltip verticalmente, no la altura exacta de cada uno. */
 const ALTO_RESERVA = 150;
 
-/* Se mantiene dentro de la ventana: pegado al borde el tooltip se cortaba. */
-function acotarX(x) {
-  const mitad = ANCHO_MAX / 2;
-  return Math.min(Math.max(x, mitad + MARGEN), window.innerWidth - mitad - MARGEN);
-}
+/* El tooltip sale al COSTADO del punto de anclaje, centrado en vertical: a la
+   derecha si cabe su ancho máximo y, si no, a la izquierda. Nunca arriba ni
+   abajo: ahí quedaba a un palmo del puntero y, al voltearse cerca de un borde,
+   lo tapaba.
 
-/* El tooltip se dibuja arriba del punto de anclaje por defecto (ver el
-   `transform` en `.hrl-tip`). Cerca del borde superior de la ventana no hay
-   sitio arriba, así que se voltea hacia abajo; si tampoco cabe abajo (ventana
-   muy baja), se ancla al lado con más espacio y el `top` se recorta para que
-   el punto de anclaje mismo nunca quede fuera de la ventana. */
-function ubicar(x, y) {
-  const espacioArriba = y;
-  const espacioAbajo = window.innerHeight - y;
-  const arribaCabe = espacioArriba >= ALTO_RESERVA + MARGEN;
-  const haciaAbajo = !arribaCabe && (espacioAbajo >= ALTO_RESERVA + MARGEN || espacioAbajo > espacioArriba);
+   Se ancla siempre por `left`; del lado izquierdo la clase `hrl-tip--izquierda`
+   lo desplaza su propio ancho con `translateX(-100%)`. El ancho no depende del
+   espacio disponible (`width: max-content` en el CSS) y se le da un `max-width`
+   propio: un elemento fijo se ajusta al espacio que le queda hasta el borde, y
+   pegado a él salía angosto y alto.
+
+   El espacio se mide con anchoVisible(), no con innerWidth (ver viewport.js). */
+function ubicar(x, y, separacion) {
+  const ancho = anchoVisible();
+  const espacioDerecha = ancho - x - separacion - MARGEN;
+  const espacioIzquierda = x - separacion - MARGEN;
+  const izquierda = espacioDerecha < ANCHO_TOTAL && espacioIzquierda > espacioDerecha;
+  const espacio = izquierda ? espacioIzquierda : espacioDerecha;
+
+  const mitad = ALTO_RESERVA / 2 + MARGEN;
+  const top = Math.min(Math.max(y, mitad), window.innerHeight - mitad);
 
   return {
-    left: acotarX(x),
-    top: Math.min(Math.max(y, MARGEN), window.innerHeight - MARGEN),
-    haciaAbajo,
+    izquierda,
+    estilo: {
+      top,
+      maxWidth: Math.max(Math.min(ANCHO_MAX, espacio - RELLENO), 120),
+      left: izquierda ? x - separacion : x + separacion,
+    },
   };
 }
 
 /* Capa flotante del tooltip. Una sola instancia alimentada con
-   {title, body, x, y}: en la matriz de producción hay más de mil celdas y
-   montar un componente por celda sería inviable. */
+   {title, body, x, y, gap?}: en la matriz de producción hay más de mil celdas y
+   montar un componente por celda sería inviable. `gap` sustituye a la
+   separación por defecto (ver SEPARACION_ELEMENTO). */
 export function FloatingTip({ tip }) {
   if (!tip) return null;
-  const { left, top, haciaAbajo } = ubicar(tip.x, tip.y);
+  const { izquierda, estilo } = ubicar(tip.x, tip.y, tip.gap ?? SEPARACION);
 
   return createPortal(
-    <div
-      className={`hrl-portal hrl-tip${haciaAbajo ? ' hrl-tip--abajo' : ''}`}
-      style={{ left, top }}
-      role="tooltip"
-    >
+    <div className={`hrl-portal hrl-tip${izquierda ? ' hrl-tip--izquierda' : ''}`} style={estilo} role="tooltip">
       {tip.title && <strong className="hrl-tip__title">{tip.title}</strong>}
       {tip.body}
     </div>,
@@ -65,11 +81,11 @@ export function FloatingTip({ tip }) {
 export function Tooltip({ title, body, children, as: Etiqueta = 'span', focusable = true, style }) {
   const [pos, setPos] = useState(null);
 
-  const mover = (e) => setPos({ x: e.clientX, y: e.clientY - 18 });
+  const mover = (e) => setPos({ x: e.clientX, y: e.clientY });
 
   const alEnfocar = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
-    setPos({ x: r.left + r.width / 2, y: r.top - 6 });
+    setPos({ x: r.right, y: r.top + r.height / 2, gap: SEPARACION_ELEMENTO });
   };
 
   return (
@@ -86,7 +102,7 @@ export function Tooltip({ title, body, children, as: Etiqueta = 'span', focusabl
         {children}
       </Etiqueta>
 
-      <FloatingTip tip={pos ? { title, body, x: pos.x, y: pos.y } : null} />
+      <FloatingTip tip={pos ? { title, body, ...pos } : null} />
     </>
   );
 }

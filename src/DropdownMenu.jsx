@@ -1,7 +1,8 @@
-import { useCallback, useEffect, useId, useRef, useState } from 'react';
+import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from './icons.jsx';
 import { aliasObsoleto } from './deprecated.js';
+import { anchoVisible } from './viewport.js';
 
 /* Menú desplegable accesible, sin Radix.
 
@@ -23,10 +24,19 @@ import { aliasObsoleto } from './deprecated.js';
 const ALIGN_ALIASES = { derecha: 'right', izquierda: 'left' };
 const TONE_ALIASES = { peligro: 'danger' };
 
+const MARGEN = 8;
+const HUECO = 6;
+/* Alto mínimo que se le respeta a un menú acotado: por debajo de esto no es
+   utilizable y es mejor dejar que rebose un poco que reducirlo a una ranura. */
+const ALTO_MINIMO = 120;
+
 export function DropdownMenu({ trigger, items = [], align: alineacionPedida = 'right', label = 'Menú de acciones' }) {
   const align = aliasObsoleto(ALIGN_ALIASES, alineacionPedida, 'DropdownMenu');
   const [abierto, setAbierto] = useState(false);
-  const [pos, setPos] = useState(null);
+  /* `ancla` es el rectángulo del disparador al abrir; `colocacion` es dónde
+     queda el menú una vez medido (ver el efecto de más abajo). */
+  const [ancla, setAncla] = useState(null);
+  const [colocacion, setColocacion] = useState(null);
   const [activo, setActivo] = useState(-1);
   const refDisparador = useRef(null);
   const refMenu = useRef(null);
@@ -43,9 +53,45 @@ export function DropdownMenu({ trigger, items = [], align: alineacionPedida = 'r
   const abrir = () => {
     const r = refDisparador.current?.getBoundingClientRect();
     if (!r) return;
-    setPos({ top: r.bottom + 6, left: align === 'right' ? r.right : r.left, align });
+    setAncla({ top: r.top, bottom: r.bottom, left: r.left, right: r.right });
+    setColocacion(null);
     setAbierto(true);
   };
+
+  /* El tamaño real del menú solo se conoce una vez montado, así que se coloca
+     en un layout effect: corre antes de pintar y no hay parpadeo (mientras
+     tanto va oculto). Se abre debajo del disparador si cabe; si no, encima; y se
+     acota a la ventana en los dos ejes. Sin esto salía fuera de pantalla junto a
+     cualquier borde. */
+  useLayoutEffect(() => {
+    const menu = refMenu.current;
+    if (!abierto || !ancla || !menu) return;
+
+    const ancho = menu.offsetWidth;
+    const alto = menu.scrollHeight + menu.offsetHeight - menu.clientHeight;
+    const visibleAncho = anchoVisible();
+    const visibleAlto = window.innerHeight;
+
+    const abajo = visibleAlto - ancla.bottom - HUECO - MARGEN;
+    const arriba = ancla.top - HUECO - MARGEN;
+    const haciaAbajo = alto <= abajo || abajo >= arriba;
+    const disponible = Math.max(haciaAbajo ? abajo : arriba, ALTO_MINIMO);
+    const altoFinal = Math.min(alto, disponible);
+
+    /* `max-height` es del contenido: si el menú es content-box hay que restarle
+       el relleno y el borde, o el menú acotado rebasa por esa diferencia. */
+    const estilo = getComputedStyle(menu);
+    const marco = estilo.boxSizing === 'border-box' ? 0
+      : parseFloat(estilo.paddingTop) + parseFloat(estilo.paddingBottom) + parseFloat(estilo.borderTopWidth) + parseFloat(estilo.borderBottomWidth);
+
+    const izquierda = align === 'right' ? ancla.right - ancho : ancla.left;
+    setColocacion({
+      top: haciaAbajo ? ancla.bottom + HUECO : ancla.top - HUECO - altoFinal,
+      left: Math.min(Math.max(izquierda, MARGEN), Math.max(visibleAncho - ancho - MARGEN, MARGEN)),
+      maxHeight: altoFinal < alto ? altoFinal - marco : undefined,
+      haciaAbajo,
+    });
+  }, [abierto, ancla, align, items.length]);
 
   useEffect(() => {
     if (!abierto) return undefined;
@@ -86,11 +132,13 @@ export function DropdownMenu({ trigger, items = [], align: alineacionPedida = 'r
     };
   }, [abierto, cerrar, seleccionables.length]);
 
+  /* Solo con el menú ya colocado: mientras se mide va oculto, y un elemento
+     oculto no admite foco (abrir con ↓ perdería el foco en el primer ítem). */
   useEffect(() => {
-    if (abierto && activo >= 0) {
+    if (abierto && colocacion && activo >= 0) {
       refMenu.current?.querySelectorAll('[role="menuitem"]')[activo]?.focus();
     }
-  }, [abierto, activo]);
+  }, [abierto, colocacion, activo]);
 
   return (
     <>
@@ -113,18 +161,19 @@ export function DropdownMenu({ trigger, items = [], align: alineacionPedida = 'r
       </span>
 
       {abierto &&
-        pos &&
+        ancla &&
         createPortal(
           <div
             id={id}
             ref={refMenu}
-            className="hrl-portal hrl-menu"
+            className={`hrl-portal hrl-menu${colocacion?.haciaAbajo === false ? ' hrl-menu--arriba' : ''}`}
             role="menu"
             aria-label={label}
             style={{
-              top: pos.top,
-              left: pos.align === 'right' ? undefined : pos.left,
-              right: pos.align === 'right' ? window.innerWidth - pos.left : undefined,
+              top: colocacion?.top ?? 0,
+              left: colocacion?.left ?? 0,
+              maxHeight: colocacion?.maxHeight,
+              visibility: colocacion ? undefined : 'hidden',
             }}
           >
             {items.map((item, i) =>

@@ -13,7 +13,7 @@ import { useFloatingTip } from './useFloatingTip.js';
 
      items: { key, title, subtitle?, marked?, tip?: {title, body}, description? }[] */
 export function SelectionStrip({ items = [], active, onChange, label = 'Selecci√≥n' }) {
-  const { tip, follow, hide } = useFloatingTip();
+  const { tip, follow, anchor, hide } = useFloatingTip();
 
   return (
     <>
@@ -23,10 +23,7 @@ export function SelectionStrip({ items = [], active, onChange, label = 'Selecci√
           const cuerpo = item.tip?.body ?? item.description ?? '';
 
           /* Con el teclado no hay puntero: el tooltip se ancla a la ficha. */
-          const anclar = (e) => {
-            const r = e.currentTarget.getBoundingClientRect();
-            follow({ clientX: r.left + r.width / 2, clientY: r.top }, titulo, cuerpo);
-          };
+          const anclar = (e) => anchor(e.currentTarget, titulo, cuerpo);
 
           return (
             <button

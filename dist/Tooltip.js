@@ -1,49 +1,48 @@
 import { Fragment, jsx, jsxs } from "react/jsx-runtime";
 import { useState } from "react";
 import { createPortal } from "react-dom";
+import { anchoVisible } from "./viewport.js";
 const MARGEN = 12;
 const ANCHO_MAX = 320;
+const RELLENO = 36;
+const ANCHO_TOTAL = ANCHO_MAX + RELLENO;
+const SEPARACION = 20;
+const SEPARACION_ELEMENTO = 8;
 const ALTO_RESERVA = 150;
-function acotarX(x) {
-  const mitad = ANCHO_MAX / 2;
-  return Math.min(Math.max(x, mitad + MARGEN), window.innerWidth - mitad - MARGEN);
-}
-function ubicar(x, y) {
-  const espacioArriba = y;
-  const espacioAbajo = window.innerHeight - y;
-  const arribaCabe = espacioArriba >= ALTO_RESERVA + MARGEN;
-  const haciaAbajo = !arribaCabe && (espacioAbajo >= ALTO_RESERVA + MARGEN || espacioAbajo > espacioArriba);
+function ubicar(x, y, separacion) {
+  const ancho = anchoVisible();
+  const espacioDerecha = ancho - x - separacion - MARGEN;
+  const espacioIzquierda = x - separacion - MARGEN;
+  const izquierda = espacioDerecha < ANCHO_TOTAL && espacioIzquierda > espacioDerecha;
+  const espacio = izquierda ? espacioIzquierda : espacioDerecha;
+  const mitad = ALTO_RESERVA / 2 + MARGEN;
+  const top = Math.min(Math.max(y, mitad), window.innerHeight - mitad);
   return {
-    left: acotarX(x),
-    top: Math.min(Math.max(y, MARGEN), window.innerHeight - MARGEN),
-    haciaAbajo
+    izquierda,
+    estilo: {
+      top,
+      maxWidth: Math.max(Math.min(ANCHO_MAX, espacio - RELLENO), 120),
+      left: izquierda ? x - separacion : x + separacion
+    }
   };
 }
 function FloatingTip({ tip }) {
   if (!tip) return null;
-  const { left, top, haciaAbajo } = ubicar(tip.x, tip.y);
+  const { izquierda, estilo } = ubicar(tip.x, tip.y, tip.gap ?? SEPARACION);
   return createPortal(
-    /* @__PURE__ */ jsxs(
-      "div",
-      {
-        className: `hrl-portal hrl-tip${haciaAbajo ? " hrl-tip--abajo" : ""}`,
-        style: { left, top },
-        role: "tooltip",
-        children: [
-          tip.title && /* @__PURE__ */ jsx("strong", { className: "hrl-tip__title", children: tip.title }),
-          tip.body
-        ]
-      }
-    ),
+    /* @__PURE__ */ jsxs("div", { className: `hrl-portal hrl-tip${izquierda ? " hrl-tip--izquierda" : ""}`, style: estilo, role: "tooltip", children: [
+      tip.title && /* @__PURE__ */ jsx("strong", { className: "hrl-tip__title", children: tip.title }),
+      tip.body
+    ] }),
     document.body
   );
 }
 function Tooltip({ title, body, children, as: Etiqueta = "span", focusable = true, style }) {
   const [pos, setPos] = useState(null);
-  const mover = (e) => setPos({ x: e.clientX, y: e.clientY - 18 });
+  const mover = (e) => setPos({ x: e.clientX, y: e.clientY });
   const alEnfocar = (e) => {
     const r = e.currentTarget.getBoundingClientRect();
-    setPos({ x: r.left + r.width / 2, y: r.top - 6 });
+    setPos({ x: r.right, y: r.top + r.height / 2, gap: SEPARACION_ELEMENTO });
   };
   return /* @__PURE__ */ jsxs(Fragment, { children: [
     /* @__PURE__ */ jsx(
@@ -59,7 +58,7 @@ function Tooltip({ title, body, children, as: Etiqueta = "span", focusable = tru
         children
       }
     ),
-    /* @__PURE__ */ jsx(FloatingTip, { tip: pos ? { title, body, x: pos.x, y: pos.y } : null })
+    /* @__PURE__ */ jsx(FloatingTip, { tip: pos ? { title, body, ...pos } : null })
   ] });
 }
 export {

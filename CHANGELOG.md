@@ -3,6 +3,43 @@
 Formato: qué cambió y por qué. Las versiones siguen el criterio semántico —
 quitar o renombrar una prop es un cambio mayor, porque rompe a quien ya la usa.
 
+## 1.4.0 — 21/09/2026
+
+Los tooltips salen al costado del cursor y el menú desplegable queda dentro de la
+ventana. Es un cambio de interacción deliberado (dónde aparecen), no de API.
+
+**Tooltips.** Salían encima del cursor y, cerca del borde superior, se volteaban
+hacia abajo arrancando a 6 px del puntero: lo tapaban. Además una transición de
+0.12 s los dejaba atrás al mover el ratón y, al cambiar de lado, cruzaban por
+debajo del cursor.
+- Ahora salen **a la derecha del cursor** (20 px de separación, lo que libra la
+  silueta del puntero), centrados en vertical, y pasan **a la izquierda** cuando
+  no caben a la derecha. Siguen al cursor sin retardo.
+- Con foco por teclado se anclan al costado del propio elemento, no encima.
+- Pegados a un borde salían angostos y altos (157 px de ancho por 196 de alto):
+  ahora llevan `width: max-content` y su ancho no depende del espacio libre.
+- Comprobado con un navegador real en las cuatro esquinas, en una ventana de
+  420 px, con `Calendar`, `SeriesBars` y `SelectionStrip`: ninguno tapa al
+  cursor ni sale de la ventana.
+
+**`DropdownMenu`.** Salía **fuera de pantalla**. Causa: `.hrl-menu` reutilizaba la
+animación del tooltip, cuyo estado final es `translate(-50%, -100%)`, y el
+`fill-mode: both` lo dejaba aplicado para siempre: el menú quedaba medio ancho a
+la izquierda y todo su alto hacia arriba de donde debía (medido: `x -187…27`,
+`y -71…78` para un botón en `x 32…149`). Además no miraba los bordes.
+- Animación propia (`hrl-menuIn`).
+- Mide su tamaño real al abrirse y se coloca **debajo del disparador o, si no cabe,
+  encima**; se acota a la ventana en horizontal y, si no cabe entero por ningún
+  lado, tiene desplazamiento propio (`max-height`).
+- Con la flecha ↓ el foco sigue yendo al primer ítem.
+
+**Interno.** `useFloatingTip` devuelve además `anchor(elemento, título, cuerpo)`
+para el foco por teclado; `FloatingTip` acepta `gap` en el tip. Se retiran la
+clase `hrl-tip--abajo` y sus keyframes. Nuevo `src/viewport.js`
+(`anchoVisible()`): `window.innerWidth` cuenta el hueco de `scrollbar-gutter:
+stable` (que `tokens.css` reserva en `<html>`) y el bloque contenedor de un
+elemento fijo no, lo que dejaba las capas hasta 15 px fuera del área visible.
+
 ## 1.3.1 — 21/09/2026
 
 Sin cambios de código ni de aspecto.

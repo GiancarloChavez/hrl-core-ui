@@ -1092,7 +1092,11 @@ body { margin: 0; background: #f9fafb; }
 
 .hrl-tip {
   position: fixed;
-  transform: translate(-50%, -100%);
+  /* Se ancla por el costado (siempre por left, ver Tooltip.jsx) y se centra en
+     vertical sobre el punto. El ancho es el de su contenido y no el del espacio
+     que le queda hasta el borde de la ventana. */
+  transform: translateY(-50%);
+  width: max-content;
   background: #1c252e;
   color: rgba(255, 255, 255, 0.74);
   font-family: var(--font-sans, 'Public Sans', Helvetica, Arial, sans-serif);
@@ -1104,8 +1108,9 @@ body { margin: 0; background: #f9fafb; }
   box-shadow: 0 18px 36px -10px rgba(28, 37, 46, 0.55);
   pointer-events: none;
   z-index: 220;
-  animation: hrl-tipIn 0.22s var(--ease) both;
-  transition: left 0.12s linear, top 0.12s linear;
+  animation: hrl-tipIn 0.16s var(--ease) both;
+  /* Sin transición de left/top: sigue al cursor al instante. Con retardo
+     llegaba tarde y, al cambiar de lado, cruzaba por debajo del puntero. */
 }
 
 .hrl-tip__title {
@@ -1118,17 +1123,17 @@ body { margin: 0; background: #f9fafb; }
 }
 
 @keyframes hrl-tipIn {
-  from { opacity: 0; transform: translate(-50%, calc(-100% - 4px)) scale(0.96); }
-  to { opacity: 1; transform: translate(-50%, -100%) scale(1); }
+  from { opacity: 0; transform: translate(-4px, -50%) scale(0.97); }
+  to { opacity: 1; transform: translateY(-50%) scale(1); }
 }
 
-/* Volteado: sin sitio arriba del punto de anclaje (cerca del borde superior
-   de la ventana), el tooltip cuelga hacia abajo en vez de cortarse. */
-.hrl-tip--abajo { transform: translate(-50%, 12px); animation-name: hrl-tipInAbajo; }
+/* A la izquierda del punto: sin sitio a la derecha (cerca del borde) el
+   tooltip pasa al otro costado en vez de cortarse o de quedar debajo del cursor. */
+.hrl-tip--izquierda { transform: translate(-100%, -50%); animation-name: hrl-tipInIzquierda; }
 
-@keyframes hrl-tipInAbajo {
-  from { opacity: 0; transform: translate(-50%, calc(12px + 4px)) scale(0.96); }
-  to { opacity: 1; transform: translate(-50%, 12px) scale(1); }
+@keyframes hrl-tipInIzquierda {
+  from { opacity: 0; transform: translate(calc(-100% + 4px), -50%) scale(0.97); }
+  to { opacity: 1; transform: translate(-100%, -50%) scale(1); }
 }
 
 /* -------------------------------------------------------------------- Modal */
@@ -2107,7 +2112,25 @@ body { margin: 0; background: #f9fafb; }
   display: flex;
   flex-direction: column;
   gap: 2px;
-  animation: hrl-tipIn 0.18s var(--ease) both;
+  /* Si no cabe entero en la ventana, DropdownMenu le fija un max-height. */
+  overflow-y: auto;
+  /* Animación propia: reutilizar la del tooltip dejaba el menú con un
+     translate(-50%, -100%) permanente —medio ancho a la izquierda y todo su
+     alto hacia arriba— por su fill-mode `both`. */
+  animation: hrl-menuIn 0.18s var(--ease) both;
+}
+
+@keyframes hrl-menuIn {
+  from { opacity: 0; transform: translateY(-4px) scale(0.98); }
+  to { opacity: 1; transform: none; }
+}
+
+/* Abierto hacia arriba (no cabía debajo del disparador). */
+.hrl-menu--arriba { animation-name: hrl-menuInArriba; }
+
+@keyframes hrl-menuInArriba {
+  from { opacity: 0; transform: translateY(4px) scale(0.98); }
+  to { opacity: 1; transform: none; }
 }
 
 .hrl-menu__item {

@@ -131,6 +131,18 @@ hoy. Renombrar uno es un cambio de API: el nombre anterior pasa a
   resolverse contra él; el diálogo aparece fuera de la vista.
 - El cierre se anima antes de desmontar: `useExitAnimation`, no desmontar de golpe.
 - Al cerrar un menú, el foco vuelve al elemento que lo abrió.
+- **Un tooltip sale al costado del cursor**, centrado en vertical, y pasa al otro
+  costado cerca de un borde. Nunca arriba ni debajo (el puntero lo tapa), y sin
+  transición de posición: con retardo llega tarde y cruza bajo el cursor. Por
+  teclado se ancla al costado del propio elemento.
+- **Un menú se abre hacia donde quepa** (debajo del disparador o, si no, encima) y
+  se acota a la ventana en los dos ejes; si no cabe entero, se desplaza.
+- El espacio disponible se mide con `anchoVisible()` (`src/viewport.js`), no con
+  `window.innerWidth`: este cuenta el hueco de `scrollbar-gutter` y deja las
+  capas hasta 15 px fuera del área visible.
+- Cada capa flotante tiene **sus propios `@keyframes`**. Reutilizar los de otra
+  deja su estado final aplicado para siempre por el `fill-mode: both`: así el
+  menú heredó el `translate(-50%, -100%)` del tooltip y salía fuera de pantalla.
 
 ### 3.2 Acciones destructivas
 
