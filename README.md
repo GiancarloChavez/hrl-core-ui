@@ -10,91 +10,68 @@ segundo sistema lo necesitó. La lista completa de lo que ofrece está en
 
 ---
 
-## Instalación
+## Empezar en un proyecto
 
-No está publicado en npm. Se instala por URL de Git, **fijando la versión con el
-tag**:
+Cinco pasos, en este orden. El único que exige escribir código es el cuarto.
 
-```bash
-npm i "git+https://github.com/GiancarloChavez/hrl-core-ui.git#v1.5.0"
-```
+1. **Acceso.** El repositorio es **privado**: la máquina que instale necesita una
+   credencial de lectura (ver [Acceso al repositorio](#acceso-al-repositorio)).
+2. **Instalar**, fijando la versión con el tag (la más reciente está en
+   `CHANGELOG.md`):
 
-npm deja `git+ssh://git@github.com/…` en el lockfile para cualquier repositorio de
-GitHub, escribas la dependencia como la escribas (`github:`, `git+https://`…). Es
-normal y no hace falta pelear con ello: no obliga a tener una llave SSH. Lo que
-cada máquina necesita es **una credencial de lectura del repositorio**, por SSH o
-por https. Comprobado: con SSH desactivado y credenciales https guardadas,
-`npm ci` instala igual; sin ninguna credencial falla con
-`Could not read from remote repository` sobre `ssh://git@github.com/…`.
+   ```bash
+   npm i "git+https://github.com/GiancarloChavez/hrl-core-ui.git#vX.Y.Z"
+   ```
 
-El repositorio es **privado**: quien lo instale necesita acceso de lectura,
-concedido por el dueño (`GiancarloChavez`) o al invitarlo como colaborador.
+3. **Integrar.** El kit trae su propia herramienta, sin dependencias:
 
-- **En tu máquina**, con una llave SSH registrada en GitHub o con Git Credential
-  Manager (que guarda el acceso tras el primer `git clone` o `git push` por https).
-- **En un CI o servidor**, sin usuario interactivo: un token de solo lectura del
-  repositorio y, antes de `npm ci`, decirle a git que lo use tanto para las
-  direcciones https como para la SSH que trae el lockfile:
+   ```bash
+   npx hrl-core-ui init
+   ```
 
-  ```bash
-  git config --global url."https://x-access-token:$TOKEN@github.com/".insteadOf "https://github.com/"
-  git config --global --add url."https://x-access-token:$TOKEN@github.com/".insteadOf "ssh://git@github.com/"
-  ```
+   `init` es **idempotente** (repetirlo no cambia nada; `--dry-run` muestra qué haría) y
+   solo hace lo que se puede hacer sin adivinar: fija la versión en `package.json` si no
+   lo estaba; carga `tokens.css` en el punto de entrada **antes** que los estilos propios;
+   escribe el contrato del proyecto (`CLAUDE.md`, con las reglas del kit en un bloque con
+   marcas que `upgrade` refresca y un hueco para las propias; si el proyecto ya documenta
+   el kit, no lo toca); y añade el script `kit:doctor`.
 
-  El `--add` de la segunda línea es necesario: sin él sustituiría a la primera. La
-  reescritura de las dos direcciones está comprobada con git; lo que no se ha
-  probado es que GitHub acepte un token real desde un CI.
+4. **Montar la interfaz** (lo único que depende de tu aplicación): `<AppShell>` con su
+   navegación y su usuario. `init` te deja un ejemplo mínimo. El nombre del sistema se le
+   pasa por `brand` y la clave del modo oscuro por `themeKey`; el kit no sabe de qué
+   sistema forma parte. Una pantalla sin `AppShell` (un login) monta `<IconSprite />`.
 
-- **`EALLOWSCRIPTS` al instalar**: npm prepara las dependencias de Git en una
-  instalación anidada, y una línea `allow-scripts=…` en tu `~/.npmrc` global (no es
-  una clave real de npm) la rechaza. Coméntala. El kit ya declara `allowScripts`
-  para sus propias herramientas de desarrollo.
+5. **Comprobar:**
 
-Actualizar es cambiar el tag. Sin tag, npm toma la rama por defecto y el kit puede
-moverse bajo los pies del proyecto: **fija siempre la versión**. El lockfile
-guarda además el commit exacto de ese tag.
+   ```bash
+   npx hrl-core-ui doctor [--fix] [--strict]   # o: npm run kit:doctor
+   ```
 
-## Consumir el kit en un proyecto
+   `doctor` comprueba que la versión esté fija, instalada y coincida con el lockfile; que
+   `tokens.css` se cargue antes que los estilos propios (entiende imports estáticos y
+   dinámicos, y no confunde un CSS de otra rama `if/else` con uno anterior); que no haya
+   imports por rutas internas ni una copia local del kit; que el sprite de iconos esté
+   montado; que no se usen **nombres obsoletos** (con `--fix` los reescribe él); que el
+   proyecto tenga un contrato que mencione el kit; y que los componentes **se monten** con
+   el React del proyecto. Sale con código 1 si hay errores; con `--strict`, también si hay
+   avisos: es lo que conviene poner en un CI.
 
-Dos comandos. El kit trae su propia herramienta, sin dependencias, que hace el resto:
-
-```bash
-npm i "git+https://github.com/GiancarloChavez/hrl-core-ui.git#vX.Y.Z"
-npx hrl-core-ui init
-```
-
-`init` es **idempotente** (repetirlo no cambia nada; `--dry-run` muestra qué haría) y hace
-lo que se puede hacer sin adivinar:
-
-- fija la versión en `package.json` si no lo estaba;
-- carga `tokens.css` en el punto de entrada, **antes** que los estilos propios (entiende
-  imports estáticos y dinámicos);
-- escribe el contrato del proyecto (`CLAUDE.md`): las reglas del kit en un bloque con
-  marcas —que `upgrade` refresca— y un hueco para las reglas propias; si el proyecto ya
-  documenta el kit, no lo toca;
-- añade el script `kit:doctor`.
-
-Lo único que no puede hacer por ti es lo que depende de tu aplicación: montar
-`<AppShell>` con su navegación y su usuario. `init` te deja un ejemplo mínimo.
-
-### Comprobar y actualizar
+## Actualizar
 
 ```bash
-npx hrl-core-ui doctor [--fix] [--strict]   # ¿sigue sana la integración?
-npx hrl-core-ui upgrade vX.Y.Z              # (o latest) sube la versión sin sorpresas
+npx hrl-core-ui upgrade vX.Y.Z     # o "latest"
 ```
 
-`doctor` comprueba: que la versión esté fija, instalada y coincida con el lockfile; que
-`tokens.css` se cargue antes que los estilos propios; que no haya imports por rutas
-internas ni una copia local del kit; que el sprite de iconos esté montado; que no se usen
-**nombres obsoletos** (con `--fix` los reescribe él); que el proyecto tenga un contrato
-que mencione el kit; y que los componentes **se monten** con el React del proyecto. Sale
-con código 1 si hay errores; con `--strict`, también si hay avisos, para usarlo en un CI.
+Un cambio en el kit no altera ningún proyecto hasta que este lo actualiza: cada uno fija su
+versión. `upgrade` cambia el tag, instala, comprueba que **solo cambió el kit** en el
+lockfile (si npm subió otra dependencia, restaura el lockfile y reinstala), muestra el
+CHANGELOG entre la versión anterior y la nueva —léelo: dice qué cambia de aspecto y qué
+queda obsoleto—, refresca el bloque del kit en `CLAUDE.md` y corre `doctor`. Si la
+instalación falla, deja `package.json` y el lockfile exactamente como estaban.
 
-`upgrade` cambia el tag, instala, comprueba que **solo cambió el kit** en el lockfile (si
-npm subió otra dependencia, restaura el lockfile y reinstala), muestra el CHANGELOG entre
-la versión anterior y la nueva, refresca el bloque del kit en `CLAUDE.md` y corre `doctor`.
-Si la instalación falla, deja `package.json` y el lockfile como estaban.
+Después, la verificación propia del proyecto (lint, build, pruebas) y commit de
+`package.json`, `package-lock.json` y los ajustes. **No borres el lockfile para
+regenerarlo**: npm sube todas las dependencias a su última versión permitida.
 
 La herramienta viaja en el paquete desde la **1.5.0**: un proyecto en una versión anterior
 sube primero a mano (cambia el tag y `npm install`) y desde ahí ya la tiene.
@@ -103,19 +80,49 @@ Las reglas que `init` escribe en el contrato —y que `doctor` hace cumplir— s
 [`design.md`](design.md), que también viaja dentro del paquete
 (`node_modules/@hrl/core-ui/design.md`).
 
+### Acceso al repositorio
+
+npm deja `git+ssh://git@github.com/…` en el lockfile para cualquier repositorio de
+GitHub, escribas la dependencia como la escribas (`github:`, `git+https://`…). Es
+normal y no obliga a tener una llave SSH. Lo que cada máquina necesita es **una
+credencial de lectura del repositorio**, por SSH o por https. Comprobado: con SSH
+desactivado y credenciales https guardadas, `npm ci` instala igual; sin ninguna
+credencial falla con `Could not read from remote repository` sobre
+`ssh://git@github.com/…`. El acceso lo concede el dueño (`GiancarloChavez`) al invitar
+como colaborador.
+
+- **En tu máquina**, con una llave SSH registrada en GitHub o con Git Credential Manager
+  (que guarda el acceso tras el primer `git clone` o `git push` por https).
+- **En un CI o servidor**, sin usuario interactivo: un token de solo lectura del
+  repositorio y, antes de `npm ci`, decirle a git que lo use tanto para las direcciones
+  https como para la SSH que trae el lockfile:
+
+  ```bash
+  git config --global url."https://x-access-token:$TOKEN@github.com/".insteadOf "https://github.com/"
+  git config --global --add url."https://x-access-token:$TOKEN@github.com/".insteadOf "ssh://git@github.com/"
+  ```
+
+  El `--add` de la segunda línea es necesario: sin él sustituiría a la primera. La
+  reescritura de las dos direcciones está comprobada con git; lo que no se ha probado es
+  que GitHub acepte un token real desde un CI.
+
+- **`EALLOWSCRIPTS` al instalar**: npm prepara las dependencias de Git en una instalación
+  anidada, y una línea `allow-scripts=…` en tu `~/.npmrc` global (no es una clave real de
+  npm) la rechaza. Coméntala. El kit ya declara `allowScripts` para sus propias
+  herramientas de desarrollo.
+
 ## Uso
 
 ```jsx
-// Una vez, en el punto de entrada: los tokens antes que nada.
+// Los tokens se cargan una vez, en el punto de entrada (`init` lo hace).
 import '@hrl/core-ui/tokens.css';
 
-// En cualquier parte:
+// En cualquier parte, solo desde el punto de entrada público:
 import { AppShell, Card, DataTable, Button } from '@hrl/core-ui';
 ```
 
-`AppShell` no sabe de qué sistema forma parte: el nombre que se ve en la barra
-superior se le pasa por `brand`, y la clave con la que recuerda el modo oscuro
-por `themeKey`.
+Catálogo completo en [`UI_CATALOG.md`](UI_CATALOG.md) y, para verlo en pantalla, en el
+catálogo visual (`npm run ladle:serve` en este repositorio).
 
 ## Qué es de aquí y qué no
 
@@ -177,7 +184,8 @@ npm run build         # compila src/ a dist/ con esbuild
 npm run humo          # monta cada componente del compilado y falla si alguno revienta
 npm run contrast      # WCAG AA de los tokens, informativo
 npm run literales     # falla si un font-size vuelve a escribirse fuera de la escala
-npm run verificar     # tokens + literales + build + humo
+npm run cli           # prueba la herramienta hrl-core-ui contra un proyecto de ejemplo
+npm run verificar     # tokens + literales + build + humo + herramienta
 npm run ladle:serve   # catálogo visual en local
 npm run ladle:build   # catálogo como sitio estático en build/
 ```
@@ -209,18 +217,23 @@ del repositorio no se publica.
 
 ### Publicar una versión
 
-1. Cambia lo que tengas que cambiar en `src/` o en `tokens.css`.
-2. Anota el cambio en `CHANGELOG.md`.
-3. `npm run verificar`.
-4. Sube la versión en `package.json` y crea el tag: `git tag v1.1.0`.
-5. `git push && git push --tags`.
+1. Cambia lo que haga falta en `src/`, `tokens.json` o `tokens.css`. Si renombras algo
+   público, déjalo como alias en `src/deprecated.js`: así `doctor --fix` lo corrige en los
+   proyectos y nada se rompe hasta la próxima versión mayor.
+2. Anota el cambio en `CHANGELOG.md`: qué cambió y por qué; si cambia el aspecto, cuánto.
+3. `npm run verificar`, `npm run contrast` y, si tocaste el catálogo, `npm run ladle:build`.
+4. Sube la versión en `package.json` y en `package-lock.json`, y crea el tag `vX.Y.Z`.
+5. `git push origin main` y `git push origin vX.Y.Z`. El CI valida y el tag regenera la rama
+   `catalogo`, con lo que Netlify actualiza el catálogo solo.
+6. Cada proyecto actualiza cuando decide: `npx hrl-core-ui upgrade vX.Y.Z`.
 
-La versión es semántica: quitar o renombrar una prop es un cambio mayor, porque
-rompe a quien ya la usa.
+La versión es semántica: quitar o renombrar una prop, un valor de prop o un icono sin dejar
+alias es un cambio **mayor**; añadir algo o cambiar el aspecto a propósito, **menor**; corregir
+sin cambiar la API ni el aspecto, **parche**.
 
 ## Consumidores
 
 | Sistema | Estado |
 |---|---|
-| Vigilancia Oncológica (HRL) | origen del kit; lo consume como paquete |
-| Reporte Estadístico (HRL) | se reconstruye sobre esta v1.0 |
+| Vigilancia Oncológica (HRL) | origen del kit; lo consume como paquete (rama `UI_standard`) |
+| Reporte Estadístico (HRL) | aún con su propia copia del kit, con la API en español; migrarlo es un trabajo aparte |
