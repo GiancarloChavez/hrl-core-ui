@@ -1,7 +1,7 @@
 import { useCallback, useEffect, useId, useLayoutEffect, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import { Icon } from './icons.jsx';
-import { aliasObsoleto } from './deprecated.js';
+import { aliasObsoleto, PROP_ALIASES } from './deprecated.js';
 import { anchoVisible } from './viewport.js';
 
 /* Menú desplegable accesible, sin Radix.
@@ -21,8 +21,8 @@ import { anchoVisible } from './viewport.js';
      /> */
 /* `align`: right (por defecto) | left. `tone` de un ítem: danger. Los nombres en
    español anteriores se siguen aceptando (ver deprecated.js). */
-const ALIGN_ALIASES = { derecha: 'right', izquierda: 'left' };
-const TONE_ALIASES = { peligro: 'danger' };
+const ALIGN_ALIASES = PROP_ALIASES.DropdownMenu.align;
+const TONE_ALIASES = PROP_ALIASES.DropdownMenu.itemTone;
 
 const MARGEN = 8;
 const HUECO = 6;

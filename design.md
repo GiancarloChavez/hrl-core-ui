@@ -42,6 +42,8 @@ dist/           Salida compilada de src/. Generada.
 stories/        Catálogo visual (Ladle). No se publica en el paquete.
 .ladle/         Configuración y estilos del catálogo, no del kit.
 scripts/        Generación de tokens, comprobaciones y prueba de humo.
+bin/            Herramienta `hrl-core-ui` (init, doctor, upgrade). Se publica en el
+                paquete y usa solo módulos de Node.
 ```
 
 - **`src/` no importa nada de fuera de `src/`.** Ni alias, ni rutas de otros
@@ -261,7 +263,9 @@ La versión es semántica:
 - **Parche**: corregir sin cambiar la API ni el aspecto.
 
 Un nombre que se renombra no desaparece: queda como alias con aviso en
-desarrollo (`src/deprecated.js`) hasta la siguiente versión mayor.
+desarrollo (`src/deprecated.js`: `ICON_ALIASES` y `PROP_ALIASES`) hasta la siguiente
+versión mayor. Esas tablas son también la fuente de `hrl-core-ui doctor --fix`, que
+reescribe el nombre viejo en los proyectos: si renombras algo, se añade ahí.
 
 Para publicar:
 
@@ -273,21 +277,25 @@ Para publicar:
 5. `git push` y `git push --tags`. El tag regenera la rama `catalogo` (el sitio
    público) y ninguna aplicación cambia sola.
 
-Cada aplicación actualiza cuando decide: cambia el tag en su `package.json`, corre
-`npm install` y verifica. Por eso un cambio del kit nunca rompe a un sistema en
-producción sin aviso.
+Cada aplicación actualiza cuando decide, con `npx hrl-core-ui upgrade vX.Y.Z`: cambia
+el tag, instala sin subir otras dependencias, muestra el CHANGELOG y verifica. Por eso
+un cambio del kit nunca rompe a un sistema en producción sin aviso.
 
 ---
 
 ## 9. Antes de dar algo por terminado
 
 ```bash
-npm run verificar     # tokens, literales, build y prueba de humo
+npm run verificar     # tokens, literales, build, prueba de humo y prueba de la herramienta
 npm run contrast      # WCAG AA de los tokens
 npm run ladle:build   # el catálogo compila
 ```
 
-Ni el build ni la prueba de humo dicen que algo *se vea bien*. Eso solo se
+`verificar` incluye la prueba de la herramienta `bin/` (`npm run cli`), que monta un
+proyecto de ejemplo y comprueba `init`, `doctor` y `upgrade`. Si cambias lo que
+`doctor` comprueba —orden de estilos, imports, nombres obsoletos—, actualiza esa prueba.
+
+Ni el build ni las pruebas de humo dicen que algo *se vea bien*. Eso solo se
 comprueba mirándolo: `npm run ladle:serve`, en claro y en oscuro. Lo que no
 puedas verificar sin abrir el navegador, dilo explícitamente en lugar de
 afirmarlo.

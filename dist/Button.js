@@ -1,7 +1,7 @@
 import { jsx, jsxs } from "react/jsx-runtime";
 import { variants } from "./variants.js";
 import { Icon } from "./icons.js";
-import { aliasObsoleto } from "./deprecated.js";
+import { aliasObsoleto, PROP_ALIASES } from "./deprecated.js";
 const clase = variants(
   "hrl-btn",
   {
@@ -43,7 +43,7 @@ function Button({
     }
   );
 }
-const TONE_ALIASES = { plano: "plain", accion: "action" };
+const TONE_ALIASES = PROP_ALIASES.IconButton.tone;
 function IconButton({ icon, "aria-label": label, tone: tonoPedido = "plain", className, ...rest }) {
   const tone = aliasObsoleto(TONE_ALIASES, tonoPedido, "IconButton");
   if (!label && import.meta.env?.DEV) {

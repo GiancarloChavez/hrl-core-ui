@@ -32,6 +32,7 @@ import { PageActions, PAGE_ACTIONS_ID } from "./PageActions.js";
 import { FilterBar } from "./FilterBar.js";
 import { Icon, IconSprite, Sprite } from "./icons.js";
 import { ICONS, ICON_ALIASES } from "./icon-catalog.js";
+import { DEPRECATED } from "./deprecated.js";
 import { variants, cx } from "./variants.js";
 import { preset, token, literalColor, tokensToCss } from "./preset.js";
 import { useExitAnimation, useMountedWhile, useExpandedRows, EXIT_MS } from "./useExitAnimation.js";
@@ -47,6 +48,7 @@ export {
   Card,
   Checkbox,
   CompactSelect,
+  DEPRECATED,
   DataTable,
   DetailDialog,
   Dialog,

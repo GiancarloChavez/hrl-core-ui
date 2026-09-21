@@ -1,8 +1,15 @@
 {
   "name": "@hrl/core-ui",
-  "version": "1.4.1",
+  "version": "1.5.0",
   "description": "Sistema de diseño del Hospital Regional de Loreto: componentes React y tokens CSS, sin dependencias.",
   "license": "UNLICENSED",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/GiancarloChavez/hrl-core-ui.git"
+  },
+  "bin": {
+    "hrl-core-ui": "./bin/hrl-core-ui.mjs"
+  },
   "type": "module",
   "main": "./dist/index.js",
   "module": "./dist/index.js",
@@ -22,7 +29,8 @@
     "README.md",
     "CHANGELOG.md",
     "UI_CATALOG.md",
-    "design.md"
+    "design.md",
+    "bin"
   ],
   "scripts": {
     "tokens": "node scripts/generate-tokens.mjs",
@@ -30,7 +38,8 @@
     "build": "node build.mjs",
     "humo": "node scripts/humo.mjs",
     "literales": "node scripts/check-literales.mjs",
-    "verificar": "node scripts/generate-tokens.mjs && node scripts/check-literales.mjs && node build.mjs && node scripts/humo.mjs",
+    "cli": "node scripts/humo-cli.mjs",
+    "verificar": "node scripts/generate-tokens.mjs && node scripts/check-literales.mjs && node build.mjs && node scripts/humo.mjs && node scripts/humo-cli.mjs",
     "ladle:serve": "ladle serve",
     "ladle:build": "ladle build"
   },

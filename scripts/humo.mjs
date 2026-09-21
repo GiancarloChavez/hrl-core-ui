@@ -115,7 +115,7 @@ for (const [nombre, prueba] of ASERCIONES) {
 /* El barril tiene que exportar todo lo que documenta el catálogo: un export
    que se olvida al renombrar no lo detecta ningún build. */
 const esperados = ['Button', 'Input', 'DataTable', 'AppShell', 'PageActions', 'usePagination',
-  'useExitAnimation', 'useExpandedRows', 'ICON_ALIASES', 'useFloatingTip', 'readTheme', 'applyTheme',
+  'useExitAnimation', 'useExpandedRows', 'ICON_ALIASES', 'DEPRECATED', 'useFloatingTip', 'readTheme', 'applyTheme',
   'memoize', 'invalidate', 'sortRows', 'nextSort', 'variants', 'cx', 'preset', 'token', 'ICONS'];
 const faltan = esperados.filter((n) => !(n in kit));
 if (faltan.length) {

@@ -16,7 +16,7 @@ No está publicado en npm. Se instala por URL de Git, **fijando la versión con 
 tag**:
 
 ```bash
-npm i "git+https://github.com/GiancarloChavez/hrl-core-ui.git#v1.4.1"
+npm i "git+https://github.com/GiancarloChavez/hrl-core-ui.git#v1.5.0"
 ```
 
 npm deja `git+ssh://git@github.com/…` en el lockfile para cualquier repositorio de
@@ -56,38 +56,52 @@ guarda además el commit exacto de ese tag.
 
 ## Consumir el kit en un proyecto
 
-1. **Instalar** como arriba, con el tag fijado en `package.json` → `dependencies`.
-2. **Cargar los tokens una vez**, en el punto de entrada y *antes* que los estilos
-   de la aplicación (que pueden ajustar componentes del kit, nunca al revés):
+Dos comandos. El kit trae su propia herramienta, sin dependencias, que hace el resto:
 
-   ```jsx
-   import '@hrl/core-ui/tokens.css';
-   import './estilos.css';
-   ```
+```bash
+npm i "git+https://github.com/GiancarloChavez/hrl-core-ui.git#vX.Y.Z"
+npx hrl-core-ui init
+```
 
-3. **Montar la interfaz.** `AppShell` ya monta el sprite de iconos; una pantalla
-   sin él (un login, por ejemplo) monta `<IconSprite />` una vez. Toda la base
-   —tipografía, tamaños, sombras— cuelga de `.hrl-nuevo`, el contenedor que
-   dibuja `AppShell`: un componente suelto fuera de él no tiene fuente ni
-   superficies.
-4. **Importar solo del punto de entrada**: `@hrl/core-ui` y
-   `@hrl/core-ui/tokens.css`, nunca un archivo interno por ruta.
-5. **No hace falta configurar nada más**: el paquete trae el código ya compilado
-   (`dist/`), así que Vite no tiene que transformar JSX dentro de `node_modules`,
-   y no usa ningún alias.
-6. **Escribir el contrato del proyecto** (su `CLAUDE.md` o equivalente): que el
-   kit no vive en ese repositorio, que un componente o token nuevo se pide **aquí**
-   y no se copia, y las reglas de uso de la aplicación. Las del kit están en
-   [`design.md`](design.md), que también viaja dentro del paquete
-   (`node_modules/@hrl/core-ui/design.md`).
-7. **Comprobar** que el paquete resuelve: la prueba de humo de render de la
-   aplicación debe importar `@hrl/core-ui` y montar sus componentes.
+`init` es **idempotente** (repetirlo no cambia nada; `--dry-run` muestra qué haría) y hace
+lo que se puede hacer sin adivinar:
 
-Para actualizar: cambia el tag en `package.json`, corre `npm install`, lee el
-`CHANGELOG.md` de la versión (lo que cambia de aspecto y lo obsoleto), verifica
-con lint, build y prueba de humo, y haz commit. Un nombre obsoleto sigue
-funcionando hasta la próxima versión mayor y avisa en consola en desarrollo:
-sustitúyelo cuando lo veas.
+- fija la versión en `package.json` si no lo estaba;
+- carga `tokens.css` en el punto de entrada, **antes** que los estilos propios (entiende
+  imports estáticos y dinámicos);
+- escribe el contrato del proyecto (`CLAUDE.md`): las reglas del kit en un bloque con
+  marcas —que `upgrade` refresca— y un hueco para las reglas propias; si el proyecto ya
+  documenta el kit, no lo toca;
+- añade el script `kit:doctor`.
+
+Lo único que no puede hacer por ti es lo que depende de tu aplicación: montar
+`<AppShell>` con su navegación y su usuario. `init` te deja un ejemplo mínimo.
+
+### Comprobar y actualizar
+
+```bash
+npx hrl-core-ui doctor [--fix] [--strict]   # ¿sigue sana la integración?
+npx hrl-core-ui upgrade vX.Y.Z              # (o latest) sube la versión sin sorpresas
+```
+
+`doctor` comprueba: que la versión esté fija, instalada y coincida con el lockfile; que
+`tokens.css` se cargue antes que los estilos propios; que no haya imports por rutas
+internas ni una copia local del kit; que el sprite de iconos esté montado; que no se usen
+**nombres obsoletos** (con `--fix` los reescribe él); que el proyecto tenga un contrato
+que mencione el kit; y que los componentes **se monten** con el React del proyecto. Sale
+con código 1 si hay errores; con `--strict`, también si hay avisos, para usarlo en un CI.
+
+`upgrade` cambia el tag, instala, comprueba que **solo cambió el kit** en el lockfile (si
+npm subió otra dependencia, restaura el lockfile y reinstala), muestra el CHANGELOG entre
+la versión anterior y la nueva, refresca el bloque del kit en `CLAUDE.md` y corre `doctor`.
+Si la instalación falla, deja `package.json` y el lockfile como estaban.
+
+La herramienta viaja en el paquete desde la **1.5.0**: un proyecto en una versión anterior
+sube primero a mano (cambia el tag y `npm install`) y desde ahí ya la tiene.
+
+Las reglas que `init` escribe en el contrato —y que `doctor` hace cumplir— salen de
+[`design.md`](design.md), que también viaja dentro del paquete
+(`node_modules/@hrl/core-ui/design.md`).
 
 ## Uso
 

@@ -53,6 +53,7 @@ export { FilterBar } from './FilterBar.jsx';
 /* ------------------------------------------------- iconos y utilidades */
 export { Icon, IconSprite, Sprite } from './icons.jsx';
 export { ICONS, ICON_ALIASES } from './icon-catalog.js';
+export { DEPRECATED } from './deprecated.js';
 export { variants, cx } from './variants.js';
 export { preset, token, literalColor, tokensToCss } from './preset.js';
 

@@ -41,5 +41,8 @@ jobs:
       - name: Humo de render
         run: npm run humo
 
+      - name: Herramienta hrl-core-ui (init, doctor, upgrade)
+        run: npm run cli
+
       - name: Contraste WCAG AA
         run: npm run contrast

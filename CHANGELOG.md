@@ -3,6 +3,38 @@
 Formato: qué cambió y por qué. Las versiones siguen el criterio semántico —
 quitar o renombrar una prop es un cambio mayor, porque rompe a quien ya la usa.
 
+## 1.5.0 — 21/09/2026
+
+**Herramienta de integración: `npx hrl-core-ui`.** Integrar el kit en un proyecto eran
+siete pasos manuales (instalar con el tag, cargar `tokens.css` antes que los estilos,
+montar el sprite, importar solo del punto de entrada, escribir el contrato del
+proyecto, añadir una prueba de humo, actualizar con el ciclo de tag). Es justo el tipo
+de trabajo que falla cuando se hace a mano; ahora son dos comandos y una comprobación.
+Sin dependencias nuevas: solo módulos de Node, dentro del paquete.
+
+- **`init`** integra el proyecto: fija la versión, carga `tokens.css` antes que los
+  estilos propios (estático o dinámico), escribe el contrato (`CLAUDE.md`, con un bloque
+  del kit delimitado por marcas) y añade el script `kit:doctor`. Idempotente; `--dry-run`.
+- **`doctor`** comprueba la integración: versión fija, instalada y coherente con el
+  lockfile; orden de los estilos (un CSS de otra rama `if/else` no cuenta); imports por
+  rutas internas; copia local del kit; sprite de iconos; **nombres obsoletos** (con
+  `--fix` los reescribe); contrato; y que 10 componentes **se monten** con el React del
+  proyecto. Código 1 si hay errores; `--strict` también con avisos (para CI).
+- **`upgrade`** cambia el tag, instala, comprueba que **solo cambió el kit** en el
+  lockfile (si no, lo restaura y reinstala), muestra el CHANGELOG entre versiones, refresca
+  el bloque del contrato y corre `doctor`. Si `npm install` falla, deja `package.json` y
+  el lockfile exactamente como estaban.
+- `src/deprecated.js` exporta `DEPRECATED` (`icons` y `props`): una sola tabla de nombres
+  obsoletos que leen los componentes y `doctor --fix`. Los alias ya existentes no cambian.
+- `npm run cli` prueba la herramienta contra un proyecto de ejemplo (27 comprobaciones) y
+  forma parte de `verificar` y del CI. `upgrade` se probó además con `npm install` real
+  contra un repositorio git local con dos versiones etiquetadas, incluida la versión
+  inexistente (restaura todo) y la repetida.
+- Nuevos campos de `package.json`: `bin`, `repository`; `bin/` entra en `files`.
+
+La herramienta viaja en el paquete desde esta versión: un proyecto anterior sube primero
+a mano y desde ahí ya la tiene.
+
 ## 1.4.1 — 21/09/2026
 
 Solo documentación. Corrige una afirmación **falsa** de 1.3.1.

@@ -1,6 +1,6 @@
 import { variants } from './variants.js';
 import { Icon } from './icons.jsx';
-import { aliasObsoleto } from './deprecated.js';
+import { aliasObsoleto, PROP_ALIASES } from './deprecated.js';
 
 /* Botón del sistema. Único punto de entrada: en la aplicación no se escribe
    <button> a mano (ver design.md).
@@ -53,7 +53,7 @@ export function Button({
 /* Botón de solo icono. Obliga a `aria-label` porque no tiene texto. */
 /* `tone` de IconButton: plain (por defecto) | action. Los nombres en español
    anteriores se siguen aceptando (ver deprecated.js). */
-const TONE_ALIASES = { plano: 'plain', accion: 'action' };
+const TONE_ALIASES = PROP_ALIASES.IconButton.tone;
 
 export function IconButton({ icon, 'aria-label': label, tone: tonoPedido = 'plain', className, ...rest }) {
   const tone = aliasObsoleto(TONE_ALIASES, tonoPedido, 'IconButton');
