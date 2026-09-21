@@ -12,19 +12,73 @@ segundo sistema lo necesitó. La lista completa de lo que ofrece está en
 
 ## Instalación
 
-No está publicado en npm. Se instala por URL de Git, fijando la versión con el
-tag:
+No está publicado en npm. Se instala por URL de Git, **fijando la versión con el
+tag**:
 
 ```bash
-npm i github:GiancarloChavez/hrl-core-ui#v1.0.0
+npm i "git+https://github.com/GiancarloChavez/hrl-core-ui.git#v1.3.1"
 ```
 
-> El repositorio es privado: quien lo instale necesita acceso de lectura
-> concedido por el dueño (`GiancarloChavez`), o que se lo den al invitarlo como
-> colaborador del repo.
+Usa la forma `git+https://`, no el atajo `github:usuario/repo`: el atajo hace que
+npm resuelva por SSH (`git+ssh://`) y deja esa dirección en el lockfile, así que
+cualquier máquina que corra `npm ci` —un compañero, el CI, el servidor— necesitaría
+una llave SSH con acceso al repositorio. Con https basta un credencial de lectura.
 
-Actualizar es cambiar el tag. Sin tag, npm toma la rama por defecto y el kit
-puede moverse bajo los pies del proyecto: **fija siempre la versión**.
+El repositorio es **privado**: quien lo instale necesita acceso de lectura,
+concedido por el dueño (`GiancarloChavez`) o al invitarlo como colaborador.
+
+- **En tu máquina**, Git Credential Manager ya guarda el acceso tras el primer
+  `git clone` o `git push` por https.
+- **En un CI o servidor**, sin usuario interactivo: un token de solo lectura del
+  repositorio y, antes de `npm ci`:
+
+  ```bash
+  git config --global url."https://x-access-token:$TOKEN@github.com/".insteadOf "https://github.com/"
+  ```
+
+- **`EALLOWSCRIPTS` al instalar**: npm prepara las dependencias de Git en una
+  instalación anidada, y una línea `allow-scripts=…` en tu `~/.npmrc` global (no es
+  una clave real de npm) la rechaza. Coméntala. El kit ya declara `allowScripts`
+  para sus propias herramientas de desarrollo.
+
+Actualizar es cambiar el tag. Sin tag, npm toma la rama por defecto y el kit puede
+moverse bajo los pies del proyecto: **fija siempre la versión**. El lockfile
+guarda además el commit exacto de ese tag.
+
+## Consumir el kit en un proyecto
+
+1. **Instalar** como arriba, con el tag fijado en `package.json` → `dependencies`.
+2. **Cargar los tokens una vez**, en el punto de entrada y *antes* que los estilos
+   de la aplicación (que pueden ajustar componentes del kit, nunca al revés):
+
+   ```jsx
+   import '@hrl/core-ui/tokens.css';
+   import './estilos.css';
+   ```
+
+3. **Montar la interfaz.** `AppShell` ya monta el sprite de iconos; una pantalla
+   sin él (un login, por ejemplo) monta `<IconSprite />` una vez. Toda la base
+   —tipografía, tamaños, sombras— cuelga de `.hrl-nuevo`, el contenedor que
+   dibuja `AppShell`: un componente suelto fuera de él no tiene fuente ni
+   superficies.
+4. **Importar solo del punto de entrada**: `@hrl/core-ui` y
+   `@hrl/core-ui/tokens.css`, nunca un archivo interno por ruta.
+5. **No hace falta configurar nada más**: el paquete trae el código ya compilado
+   (`dist/`), así que Vite no tiene que transformar JSX dentro de `node_modules`,
+   y no usa ningún alias.
+6. **Escribir el contrato del proyecto** (su `CLAUDE.md` o equivalente): que el
+   kit no vive en ese repositorio, que un componente o token nuevo se pide **aquí**
+   y no se copia, y las reglas de uso de la aplicación. Las del kit están en
+   [`design.md`](design.md), que también viaja dentro del paquete
+   (`node_modules/@hrl/core-ui/design.md`).
+7. **Comprobar** que el paquete resuelve: la prueba de humo de render de la
+   aplicación debe importar `@hrl/core-ui` y montar sus componentes.
+
+Para actualizar: cambia el tag en `package.json`, corre `npm install`, lee el
+`CHANGELOG.md` de la versión (lo que cambia de aspecto y lo obsoleto), verifica
+con lint, build y prueba de humo, y haz commit. Un nombre obsoleto sigue
+funcionando hasta la próxima versión mayor y avisa en consola en desarrollo:
+sustitúyelo cuando lo veas.
 
 ## Uso
 
@@ -34,12 +88,6 @@ import '@hrl/core-ui/tokens.css';
 
 // En cualquier parte:
 import { AppShell, Card, DataTable, Button } from '@hrl/core-ui';
-```
-
-El sprite de iconos se monta una sola vez, en la raíz de la aplicación:
-
-```jsx
-import { IconSprite } from '@hrl/core-ui';
 ```
 
 `AppShell` no sabe de qué sistema forma parte: el nombre que se ve en la barra
@@ -151,5 +199,5 @@ rompe a quien ya la usa.
 
 | Sistema | Estado |
 |---|---|
-| Vigilancia Oncológica (HRL) | origen del kit; ya lo consume como paquete (v1.1.2) |
+| Vigilancia Oncológica (HRL) | origen del kit; lo consume como paquete |
 | Reporte Estadístico (HRL) | se reconstruye sobre esta v1.0 |

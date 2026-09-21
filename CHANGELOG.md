@@ -3,6 +3,17 @@
 Formato: qué cambió y por qué. Las versiones siguen el criterio semántico —
 quitar o renombrar una prop es un cambio mayor, porque rompe a quien ya la usa.
 
+## 1.3.1 — 21/09/2026
+
+Sin cambios de código ni de aspecto.
+
+- `design.md` pasa a publicarse dentro del paquete: quien instala el kit puede
+  leer el contrato en `node_modules/@hrl/core-ui/design.md` sin salir del proyecto.
+- README: instalación con `git+https://` en lugar del atajo `github:` (que deja
+  una dirección SSH en el lockfile y obliga a cada máquina a tener una llave con
+  acceso), cómo autorizar un CI o servidor, el error `EALLOWSCRIPTS` y una guía
+  paso a paso para consumir el kit en un proyecto.
+
 ## 1.3.0 — 19/09/2026
 
 Toda la API pública queda en inglés y todos los tamaños de fuente salen de la

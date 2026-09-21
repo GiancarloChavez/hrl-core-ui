@@ -1,6 +1,6 @@
 {
   "name": "@hrl/core-ui",
-  "version": "1.3.0",
+  "version": "1.3.1",
   "description": "Sistema de diseño del Hospital Regional de Loreto: componentes React y tokens CSS, sin dependencias.",
   "license": "UNLICENSED",
   "type": "module",
@@ -21,7 +21,8 @@
     "tokens.json",
     "README.md",
     "CHANGELOG.md",
-    "UI_CATALOG.md"
+    "UI_CATALOG.md",
+    "design.md"
   ],
   "scripts": {
     "tokens": "node scripts/generate-tokens.mjs",
