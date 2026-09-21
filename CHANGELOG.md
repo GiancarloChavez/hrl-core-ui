@@ -3,6 +3,17 @@
 Formato: qué cambió y por qué. Las versiones siguen el criterio semántico —
 quitar o renombrar una prop es un cambio mayor, porque rompe a quien ya la usa.
 
+## 1.4.1 — 21/09/2026
+
+Solo documentación. Corrige una afirmación **falsa** de 1.3.1.
+
+1.3.1 decía que instalar con `git+https://` evitaba que el lockfile apuntara a
+SSH. No es así: npm escribe `git+ssh://git@github.com/…` para cualquier repositorio
+de GitHub, sea cual sea la forma de la dependencia. Tampoco obliga a tener una llave
+SSH: probado con SSH desactivado, `npm ci` instala si hay credenciales https, y sin
+ninguna credencial falla. El README lo explica ahora con lo comprobado y da la receta
+para un CI (un token de solo lectura y `url.…insteadOf` para las dos direcciones).
+
 ## 1.4.0 — 21/09/2026
 
 Los tooltips salen al costado del cursor y el menú desplegable queda dentro de la

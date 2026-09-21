@@ -16,25 +16,34 @@ No está publicado en npm. Se instala por URL de Git, **fijando la versión con 
 tag**:
 
 ```bash
-npm i "git+https://github.com/GiancarloChavez/hrl-core-ui.git#v1.3.1"
+npm i "git+https://github.com/GiancarloChavez/hrl-core-ui.git#v1.4.1"
 ```
 
-Usa la forma `git+https://`, no el atajo `github:usuario/repo`: el atajo hace que
-npm resuelva por SSH (`git+ssh://`) y deja esa dirección en el lockfile, así que
-cualquier máquina que corra `npm ci` —un compañero, el CI, el servidor— necesitaría
-una llave SSH con acceso al repositorio. Con https basta un credencial de lectura.
+npm deja `git+ssh://git@github.com/…` en el lockfile para cualquier repositorio de
+GitHub, escribas la dependencia como la escribas (`github:`, `git+https://`…). Es
+normal y no hace falta pelear con ello: no obliga a tener una llave SSH. Lo que
+cada máquina necesita es **una credencial de lectura del repositorio**, por SSH o
+por https. Comprobado: con SSH desactivado y credenciales https guardadas,
+`npm ci` instala igual; sin ninguna credencial falla con
+`Could not read from remote repository` sobre `ssh://git@github.com/…`.
 
 El repositorio es **privado**: quien lo instale necesita acceso de lectura,
 concedido por el dueño (`GiancarloChavez`) o al invitarlo como colaborador.
 
-- **En tu máquina**, Git Credential Manager ya guarda el acceso tras el primer
-  `git clone` o `git push` por https.
+- **En tu máquina**, con una llave SSH registrada en GitHub o con Git Credential
+  Manager (que guarda el acceso tras el primer `git clone` o `git push` por https).
 - **En un CI o servidor**, sin usuario interactivo: un token de solo lectura del
-  repositorio y, antes de `npm ci`:
+  repositorio y, antes de `npm ci`, decirle a git que lo use tanto para las
+  direcciones https como para la SSH que trae el lockfile:
 
   ```bash
   git config --global url."https://x-access-token:$TOKEN@github.com/".insteadOf "https://github.com/"
+  git config --global --add url."https://x-access-token:$TOKEN@github.com/".insteadOf "ssh://git@github.com/"
   ```
+
+  El `--add` de la segunda línea es necesario: sin él sustituiría a la primera. La
+  reescritura de las dos direcciones está comprobada con git; lo que no se ha
+  probado es que GitHub acepte un token real desde un CI.
 
 - **`EALLOWSCRIPTS` al instalar**: npm prepara las dependencias de Git en una
   instalación anidada, y una línea `allow-scripts=…` en tu `~/.npmrc` global (no es
