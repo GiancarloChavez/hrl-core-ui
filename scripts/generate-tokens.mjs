@@ -58,7 +58,15 @@ function reemplazarEntre(texto, inicioMarca, finMarca, nuevoContenido) {
   return texto.slice(0, desde) + nuevoContenido + texto.slice(fin);
 }
 
-const cssActual = readFileSync('tokens.css', 'utf8').split(CRLF).join(LF);
+const original = readFileSync('tokens.css', 'utf8');
+
+/* Los archivos generados conservan el fin de línea con el que están: CRLF en un
+   checkout de Windows con autocrlf, LF en Linux y en lo que guarda git. Escribir
+   siempre CRLF hacía que, en un checkout LF, `git diff --exit-code` viera todas
+   las líneas distintas y el CI fallara aunque el contenido fuera idéntico; en
+   Windows no se notaba porque git normaliza al comparar. */
+const finDeLinea = original.includes(CRLF) ? CRLF : LF;
+const cssActual = original.split(CRLF).join(LF);
 
 let cssNuevo = reemplazarEntre(
   cssActual,
@@ -73,7 +81,7 @@ cssNuevo = reemplazarEntre(
   bloqueGrupos(data.dark.groups),
 );
 
-writeFileSync('tokens.css', cssNuevo.split(LF).join(CRLF));
+writeFileSync('tokens.css', cssNuevo.split(LF).join(finDeLinea));
 
 // --------------------------------------------------------------------------
 // src/preset.js: mismo `preset` con la misma forma de siempre (color,
@@ -247,7 +255,7 @@ export function tokensToCss({ selector = ':root', selectorOscuro = ':root[data-t
 }
 `;
 
-writeFileSync('src/preset.js', presetJs.split(LF).join(CRLF));
+writeFileSync('src/preset.js', presetJs.split(LF).join(finDeLinea));
 
 console.log('tokens.css y src/preset.js regenerados desde tokens.json.');
 console.log('preset.color:', Object.keys(preset.color).length, 'claves | colorOscuro:', Object.keys(preset.colorOscuro).length);

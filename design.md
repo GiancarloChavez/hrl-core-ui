@@ -286,7 +286,7 @@ un cambio del kit nunca rompe a un sistema en producción sin aviso.
 ## 9. Antes de dar algo por terminado
 
 ```bash
-npm run verificar     # tokens, literales, build, prueba de humo y prueba de la herramienta
+npm run verificar     # tokens, fin de línea, literales, build, humo y prueba de la herramienta
 npm run contrast      # WCAG AA de los tokens
 npm run ladle:build   # el catálogo compila
 ```

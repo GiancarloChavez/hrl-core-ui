@@ -1,11 +1,18 @@
 name: CI
 
+# Solo en main y en PRs. Antes también corría en cada tag `v*`, pero un tag apunta a un
+# commit que ya pasó por main: era el mismo CI dos veces por versión (y, cuando fallaba,
+# dos correos). El tag sí dispara la publicación del catálogo (catalogo.yml).
 on:
   push:
     branches: [main]
-    tags: ['v*']
   pull_request:
     branches: [main]
+
+# Si llegan dos empujes seguidos a la misma rama, solo importa el último.
+concurrency:
+  group: ci-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   verificar:

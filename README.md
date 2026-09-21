@@ -184,8 +184,9 @@ npm run build         # compila src/ a dist/ con esbuild
 npm run humo          # monta cada componente del compilado y falla si alguno revienta
 npm run contrast      # WCAG AA de los tokens, informativo
 npm run literales     # falla si un font-size vuelve a escribirse fuera de la escala
+npm run eol           # el generador de tokens respeta el fin de línea (LF y CRLF)
 npm run cli           # prueba la herramienta hrl-core-ui contra un proyecto de ejemplo
-npm run verificar     # tokens + literales + build + humo + herramienta
+npm run verificar     # tokens + eol + literales + build + humo + herramienta
 npm run ladle:serve   # catálogo visual en local
 npm run ladle:build   # catálogo como sitio estático en build/
 ```
