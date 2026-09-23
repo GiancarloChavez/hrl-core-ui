@@ -17,6 +17,8 @@ export function Input({
   value,
   onChange,
   autoComplete,
+  /* Enfoca el campo al montarse: la primera casilla de un ingreso. */
+  autoFocus = false,
   disabled = false,
   /* Dentro de una tabla el nombre del campo ya lo da la cabecera de la
      columna. La etiqueta sigue existiendo para los lectores de pantalla. */
@@ -97,6 +99,7 @@ export function Input({
             value={value}
             onChange={onChange}
             autoComplete={autoComplete}
+            autoFocus={autoFocus}
           />
         </span>
       )}

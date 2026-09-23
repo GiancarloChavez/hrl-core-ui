@@ -2,6 +2,7 @@ import { jsx, jsxs } from "react/jsx-runtime";
 import { useCallback, useEffect, useRef, useState } from "react";
 import { Sprite, Icon } from "./icons.js";
 import { EmptyState } from "./EmptyState.js";
+import { HrlLogo } from "./HrlLogo.js";
 import { PageHeader } from "./PageHeader.js";
 import { Tooltip } from "./Tooltip.js";
 import { readTheme, applyTheme } from "./theme.js";
@@ -244,7 +245,7 @@ function AppShell({
     /* @__PURE__ */ jsx(Sprite, {}),
     /* @__PURE__ */ jsxs("div", { className: `hrl-shell${plegado ? " hrl-shell--plegado" : ""}`, children: [
       /* @__PURE__ */ jsxs("aside", { className: "hrl-sidebar", children: [
-        /* @__PURE__ */ jsx("div", { className: "hrl-sidebar__logo", children: logo }),
+        /* @__PURE__ */ jsx("div", { className: "hrl-sidebar__logo", children: logo === void 0 ? /* @__PURE__ */ jsx(HrlLogo, { width: 158 }) : logo }),
         /* @__PURE__ */ jsx(SidebarNav, { navItems, active, onSelect, plegado })
       ] }),
       /* @__PURE__ */ jsxs("div", { className: "hrl-main", children: [

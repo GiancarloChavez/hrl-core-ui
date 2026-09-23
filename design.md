@@ -38,6 +38,10 @@ que el consumidor compile nada. Nunca se edita a mano; sale de `npm run build`.
 src/            Componentes, hooks y utilidades. Es lo que se publica.
 tokens.json     ÚNICA fuente de los tokens (colores, escalas, movimiento).
 tokens.css      Estilos del kit. Los bloques de tokens se GENERAN de tokens.json.
+fonts/          Fuentes (woff2) que tokens.css declara con @font-face, y su licencia.
+assets/         Identidad del hospital que el kit incluye: logo, escudo y las seis
+                fachadas del login (WebP optimizado). tokens.css las referencia con url().
+                Ningún recurso del kit se pide a internet: `npm run fuentes` lo impide.
 dist/           Salida compilada de src/. Generada.
 stories/        Catálogo visual (Ladle). No se publica en el paquete.
 .ladle/         Configuración y estilos del catálogo, no del kit.
@@ -49,6 +53,10 @@ bin/            Herramienta `hrl-core-ui` (init, doctor, upgrade). Se publica en
 - **`src/` no importa nada de fuera de `src/`.** Ni alias, ni rutas de otros
   proyectos. Sus imports son relativos: el kit debe funcionar copiado a otro
   proyecto sin depender de nada del anfitrión.
+- **La identidad del hospital sí es del kit.** El logo, el escudo y las fachadas del
+  login son del Hospital Regional de Loreto, no de un sistema: todos los sistemas del
+  hospital los comparten, y por eso viajan en el paquete en vez de copiarse (y
+  desactualizarse) proyecto por proyecto. Lo que sigue prohibido es lo de abajo.
 - **El kit no sabe de ningún sistema concreto.** Ni de pacientes, ni de
   indicadores, ni del HIS, ni del nombre de una aplicación. Si un componente
   necesita datos, los recibe por props; si un texto nombra un dominio, no

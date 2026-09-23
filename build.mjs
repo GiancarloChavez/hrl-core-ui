@@ -15,7 +15,7 @@
    Git funcione sin compilar nada. */
 
 import { build } from 'esbuild';
-import { readdirSync, rmSync, mkdirSync, copyFileSync } from 'node:fs';
+import { readdirSync, rmSync, mkdirSync } from 'node:fs';
 
 const entradas = readdirSync('src')
   .filter((f) => f.endsWith('.jsx') || f.endsWith('.js'))
@@ -48,5 +48,6 @@ for (const f of readdirSync('dist').filter((n) => n.endsWith('.js'))) {
   writeFileSync(ruta, texto);
 }
 
-copyFileSync('tokens.css', 'dist/tokens.css');
+/* tokens.css, fonts/ y assets/ se publican desde la raíz (`exports` apunta a ./tokens.css):
+   una copia en dist/ solo duplicaría 1,5 MB de fuentes e imágenes en el paquete. */
 console.log(`\n${entradas.length} archivos compilados en dist/`);

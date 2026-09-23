@@ -190,6 +190,15 @@ const preset = {
   touchTarget: {
     base: "40px",
     lg: "44px"
+  },
+  /* Escala de espaciado (gap, padding) de las separaciones entre bloques. */
+  space: {
+    "1": "4px",
+    "2": "8px",
+    "3": "12px",
+    "4": "16px",
+    "5": "24px",
+    "6": "32px"
   }
 };
 function token(nombre, respaldo) {
@@ -213,7 +222,8 @@ function tokensToCss({ selector = ":root", selectorOscuro = ':root[data-tema-hrl
     ...Object.entries(preset.transition).map(([k, v]) => linea(`transition-${k}`, v)),
     linea("ease", preset.ease),
     linea("touch-target", preset.touchTarget.base),
-    linea("touch-target-lg", preset.touchTarget.lg)
+    linea("touch-target-lg", preset.touchTarget.lg),
+    ...Object.entries(preset.space).map(([k, v]) => linea(`space-${k}`, v))
   ].join("\n");
   const oscuro = Object.entries(preset.colorOscuro).map(([k, v]) => linea(k, v)).join("\n");
   return `${selector} {

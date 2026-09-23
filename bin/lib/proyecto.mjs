@@ -122,3 +122,20 @@ export function importsDe(texto, filtro = /.*/) {
 }
 
 export const lineaDe = (texto, indice) => texto.slice(0, indice).split('\n').length;
+
+/* Fin de una etiqueta JSX que empieza en `inicio`: el primer `>` que no esté
+   dentro de llaves ni de comillas (una flecha `=>` dentro de una prop no la cierra). */
+export function finDeEtiqueta(texto, inicio) {
+  let prof = 0;
+  let comilla = null;
+  for (let i = inicio; i < texto.length; i++) {
+    const c = texto[i];
+    if (comilla) {
+      if (c === comilla && texto[i - 1] !== '\\') comilla = null;
+    } else if (c === '"' || c === "'" || c === '`') comilla = c;
+    else if (c === '{') prof++;
+    else if (c === '}') prof--;
+    else if (c === '>' && prof === 0) return i;
+  }
+  return -1;
+}

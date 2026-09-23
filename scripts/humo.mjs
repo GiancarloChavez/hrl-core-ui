@@ -24,6 +24,14 @@ const CASOS = [
   ['NumberCell', { 'aria-label': 'Atenciones', value: 4.5, onChange: () => {} }],
   ['Badge', { label: 'Activo', tone: 'ok' }],
   ['Card', { title: 'Sección', children: 'x' }],
+  ['Stack', { direction: 'row', gap: 3, align: 'center', justify: 'between', wrap: true, children: 'x' }],
+  ['Grid', { min: 200, gap: 5, children: 'x' }],
+  ['Grid', { columns: 3, children: 'x' }],
+  ['HrlLogo', {}],
+  ['HrlLogo', { variant: 'mark', width: 48 }],
+  ['LoginScreen', { systemName: 'Sistema de prueba', onSubmit: async () => {} }],
+  ['LoginScreen', { backdrop: 'none', onSubmit: async () => {} }],
+  ['ChangePasswordScreen', { onSubmit: async () => {} }],
   ['StatCard', { label: 'KPI', value: '10', severity: 'nodata', info: 'Qué mide' }],
   ['Alert', { tone: 'warning', title: 'Atención', children: 'x' }],
 
@@ -104,6 +112,19 @@ const ASERCIONES = [
   ['IconButton tone="action"', () => html('IconButton', { icon: 'sh-eye', 'aria-label': 'Ver', tone: 'action' }).includes('hrl-accion')],
   ['IconButton tone="accion" (obsoleto)', () => html('IconButton', { icon: 'sh-eye', 'aria-label': 'Ver', tone: 'accion' }).includes('hrl-accion')],
   ['IconButton por defecto no es de acción', () => !html('IconButton', { icon: 'sh-eye', 'aria-label': 'Ver' }).includes('hrl-accion')],
+  ['la fachada sigue la hora: 5→amanecer, 9→mañana, 14→tarde, 18→atardecer, 20→noche iluminada, 23 y 3→noche',
+    () => [[5, 'dawn'], [9, 'morning'], [14, 'afternoon'], [18, 'dusk'], [20, 'lit-night'], [23, 'night'], [3, 'night']].every(([h, f]) => kit.backdropForHour(h) === f)],
+  ['los seis fondos del login existen como clase', () => kit.LOGIN_BACKDROPS.length === 6],
+  ['LoginScreen con fondo fijo pinta esa fachada', () => html('LoginScreen', { backdrop: 'dusk', onSubmit: () => {} }).includes('hrl-login--dusk')],
+  ['LoginScreen con backdrop="none" no pinta ninguna', () => !html('LoginScreen', { backdrop: 'none', onSubmit: () => {} }).includes('hrl-login--')],
+  ['LoginScreen lleva el logo y el nombre del sistema', () => { const h = html('LoginScreen', { systemName: 'Mi sistema', onSubmit: () => {} }); return h.includes('hrl-logo') && h.includes('Mi sistema'); }],
+  ['ChangePasswordScreen pide tres contraseñas', () => (html('ChangePasswordScreen', { onSubmit: () => {} }).match(/type="password"/g) || []).length === 3],
+  ['Stack: la separación sale de la escala de espaciado', () => html('Stack', { gap: 5 }).includes('var(--space-5)')],
+  ['Grid: sin columns reparte con auto-fill', () => html('Grid', { min: 200 }).includes('auto-fill')],
+  ['HrlLogo tiene texto alternativo', () => html('HrlLogo', {}).includes('aria-label="Hospital Regional de Loreto"')],
+  ['AppShell sin logo dibuja el del hospital', () => html('AppShell', { navItems: [], title: 'x' }).includes('hrl-logo')],
+  ['AppShell con logo={null} no dibuja ninguno', () => !html('AppShell', { navItems: [], title: 'x', logo: null }).includes('hrl-logo')],
+  ['Input con autoFocus lo declara', () => html('Input', { label: 'X', autoFocus: true }).length > 0],
 ];
 for (const [nombre, prueba] of ASERCIONES) {
   let ok = false;
@@ -116,7 +137,8 @@ for (const [nombre, prueba] of ASERCIONES) {
    que se olvida al renombrar no lo detecta ningún build. */
 const esperados = ['Button', 'Input', 'DataTable', 'AppShell', 'PageActions', 'usePagination',
   'useExitAnimation', 'useExpandedRows', 'ICON_ALIASES', 'DEPRECATED', 'useFloatingTip', 'readTheme', 'applyTheme',
-  'memoize', 'invalidate', 'sortRows', 'nextSort', 'variants', 'cx', 'preset', 'token', 'ICONS'];
+  'memoize', 'invalidate', 'sortRows', 'nextSort', 'variants', 'cx', 'preset', 'token', 'ICONS',
+  'Stack', 'Grid', 'HrlLogo', 'LoginScreen', 'ChangePasswordScreen', 'backdropForHour', 'LOGIN_BACKDROPS'];
 const faltan = esperados.filter((n) => !(n in kit));
 if (faltan.length) {
   fallos += 1;

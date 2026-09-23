@@ -104,6 +104,7 @@ const CATEGORIAS = [
   { prueba: (k) => k.startsWith('font-'), destino: 'font', sub: (k) => k.slice(5) },
   { prueba: (k) => k.startsWith('duration-'), destino: 'duration', sub: (k) => k.slice(9) },
   { prueba: (k) => k.startsWith('transition-'), destino: 'transition', sub: (k) => k.slice(11) },
+  { prueba: (k) => /^space-\d$/.test(k), destino: 'space', sub: (k) => k.slice(6) },
   { prueba: (k) => k === 'touch-target', destino: 'touchTarget', sub: () => 'base' },
   { prueba: (k) => k === 'touch-target-lg', destino: 'touchTarget', sub: () => 'lg' },
   { prueba: (k) => k === 'ease', destino: 'ease', sub: null },
@@ -115,7 +116,7 @@ function categoriaDe(nombre) {
 
 const preset = {
   color: {}, colorOscuro: {}, radius: {}, shadow: {}, text: {}, weight: {},
-  leading: {}, font: {}, duration: {}, transition: {}, ease: null, touchTarget: {},
+  leading: {}, font: {}, duration: {}, transition: {}, ease: null, touchTarget: {}, space: {},
 };
 
 for (const nombre of Object.keys(lightFlat)) {
@@ -212,6 +213,9 @@ export const preset = {
 
   /* Altura mínima de cualquier control interactivo. */
   touchTarget: ${cuerpoPlano(preset.touchTarget, '  ')},
+
+  /* Escala de espaciado (gap, padding) de las separaciones entre bloques. */
+  space: ${cuerpoPlano(preset.space, '  ')},
 };
 
 /* Referencia a un token para usarlo en un estilo en línea.
@@ -247,6 +251,7 @@ export function tokensToCss({ selector = ':root', selectorOscuro = ':root[data-t
     linea('ease', preset.ease),
     linea('touch-target', preset.touchTarget.base),
     linea('touch-target-lg', preset.touchTarget.lg),
+    ...Object.entries(preset.space).map(([k, v]) => linea(\`space-\${k}\`, v)),
   ].join('\\n');
 
   const oscuro = Object.entries(preset.colorOscuro).map(([k, v]) => linea(k, v)).join('\\n');

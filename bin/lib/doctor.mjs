@@ -10,8 +10,9 @@ import { join, relative } from 'node:path';
 import { pathToFileURL } from 'node:url';
 import { DEPRECATED } from '../../dist/deprecated.js';
 import {
-  KIT, especificacionKit, etiquetaDe, fuentes, entradaDe, importsDe, leerTexto, lineaDe, raizGit, versionInstalada,
+  KIT, especificacionKit, etiquetaDe, finDeEtiqueta, fuentes, entradaDe, importsDe, leerTexto, lineaDe, raizGit, versionInstalada,
 } from './proyecto.mjs';
+import { revisiones } from './revisiones.mjs';
 
 const ESCALA_FUENTE = new Set([11, 12.5, 13.5, 14, 17, 22, 30]);
 const TOKENS_CSS = '@hrl/core-ui/tokens.css';
@@ -30,23 +31,6 @@ const CASOS = [
   ['Spinner', {}],
   ['DataTable', { columns: [{ key: 'a', label: 'A' }], rows: [{ a: 1 }] }],
 ];
-
-/* Fin de una etiqueta JSX que empieza en `inicio`: el primer `>` que no esté
-   dentro de llaves ni de comillas (una flecha `=>` dentro de una prop no la cierra). */
-function finDeEtiqueta(texto, inicio) {
-  let prof = 0;
-  let comilla = null;
-  for (let i = inicio; i < texto.length; i++) {
-    const c = texto[i];
-    if (comilla) {
-      if (c === comilla && texto[i - 1] !== '\\') comilla = null;
-    } else if (c === '"' || c === "'" || c === '`') comilla = c;
-    else if (c === '{') prof++;
-    else if (c === '}') prof--;
-    else if (c === '>' && prof === 0) return i;
-  }
-  return -1;
-}
 
 /* ¿Dos posiciones del texto están en el mismo bloque `{ … }`? Si entre la primera y la
    segunda se cierra una llave que no se abrió ahí, la primera está en otra rama (un
@@ -207,7 +191,10 @@ export async function doctor({ dir, pkg }, { fix = false } = {}) {
     }
   }
 
-  // 8. Dato, no exigencia: tamaños de fuente propios fuera de la escala.
+  // 8. Lo que una migración suele dejar a medias (marca, icono, recursos externos, clases sin definir).
+  for (const x of revisiones(dir)) anota(x.nivel, x.titulo, x.detalle, x.arreglo);
+
+  // 9. Dato, no exigencia: tamaños de fuente propios fuera de la escala.
   let fuera = 0;
   const cssPropios = fuentes(dir, /\.css$/);
   for (const a of cssPropios) for (const m of leerTexto(a).matchAll(/font-size:\s*([0-9.]+)px/g)) if (!ESCALA_FUENTE.has(parseFloat(m[1]))) fuera++;

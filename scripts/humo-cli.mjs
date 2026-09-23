@@ -53,7 +53,7 @@ function montarProyecto() {
   const nm = join(app, 'node_modules');
   const destino = join(nm, '@hrl', 'core-ui');
   mkdirSync(destino, { recursive: true });
-  for (const f of ['dist', 'tokens.css', 'package.json', 'CHANGELOG.md', 'design.md', 'UI_CATALOG.md']) cpSync(join(KIT, f), join(destino, f), { recursive: true });
+  for (const f of ['dist', 'fonts', 'assets', 'tokens.css', 'package.json', 'CHANGELOG.md', 'design.md', 'UI_CATALOG.md']) cpSync(join(KIT, f), join(destino, f), { recursive: true });
   for (const p of ['react', 'react-dom']) symlinkSync(join(KIT, 'node_modules', p), join(nm, p), 'junction');
 }
 
@@ -119,6 +119,54 @@ try {
   ok(correr('doctor').status === 1 && /antes que @hrl\/core-ui\/tokens\.css/.test(correr('doctor').stdout), 'estilos propios antes que los tokens es un error');
   writeFileSync(join(app, 'src', 'main.jsx'), "if (a) {\n  await import('./viejo.css');\n} else {\n  await import('@hrl/core-ui/tokens.css');\n  await import('./nuevo.css');\n}\n");
   ok(correr('doctor').status === 0, 'un CSS propio en otra rama (if/else) no cuenta como anterior a los tokens');
+
+  console.log('\nmigración a medias: icono, recursos externos, clases, colores y HTML nativo');
+  writeFileSync(join(app, 'index.html'), '<!doctype html>\n<html>\n<head>\n  <link rel="icon" type="image/svg+xml" href="/vite.svg" />\n  <script src="https://unpkg.com/@phosphor-icons/web"></script>\n</head>\n<body><div id="root"></div></body>\n</html>\n');
+  writeFileSync(join(app, 'src', 'Marco.jsx'), [
+    "import { Button } from '@hrl/core-ui';",
+    'export default function Marco() {',
+    '  return (',
+    '    <div className="hrl-nuevo hrl-inventada" style={{ color: \'#ff0000\' }}>',
+    '      <button>Aceptar</button>',
+    '      {/* hrl-nativo: no hay equivalente */}',
+    '      <button>Excepción</button>',
+    '      <input type="file" hidden />',
+    '      <Button>Ok</Button>',
+    '    </div>',
+    '  );',
+    '}',
+    "// un color en un comentario no cuenta: '#00ff00'",
+    '',
+  ].join('\n'));
+  const media = correr('doctor');
+  ok(media.status === 0, 'son avisos, no errores: doctor no falla');
+  ok(/1 recurso\(s\) que se cargan desde internet/.test(media.stdout) && /index\.html:5/.test(media.stdout), 'detecta un script de un CDN, con archivo y línea');
+  ok(/plantilla de Vite/.test(media.stdout), 'detecta el icono de pestaña de Vite');
+  ok(/1 clase\(s\) hrl-… usadas sin definición/.test(media.stdout) && /\.hrl-inventada/.test(media.stdout), 'detecta una clase hrl-… sin definir');
+  ok(!/\.hrl-nuevo\b/.test(media.stdout), 'una clase que define el kit (hrl-nuevo) no se marca');
+  ok(/1 color\(es\) escritos como literal/.test(media.stdout) && /Marco\.jsx:4  #ff0000/.test(media.stdout), 'detecta un color escrito como literal (y no el de un comentario)');
+  ok(/1 etiqueta\(s\) HTML nativa\(s\)/.test(media.stdout) && /Marco\.jsx:5  <button>/.test(media.stdout), 'detecta un <button> nativo');
+  ok(!/Marco\.jsx:7/.test(media.stdout) && !/Marco\.jsx:8/.test(media.stdout), 'no marca el que lleva «hrl-nativo» ni el <input type="file">');
+
+  const h3 = hash();
+  const simulacion = correr('init', '--dry-run');
+  ok(simulacion.status === 0 && hash() === h3 && /haría\s+index\.html: icono de pestaña/.test(simulacion.stdout), 'init --dry-run anuncia el cambio del icono sin hacerlo');
+  const guiado = correr('init');
+  ok(guiado.status === 0 && /hecho\s+index\.html: icono de pestaña sustituido/.test(guiado.stdout), 'init sustituye solo el icono de pestaña de Vite por el escudo del hospital');
+  ok(existsSync(join(app, 'public', 'icono-hrl.png')) && /icono-hrl\.png/.test(leer('index.html')) && !/vite\.svg/.test(leer('index.html')), 'copia el escudo a public/ y enlaza index.html');
+  ok(/manual .*recurso\(s\) que se cargan desde internet/.test(guiado.stdout) && /manual .*color\(es\) escritos como literal/.test(guiado.stdout) && /manual .*HTML nativa/.test(guiado.stdout), 'lo que no se puede arreglar sin adivinar queda como pasos manuales, con su arreglo');
+  ok(!/manual .*icono de la pestaña/.test(guiado.stdout) && /MIGRACION\.md/.test(guiado.stdout), 'el icono ya no se pide a mano, y se remite a la guía de migración');
+  const h4 = hash();
+  const repetido = correr('init');
+  ok(repetido.status === 0 && hash() === h4 && /ya\s+index\.html ya tiene un icono de pestaña propio/.test(repetido.stdout), 'repetir init no vuelve a tocar el icono');
+
+  writeFileSync(join(app, 'index.html'), '<!doctype html>\n<html>\n<head>\n  <link rel="icon" type="image/png" href="/icono-hrl.png" />\n</head>\n<body><div id="root"></div></body>\n</html>\n');
+  writeFileSync(join(app, 'src', 'Marco.jsx'), "import { Button } from '@hrl/core-ui';\nexport default function Marco() {\n  return <div className=\"hrl-nuevo\" style={{ color: 'var(--primary)' }}><Button>Ok</Button></div>;\n}\n");
+  const resuelta = correr('doctor');
+  ok(/Nada se carga desde internet/.test(resuelta.stdout) && /icono de la pestaña es propio/.test(resuelta.stdout) && /Todas las clases hrl-… que usa el código tienen definición/.test(resuelta.stdout) && /Ningún color escrito como literal/.test(resuelta.stdout) && /No hay HTML nativo/.test(resuelta.stdout), 'corregido lo anterior, las cinco revisiones pasan');
+  rmSync(join(app, 'index.html'));
+  rmSync(join(app, 'public'), { recursive: true, force: true });
+  rmSync(join(app, 'src', 'Marco.jsx'));
 
   console.log('\nupgrade (piezas)');
   const log = '# Registro\n\n## 1.2.0 — c\n\ntercero\n\n## 1.1.0 — b\n\nsegundo\n\n## 1.0.0 — a\n\nprimero\n';

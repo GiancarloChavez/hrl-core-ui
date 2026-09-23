@@ -27,7 +27,6 @@ export const Basico = () => {
         onSelect={setActivo}
         title="Resumen"
         brand="Sistema de ejemplo"
-        logo={<span style={{ fontWeight: 700 }}>HRL</span>}
         user={{ name: 'Persona de prueba', role: 'Administración' }}
         notifications={NOTIFICACIONES}
         onSignOut={() => {}}

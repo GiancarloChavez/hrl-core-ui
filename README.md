@@ -53,7 +53,10 @@ Cinco pasos, en este orden. El único que exige escribir código es el cuarto.
    imports por rutas internas ni una copia local del kit; que el sprite de iconos esté
    montado; que no se usen **nombres obsoletos** (con `--fix` los reescribe él); que el
    proyecto tenga un contrato que mencione el kit; y que los componentes **se monten** con
-   el React del proyecto. Sale con código 1 si hay errores; con `--strict`, también si hay
+   el React del proyecto. También avisa de lo que una migración suele dejar a medias:
+   recursos cargados de internet, el icono de pestaña de Vite (`init` lo cambia solo), clases
+   `hrl-…` sin definición, colores escritos como literal y HTML nativo con equivalente en
+   el kit (`init` lo lista con su arreglo). Sale con código 1 si hay errores; con `--strict`, también si hay
    avisos: es lo que conviene poner en un CI.
 
 ## Actualizar
@@ -75,6 +78,9 @@ regenerarlo**: npm sube todas las dependencias a su última versión permitida.
 
 La herramienta viaja en el paquete desde la **1.5.0**: un proyecto en una versión anterior
 sube primero a mano (cambia el tag y `npm install`) y desde ahí ya la tiene.
+
+Migrar una interfaz que ya existe: [`MIGRACION.md`](MIGRACION.md) (el recorrido, lo que
+falla y cómo arreglarlo, equivalencias y lo que el kit aún no cubre). Viaja en el paquete.
 
 Las reglas que `init` escribe en el contrato —y que `doctor` hace cumplir— salen de
 [`design.md`](design.md), que también viaja dentro del paquete
@@ -110,6 +116,11 @@ como colaborador.
   anidada, y una línea `allow-scripts=…` en tu `~/.npmrc` global (no es una clave real de
   npm) la rechaza. Coméntala. El kit ya declara `allowScripts` para sus propias
   herramientas de desarrollo.
+
+Las fuentes (Public Sans e IBM Plex Mono) y la identidad del hospital —logo, escudo y las
+fachadas de la pantalla de ingreso— **vienen en el paquete**: no dependen de internet ni
+de Google Fonts, y no hay que copiarlas ni configurar nada. `<AppShell>` dibuja el logo
+solo y `<LoginScreen>` trae el ingreso con la fachada según la hora.
 
 ## Uso
 

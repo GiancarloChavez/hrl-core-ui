@@ -39,6 +39,9 @@ jobs:
           npm run tokens
           git diff --exit-code -- tokens.css src/preset.js
 
+      - name: Fuentes propias, sin depender de internet
+        run: npm run fuentes
+
       - name: Tamaños de fuente dentro de la escala
         run: npm run literales
 

@@ -31,9 +31,9 @@ completa está en `core-ui/tokens.css` (capa semántica) y en `core-ui/preset.js
 (mismo contenido como módulo JS).
 
 `tokens.css` contiene los tokens y los estilos **del kit**, nada más. Lo propio
-de cada sistema —su pantalla de ingreso, sus tarjetas, su rejilla de paneles—
-vive en la hoja de esa aplicación (aquí, `nuevo/estilos.css`), que se carga
-después.
+de cada sistema —sus tarjetas propias, su rejilla de paneles— vive en la hoja
+de esa aplicación (aquí, `nuevo/estilos.css`), que se carga después. La
+pantalla de ingreso y el logo del hospital **sí** son del kit (ver §5).
 
 | Grupo | Tokens |
 |---|---|
@@ -47,6 +47,7 @@ después.
 | Tipografía | `--font-sans` `--font-mono` · `--text-xs` … `--text-2xl` · `--weight-*` · `--leading-*` |
 | Movimiento | `--ease` `--duration-fast|base|slow` `--transition-fast|base|slow` |
 | Táctil | `--touch-target` (40px) `--touch-target-lg` (44px) |
+| Espaciado | `--space-1` … `--space-6` (4 · 8 · 12 · 16 · 24 · 32 px). Las separaciones entre bloques salen de aquí; `Stack` y `Grid` las usan por ti. |
 
 El modo oscuro redefine **solo tokens**, nunca reglas. Se activa con
 `data-tema-hrl="oscuro"` en `<html>`; lo gestiona `applyTheme()`.
@@ -67,7 +68,7 @@ tokensToCss();                    // el bloque CSS completo, para otro bundler
 |---|---|---|
 | `Button` | `@/core-ui` | `tone` cta·blue·ghost·danger·plain · `size` md·sm · `icon` · `loading` · `disabled` · `onClick` |
 | `IconButton` | `@/core-ui` | `icon` **(req.)** · `aria-label` **(req.)** · `tone` plain·action |
-| `Input` | `@/core-ui` | `label` **(req.)** · `kind` text·number·date·password·select · `value` · `onChange` · `options` `{value,label}[]` · `groups` · `error` · `info` · `required` · `searchIcon` · `disabled` · `labelHidden` |
+| `Input` | `@/core-ui` | `label` **(req.)** · `kind` text·number·date·password·select · `value` · `onChange` · `options` `{value,label}[]` · `groups` · `error` · `info` · `required` · `searchIcon` · `disabled` · `labelHidden` · `autoFocus` |
 | `Badge` | `@/core-ui` | `label` · `tone` ok·warn·crit·info·none |
 | `Card` | `@/core-ui` | `title` · `subtitle` · `total` · `accent` · `flush` · `children` |
 | `StatCard` | `@/core-ui` | `label` · `value` · `note` · `severity` neutral·normal·suspect·abnormal·nodata · `percent` · `info` · `delay` |
@@ -128,7 +129,12 @@ sale punteado y rotulado; los periodos vacíos del final se agrupan en un bloque
 
 | Componente | Props |
 |---|---|
-| `AppShell` | `navItems` `{id,label,icon,group?,badge?,href?}[]` · `active` · `onSelect` · `title` · `subtitle` · `breadcrumbs` · `actions` · `user` `{name,email?,role?,avatar?}` · `logo` · `brand` (nombre del sistema; el kit no lo sabe) · `themeKey` · `notifications` · `onSignOut` · `children` |
+| `AppShell` | `navItems` `{id,label,icon,group?,badge?,href?}[]` · `active` · `onSelect` · `title` · `subtitle` · `breadcrumbs` · `actions` · `user` `{name,email?,role?,avatar?}` · `logo` (por defecto `HrlLogo`; `null` la deja sin marca) · `brand` (nombre del sistema; el kit no lo sabe) · `themeKey` · `notifications` · `onSignOut` · `children` |
+| `Stack` | `direction` column·row · `gap` 1…6 (escala `--space-*`) · `align` start·center·end·stretch·baseline · `justify` start·center·end·between · `wrap` · `as`. Una fila o columna con separación fija: reemplaza `style={{ display: 'flex', gap }}`. |
+| `Grid` | `min` (px, 240 por defecto: cuantas celdas quepan) · `columns` (número fijo; sustituye a `min`) · `gap` 1…6 · `as`. |
+| `HrlLogo` | `variant` full·mark · `width` (px o medida CSS) · `label`. El logo del Hospital Regional de Loreto, incluido en el paquete. `AppShell` lo pone solo en la barra lateral. |
+| `LoginScreen` | `systemName` · `onSubmit({username,password})` (async; si lanza, se muestra su mensaje) · `backdrop` auto·none·dawn·morning·afternoon·dusk·lit-night·night · `labels` · `footer`. Pantalla de ingreso con la fachada del hospital según la hora. No consulta nada. |
+| `ChangePasswordScreen` | `systemName` · `onSubmit({current,next})` · `minLength` · `backdrop` · `labels` · `footer`. Cambio obligatorio de contraseña, con el mismo fondo. |
 | `PageHeader` | `title` **(req.)** · `description` · `breadcrumbs` `{label,href?}[]` · `actions` |
 | `PageActions` | `children`. Lleva controles de la vista abierta (periodo, Exportar) a la ranura de `PageHeader`, junto al título, sin subir su estado al shell. |
 | `FilterBar` | `children` (los campos) · `actions` · `footer` · `columns` |
@@ -398,4 +404,5 @@ export default function App({ usuario, onSalir }) {
 | TanStack Table | `DataTable` cubre orden, paginación, estado vacío y carga con props. Sin virtualización ni agrupación: si un módulo las necesita, se evalúa entonces. |
 | lucide-react | El set vive en `core-ui/icons.jsx` como sprite SVG. Cambiar de set es sustituir ese archivo; el resto del código pide iconos por nombre. |
 | Sonner | `Toast` propio, portalado y con animación de salida. |
+| Botón con aspecto de enlace, tarjeta que se puede pulsar | Todavía no hay `Button tone="link"` ni un `Card` clicable. Mientras tanto, un `<button>` nativo se justifica con un comentario `hrl-nativo: motivo` (`doctor` lo respeta). |
 | TypeScript | El proyecto es JS. Las formas de props están documentadas aquí y en los comentarios de cada componente. |

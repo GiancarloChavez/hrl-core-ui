@@ -218,6 +218,16 @@ export const preset = {
     base: '40px',
     lg: '44px',
   },
+
+  /* Escala de espaciado (gap, padding) de las separaciones entre bloques. */
+  space: {
+    '1': '4px',
+    '2': '8px',
+    '3': '12px',
+    '4': '16px',
+    '5': '24px',
+    '6': '32px',
+  },
 };
 
 /* Referencia a un token para usarlo en un estilo en línea.
@@ -253,6 +263,7 @@ export function tokensToCss({ selector = ':root', selectorOscuro = ':root[data-t
     linea('ease', preset.ease),
     linea('touch-target', preset.touchTarget.base),
     linea('touch-target-lg', preset.touchTarget.lg),
+    ...Object.entries(preset.space).map(([k, v]) => linea(`space-${k}`, v)),
   ].join('\n');
 
   const oscuro = Object.entries(preset.colorOscuro).map(([k, v]) => linea(k, v)).join('\n');

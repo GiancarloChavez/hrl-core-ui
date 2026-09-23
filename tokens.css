@@ -6,7 +6,48 @@
    que se montan en document.body (modales, avisos), que necesitan las
    variables y la tipografía, pero no deben pintar un fondo opaco. */
 
-@import url('https://fonts.googleapis.com/css2?family=Public+Sans:wght@400;500;600;700;800&family=IBM+Plex+Mono:wght@400;500&display=swap');
+/* Fuentes propias del kit (carpeta fonts/, licencia OFL en fonts/LICENSE.txt).
+   Se sirven desde el paquete y no desde Google Fonts: la red de un hospital
+   puede no llegar a internet, y sin la fuente el sistema cae en Helvetica o
+   Arial y deja de parecerse a lo diseñado. Public Sans es variable (un solo
+   archivo cubre 100-900); font-display: swap evita texto invisible mientras
+   carga. El bundler del proyecto empaqueta estos archivos al importar
+   tokens.css: no hay que copiarlos ni configurar nada. */
+@font-face {
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./fonts/public-sans-latin-ext.woff2') format('woff2');
+  unicode-range: U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C0,U+2113,U+2C60-2C7F,U+A720-A7FF;
+}
+
+@font-face {
+  font-family: 'Public Sans';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 100 900;
+  src: url('./fonts/public-sans-latin.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 400;
+  src: url('./fonts/ibm-plex-mono-latin-400.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
+
+@font-face {
+  font-family: 'IBM Plex Mono';
+  font-style: normal;
+  font-display: swap;
+  font-weight: 500;
+  src: url('./fonts/ibm-plex-mono-latin-500.woff2') format('woff2');
+  unicode-range: U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD;
+}
 
 .hrl-nuevo,
 .hrl-portal {
@@ -174,6 +215,16 @@
      minimo en cualquier control interactivo. */
   --touch-target: 40px;
   --touch-target-lg: 44px;
+
+  /* Escala de espaciado. Separaciones entre bloques (gap, padding) salen de aqui
+     y no de un numero suelto: 4, 8, 12, 16, 24 y 32 px cubren lo que un panel
+     necesita. */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
 
   font-family: var(--font-sans);
   color: var(--text-primary);
@@ -2485,6 +2536,123 @@ body { margin: 0; background: #f9fafb; }
 
 @media (max-width: 1100px) {
   .hrl-visor { grid-template-columns: minmax(0, 1fr); }
+}
+
+/* --------------------------------------------------------------- maquetación */
+
+/* Stack y Grid (src/Layout.jsx). La separación llega en --hrl-gap, que el
+   componente resuelve desde la escala --space-1…6. min-width: 0 evita que un
+   hijo con texto largo ensanche la fila o la rejilla más allá de su contenedor. */
+.hrl-stack {
+  display: flex;
+  flex-direction: column;
+  gap: var(--hrl-gap, var(--space-4));
+  min-width: 0;
+}
+
+.hrl-stack--fila { flex-direction: row; }
+.hrl-stack--envuelta { flex-wrap: wrap; }
+
+.hrl-grid {
+  display: grid;
+  gap: var(--hrl-gap, var(--space-4));
+}
+
+.hrl-grid > * { min-width: 0; }
+
+/* -------------------------------------------------------------------- logo */
+
+/* Logo del hospital (src/HrlLogo.jsx). Va como fondo para que el bundler del
+   proyecto empaquete el archivo al importar este CSS. */
+.hrl-logo {
+  display: block;
+  box-sizing: border-box;
+  width: var(--hrl-logo-ancho, 100%);
+  max-width: 100%;
+  aspect-ratio: 640 / 316;
+  background: url('./assets/logo-hrl.png') center / contain no-repeat;
+}
+
+.hrl-logo--escudo {
+  aspect-ratio: 1 / 1;
+  background-image: url('./assets/icono-hrl.png');
+}
+
+/* Sus verdes oscuros no se leen sobre el fondo del tema oscuro: se asienta
+   sobre una placa clara. El blanco es literal porque no cambia con el tema. */
+:root[data-tema-hrl='oscuro'] .hrl-logo {
+  padding: var(--space-2);
+  background-color: #ffffff;
+  background-origin: content-box;
+  border-radius: var(--radius-sm);
+}
+
+/* -------------------------------------------------------------- pantalla de acceso */
+
+/* LoginScreen y ChangePasswordScreen (src/LoginScreen.jsx). La fachada cambia
+   con la hora; el color de fondo se ve mientras baja la imagen. */
+.hrl-nuevo.hrl-login {
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: var(--space-4);
+  background: var(--bg-app) center / cover no-repeat;
+}
+
+.hrl-nuevo.hrl-login--dawn { background-image: url('./assets/fachada-amanecer.webp'); }
+.hrl-nuevo.hrl-login--morning { background-image: url('./assets/fachada-manana.webp'); }
+.hrl-nuevo.hrl-login--afternoon { background-image: url('./assets/fachada-tarde.webp'); }
+.hrl-nuevo.hrl-login--dusk { background-image: url('./assets/fachada-atardecer.webp'); }
+.hrl-nuevo.hrl-login--lit-night { background-image: url('./assets/fachada-noche-iluminada.webp'); }
+.hrl-nuevo.hrl-login--night { background-image: url('./assets/fachada-noche.webp'); }
+
+.hrl-login__tarjeta {
+  width: 100%;
+  max-width: 400px;
+  padding: var(--space-6) var(--space-5);
+  background: var(--surface);
+  border-radius: var(--radius-card);
+  box-shadow: var(--shadow-overlay);
+  text-align: center;
+}
+
+.hrl-login__logo { margin: 0 auto var(--space-3); }
+
+.hrl-login__subtitulo {
+  margin: 0 0 var(--space-5);
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
+}
+
+.hrl-login__titulo {
+  margin: 0 0 var(--space-2);
+  color: var(--foreground);
+  font-size: var(--text-xl);
+}
+
+.hrl-login__intro {
+  margin: 0 0 var(--space-4);
+  color: var(--muted-foreground);
+  font-size: var(--text-sm);
+}
+
+.hrl-login__form {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-3);
+  text-align: left;
+}
+
+.hrl-login__enviar {
+  width: 100%;
+  margin-top: var(--space-2);
+}
+
+.hrl-login__pie {
+  margin-top: var(--space-4);
+  color: var(--muted-foreground);
+  font-size: var(--text-xs);
 }
 
 /* Impresión: solo el documento. Sin menú, sin barra superior, sin controles. */

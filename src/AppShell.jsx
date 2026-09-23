@@ -1,6 +1,7 @@
 import { useCallback, useEffect, useRef, useState } from 'react';
 import { Sprite, Icon } from './icons.jsx';
 import { EmptyState } from './EmptyState.jsx';
+import { HrlLogo } from './HrlLogo.jsx';
 import { PageHeader } from './PageHeader.jsx';
 import { Tooltip } from './Tooltip.jsx';
 import { readTheme, applyTheme } from './theme.js';
@@ -248,7 +249,8 @@ function ProfileDrawer({ user, onClose, onSignOut, leaving, tema, onTema }) {
 
      navItems  { id, label, icon, group?, badge?, href? }[]
      user      { name, email?, role?, avatar? }
-     logo      nodo libre para la marca del sistema
+     logo      nodo libre para la marca; si se omite, el logo del hospital (HrlLogo).
+               Pasar `logo={null}` deja la barra lateral sin marca
      brand     nombre del sistema en la barra superior; el kit no lo sabe
      themeKey  clave con la que se recuerda el modo oscuro */
 export function AppShell({
@@ -337,7 +339,7 @@ export function AppShell({
       <Sprite />
       <div className={`hrl-shell${plegado ? ' hrl-shell--plegado' : ''}`}>
         <aside className="hrl-sidebar">
-          <div className="hrl-sidebar__logo">{logo}</div>
+          <div className="hrl-sidebar__logo">{logo === undefined ? <HrlLogo width={158} /> : logo}</div>
           <SidebarNav navItems={navItems} active={active} onSelect={onSelect} plegado={plegado} />
         </aside>
 

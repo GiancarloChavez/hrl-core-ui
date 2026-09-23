@@ -3,6 +3,74 @@
 Formato: qué cambió y por qué. Las versiones siguen el criterio semántico —
 quitar o renombrar una prop es un cambio mayor, porque rompe a quien ya la usa.
 
+## 1.6.0 — 23/09/2026
+
+**El kit deja de depender de internet y de que cada proyecto rehaga lo mismo.** Salió de
+la primera migración completa a un proyecto real (`ficha_14`): el kit y `doctor` estaban
+en verde y aun así la interfaz salía con otra tipografía, con el logo viejo y el icono de
+Vite, sin los fondos del login, con 67 estilos en línea, 17 colores escritos a mano y el
+login devolvía 502.
+
+**Nuevo, en el kit**
+
+- **Fuentes propias.** `tokens.css` pedía Public Sans e IBM Plex Mono a Google Fonts con un
+  `@import`. En una red sin salida a internet (la de un hospital) el sistema caía en
+  Helvetica o Arial sin ningún error. Ahora son archivos del paquete (`fonts/`, unos 75 kB,
+  licencia OFL en `fonts/LICENSE.txt`) con `@font-face` y `font-display: swap`. La familia
+  sigue llamándose `Public Sans`: ningún token cambia. El bundler del proyecto los empaqueta
+  al importar `tokens.css`; comprobado compilando `ficha_14` con Vite (cuatro `.woff2` con
+  hash, ninguna petición externa).
+- **`HrlLogo`** y el logo del hospital en el paquete (`assets/`). `variant="full"` (escudo,
+  nombre y hospital) o `"mark"` (solo el escudo). **`AppShell` lo dibuja solo** cuando no se le
+  pasa `logo`; `logo={null}` deja la barra lateral sin marca. En el tema oscuro se asienta
+  sobre una placa clara, porque sus verdes no se leen sobre fondo oscuro. Cambio de
+  comportamiento: un proyecto que no pasaba `logo` verá ahora el del hospital.
+- **`LoginScreen` y `ChangePasswordScreen`**: pantalla de ingreso y de cambio obligatorio de
+  contraseña, con **la fachada del hospital según la hora** (seis tramos: amanecer, mañana,
+  tarde, atardecer, noche iluminada, noche), como en el sistema anterior. No consultan nada:
+  reciben `onSubmit` y muestran el mensaje si lanza. Las fachadas pasaron de 38 MB (PNG) a
+  1,2 MB (WebP a 1600 px) para poder viajar en el paquete; solo se descarga la de la hora.
+  `backdrop` = `auto` · `none` · o un tramo fijo. También se exportan `backdropForHour(h)` y
+  `LOGIN_BACKDROPS`.
+- **`Stack` y `Grid`**: filas, columnas y rejillas con separación de la escala nueva
+  **`--space-1…6`** (4, 8, 12, 16, 24, 32 px; también en `preset.space`). Reemplazan al
+  `style={{ display: 'flex', gap }}` suelto.
+- **`Input` acepta `autoFocus`**. Antes la prop se ignoraba en silencio: la casilla de usuario
+  del login de `ficha_14` nunca recibía el foco.
+- La identidad del hospital (logo, escudo, fachadas) ya es del kit: `design.md` lo dice
+  expresamente y sigue prohibido lo que es de un sistema concreto (pacientes, endpoints…).
+
+**Nuevo, en la herramienta (`init` y `doctor`)**
+
+- **`init` cambia el icono de pestaña de Vite** por el escudo del hospital: copia
+  `assets/icono-hrl.png` a `public/` y enlaza `index.html`. Idempotente; `--dry-run` lo anuncia.
+- **`doctor` avisa** de: recursos que se cargan de internet (CDN, Google Fonts) en
+  `index.html`, CSS o código; icono de pestaña de la plantilla de Vite; clases `hrl-…` usadas
+  sin definir (en el kit o en el proyecto); **colores escritos como literal**; y **HTML nativo
+  con equivalente en el kit** (`<button>`, `<input>`, `<select>`, `<textarea>`, `<table>`; no
+  marca `<input type="file|hidden|radio">`). Una excepción justificada se anota con un
+  comentario `hrl-nativo: motivo` en esa línea o la anterior. Son avisos, no errores; `init`
+  los lista como pasos «manual» con su arreglo. Los comentarios no cuentan. Código en
+  `bin/lib/revisiones.mjs`.
+- **`MIGRACION.md`** (viaja en el paquete): recorrido, lo que falla con su arreglo, el ingreso,
+  cómo probar de punta a punta (un proxy de desarrollo apuntando al puerto equivocado dio un 502
+  que ninguna herramienta ve), equivalencias y lo que el kit aún no cubre.
+
+**Comprobaciones**
+
+- `npm run fuentes` (`scripts/check-fuentes.mjs`, en `verificar` y en el CI): falla si `tokens.css`
+  carga algo por http(s), si falta un archivo que referencia (fuentes, logo, fachadas) o si
+  `fonts/` o `assets/` dejan de publicarse.
+- `npm run humo` monta `Stack`, `Grid`, `HrlLogo`, `LoginScreen` y `ChangePasswordScreen`, y comprueba
+  los tramos horarios, el logo por defecto de `AppShell` y `logo={null}`.
+- `npm run cli` pasa de 27 a 42 comprobaciones.
+- Historias de Ladle: Layout, HrlLogo y Pantallas de acceso (con las seis fachadas).
+- `build.mjs` ya no copia `tokens.css` a `dist/` (nada lo usaba: `exports` apunta a la raíz) y así el
+  paquete no duplica fuentes e imágenes.
+
+Subir desde 1.5.x: `npx hrl-core-ui upgrade v1.6.0`; después `npx hrl-core-ui init` para el icono
+y la lista de pendientes.
+
 ## 1.5.0 — 21/09/2026
 
 **Herramienta de integración: `npx hrl-core-ui`.** Integrar el kit en un proyecto eran
