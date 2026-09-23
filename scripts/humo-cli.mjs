@@ -132,6 +132,7 @@ try {
     '      <button>Excepción</button>',
     '      <input type="file" hidden />',
     '      <Button>Ok</Button>',
+    '      <button /* hrl-nativo: sin equivalente */ type="button">Enlace</button>',
     '    </div>',
     '  );',
     '}',
@@ -146,7 +147,7 @@ try {
   ok(!/\.hrl-nuevo\b/.test(media.stdout), 'una clase que define el kit (hrl-nuevo) no se marca');
   ok(/1 color\(es\) escritos como literal/.test(media.stdout) && /Marco\.jsx:4  #ff0000/.test(media.stdout), 'detecta un color escrito como literal (y no el de un comentario)');
   ok(/1 etiqueta\(s\) HTML nativa\(s\)/.test(media.stdout) && /Marco\.jsx:5  <button>/.test(media.stdout), 'detecta un <button> nativo');
-  ok(!/Marco\.jsx:7/.test(media.stdout) && !/Marco\.jsx:8/.test(media.stdout), 'no marca el que lleva «hrl-nativo» ni el <input type="file">');
+  ok(!/Marco\.jsx:7/.test(media.stdout) && !/Marco\.jsx:8/.test(media.stdout) && !/Marco\.jsx:10/.test(media.stdout), 'no marca los que llevan «hrl-nativo» (en la línea anterior o dentro de la etiqueta) ni el <input type="file">');
 
   const h3 = hash();
   const simulacion = correr('init', '--dry-run');

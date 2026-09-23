@@ -40,9 +40,11 @@ cuando no hay nada que adivinar).
 | Sin logo en la barra lateral, o el logo viejo | `<AppShell>` de una versión anterior, o un `logo={…}` propio con el escudo antiguo | **Resuelto en 1.6.0**: `AppShell` dibuja `HrlLogo` si no le pasas `logo`. Borra tu `logo={…}` |
 | Icono de pestaña morado (Vite) | `index.html` sigue con el `favicon.svg` de la plantilla | **`npx hrl-core-ui init` lo cambia** por el escudo del hospital (`public/icono-hrl.png`) |
 | Iconos o estilos que aparecen y desaparecen | `<script src="https://unpkg.com/…">` o `@import` de un CDN en `index.html`/CSS: dependen de la salida a internet del equipo | Quitarlos. Iconos: `<Icon name="sh-…" />` (el sprite ya viene en el kit) |
+| Página en blanco justo después de subir el kit (`does not provide an export named …`) | Vite conserva en `node_modules/.vite` el kit pre-empaquetado de la versión anterior | `npx hrl-core-ui upgrade` la borra; si subiste a mano: `rm -rf node_modules/.vite` y reinicia el servidor de desarrollo |
+| El logo o el icono de pestaña son los de antes | Un `logo-icon.png` (u otro archivo) copiado en `public/` y enlazado a mano | Borra el archivo y su referencia: `AppShell` y `LoginScreen` ya traen el logo actual, y `init` cambia el icono de pestaña |
 | Un elemento sale sin estilo | Clase `hrl-…` en el código que nadie define | Definirla en los estilos del proyecto o pedir el componente al kit |
 | Colores que no cambian con el tema oscuro | Colores escritos como literal (`'#0284C7'`, `#1E293B`) | `var(--primary)`, `var(--serie-1…8)` para series; en JS, `token('serie-1')` |
-| Botones o campos con otro aspecto | `<button>`, `<input>`, `<select>`, `<table>` nativos | El componente del kit (el aviso dice cuál). Excepción justificada: comentario `hrl-nativo: motivo` en esa línea o la anterior |
+| Botones o campos con otro aspecto | `<button>`, `<input>`, `<select>`, `<table>` nativos | El componente del kit (el aviso dice cuál). Excepción justificada: comentario `hrl-nativo: motivo` en esa línea, la anterior o dentro de la etiqueta |
 
 ## Ingreso
 

@@ -120,9 +120,9 @@ export function init({ dir, pkg }, { dryRun = false } = {}) {
 
   hecho('manual', 'Falta lo que depende de tu aplicación: montar <AppShell> con su navegación y su usuario. Ejemplo mínimo:\n'
     + "    <AppShell navItems={[{ id: 'inicio', label: 'Inicio', icon: 'sh-home' }]} active={id} onSelect={setId}\n"
-    + "              title=\"Inicio\" brand=\"Nombre del sistema\" logo={<img src=\"/logo.png\" alt=\"\" />}\n"
-    + "              themeKey=\"clave_del_tema\" user={{ name }} onSignOut={salir}>\n"
+    + "              title=\"Inicio\" brand=\"Nombre del sistema\" themeKey=\"clave_del_tema\"\n"
+    + "              user={{ name }} onSignOut={salir}>\n"
     + '      …contenido…\n    </AppShell>\n'
-    + '    (brand, logo y themeKey son del sistema, no del kit; guía de migración: node_modules/@hrl/core-ui/MIGRACION.md). Catálogo: npm run ladle:serve en el kit, o node_modules/@hrl/core-ui/UI_CATALOG.md');
+    + '    (brand y themeKey son del sistema, no del kit; el logo del hospital lo pone AppShell solo; guía de migración: node_modules/@hrl/core-ui/MIGRACION.md). Catálogo: npm run ladle:serve en el kit, o node_modules/@hrl/core-ui/UI_CATALOG.md');
   return { pasos, errores: 0 };
 }

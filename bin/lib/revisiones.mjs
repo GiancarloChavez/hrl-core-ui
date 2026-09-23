@@ -142,7 +142,10 @@ export function revisiones(dir) {
       const etiqueta = t.slice(m.index, fin < 0 ? m.index + 200 : fin + 1);
       if (m[1] === 'input' && /\btype\s*=\s*["'](file|hidden|radio)["']/.test(etiqueta)) continue;
       const n = lineaDe(t, m.index);
-      if (/hrl-nativo/.test(etiqueta) || /hrl-nativo/.test(lineas[n - 1] || '') || /hrl-nativo/.test(lineas[n - 2] || '')) continue;
+      /* `t` tiene los comentarios blanqueados con la misma longitud que el original: la misma
+         posición en `original` da la etiqueta con sus comentarios, donde puede ir la marca. */
+      const conComentarios = original.slice(m.index, m.index + etiqueta.length);
+      if (/hrl-nativo/.test(conComentarios) || /hrl-nativo/.test(lineas[n - 1] || '') || /hrl-nativo/.test(lineas[n - 2] || '')) continue;
       const checkbox = m[1] === 'input' && /\btype\s*=\s*["']checkbox["']/.test(etiqueta);
       nativos.push(`${rel(a)}:${n}  <${m[1]}>  →  ${checkbox ? 'Checkbox' : NATIVOS[m[1]]}`);
     }

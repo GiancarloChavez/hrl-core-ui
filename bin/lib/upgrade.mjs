@@ -8,7 +8,7 @@
      cambia de aspecto y qué nombres quedan obsoletos.
    - Refresca el bloque del kit en CLAUDE.md, y corre `doctor`. */
 import { execFileSync, spawnSync } from 'node:child_process';
-import { existsSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, readFileSync, rmSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { doctor } from './doctor.mjs';
 import { refrescar } from './plantilla.mjs';
@@ -100,6 +100,14 @@ export async function upgrade({ dir, pkg }, objetivo, { fix = false } = {}, escr
   }
   if (extra.length) escribir(`  error  no se logró dejar solo el kit: revisa el diff de package-lock.json (${extra.length} paquetes distintos).`);
   else escribir('  hecho  el lockfile solo cambió en el kit; el resto de dependencias sigue como estaba');
+
+  /* Vite guarda en node_modules/.vite el kit ya pre-empaquetado. Si se queda con el de la
+     versión anterior, la aplicación sale en blanco con «does not provide an export named…»
+     al usar un componente nuevo. Es una caché: borrarla es seguro y se regenera sola. */
+  if (existsSync(join(dir, 'node_modules', '.vite'))) {
+    rmSync(join(dir, 'node_modules', '.vite'), { recursive: true, force: true });
+    escribir('  hecho  caché de dependencias de Vite borrada (node_modules/.vite). Si el servidor de desarrollo está abierto, reinícialo.');
+  }
 
   // 3. El CHANGELOG de lo que se sube.
   const rutaChangelog = join(dir, 'node_modules', '@hrl', 'core-ui', 'CHANGELOG.md');

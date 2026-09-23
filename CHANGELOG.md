@@ -3,6 +3,22 @@
 Formato: qué cambió y por qué. Las versiones siguen el criterio semántico —
 quitar o renombrar una prop es un cambio mayor, porque rompe a quien ya la usa.
 
+## 1.6.1 — 23/09/2026
+
+Correcciones que salieron de usar 1.6.0 en `ficha_14`. Sin cambios de API.
+
+- **`upgrade` borra la caché de dependencias de Vite** (`node_modules/.vite`). Con la caché de la
+  versión anterior, la aplicación salía en blanco con «The requested module … does not provide
+  an export named 'ChangePasswordScreen'» al usar un componente nuevo del kit. Es una caché: se
+  regenera sola. Si el servidor de desarrollo está abierto hay que reiniciarlo (`upgrade` lo avisa).
+- **`doctor`: la marca `hrl-nativo` también vale dentro de la etiqueta**
+  (`<button /* hrl-nativo: motivo */ type="button">`). Antes solo se reconocía en la línea de la
+  etiqueta o la anterior, y en un `return (` o un `.map()` la línea anterior no admite comentario.
+- **`init`: el ejemplo de `AppShell` ya no lleva `logo`** (desde 1.6.0 lo pone el kit) y no
+  recomienda pasar uno propio.
+- `MIGRACION.md`: la página en blanco tras subir de versión, y que un `logo-icon.png` viejo en el
+  proyecto (favicon, login o barra lateral) se sustituye por el del kit.
+
 ## 1.6.0 — 23/09/2026
 
 **El kit deja de depender de internet y de que cada proyecto rehaga lo mismo.** Salió de
